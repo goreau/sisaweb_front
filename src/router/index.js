@@ -87,15 +87,31 @@ const router = createRouter({
     {
       path: '/censitarios',
       name: 'censitarios',
-      component: () => import(/* webpackChunkName: "user" */ '../views/area/ListAreaView.vue'),
+      component: () => import(/* webpackChunkName: "user" */ '../views/censitario/ListCensitarioView.vue'),
     },
     {
       path: '/editCensitario/:id',
       name: 'editCensitario',
-      component: () => import(/* webpackChunkName: "user" */ '../views/area/EditAreaView.vue'),
+      component: () => import(/* webpackChunkName: "user" */ '../views/censitario/EditCensitarioView.vue'),
       meta: { onlyUser: true }
     },
-
+    {
+      path: '/quarteirao',
+      name: 'quarteirao',
+      component: () => import(/* webpackChunkName: "user" */ '../views/quarteirao/QuarteiraoView.vue'),
+      meta: { onlyUser: true }
+    },
+    {
+      path: '/quarteiraos',
+      name: 'quarteiraos',
+      component: () => import(/* webpackChunkName: "user" */ '../views/quarteirao/ListQuarteiraoView.vue'),
+    },
+    {
+      path: '/editQuarteirao/:id',
+      name: 'editQuarteirao',
+      component: () => import(/* webpackChunkName: "user" */ '../views/quarteirao/EditQuarteiraoView.vue'),
+      meta: { onlyUser: true }
+    },
   ],
 });
 

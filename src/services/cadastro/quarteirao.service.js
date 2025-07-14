@@ -1,8 +1,8 @@
 import axios from "@/services/api.js";
 
-class CensitarioService {
+class QuarteiraoService {
   create(data) {
-    return axios.post("/censitario", data)
+    return axios.post("/quarteirao", data)
       .then(response => {
         return response;
       },
@@ -11,8 +11,8 @@ class CensitarioService {
         })
   }
 
-  getCensitario(id) {
-    return axios.get(`/censitario/${id}`)
+  getQuarteirao(id) {
+    return axios.get(`/quarteirao/${id}`)
       .then(response => {
         return { data: response.data };
       },
@@ -22,7 +22,7 @@ class CensitarioService {
   }
 
   update(data) {
-    return axios.put("/censitario", data)
+    return axios.put("/quarteirao", data)
       .then(response => {
         return response;
       },
@@ -32,7 +32,7 @@ class CensitarioService {
   }
 
   delete(id) {
-    return axios.delete(`/censitario/${id}`)
+    return axios.delete(`/quarteirao/${id}`)
       .then(response => {
         return response;
       },
@@ -41,8 +41,8 @@ class CensitarioService {
         })
   }
 
-  getCensitarios(filter) {
-    return axios.get(`/censitarios/${filter}`)
+  getQuarteiraos(filter) {
+    return axios.get(`/quarteiraos/${filter}`)
       .then(response => {
         return { data: response.data };
       },
@@ -52,7 +52,7 @@ class CensitarioService {
   }
 
   getCombo(filter) {
-    return axios.get(`/comboCensitario/${filter}`)
+    return axios.get(`/comboQuarteirao/${filter}`)
       .then(response => {
         return { data: response.data };
       },
@@ -63,4 +63,4 @@ class CensitarioService {
 
 }
 
-export default new CensitarioService();
+export default new QuarteiraoService();

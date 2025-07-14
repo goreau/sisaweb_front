@@ -80,80 +80,132 @@ export const menuData = [
   },
   {
     href: "",
-    title: "Área",
+    title: "Cadastros",
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-gears",
         size: "lg",
         transform: "shrink-8",
       },
     },
     child: [
       {
-        href: "/area",
-        title: "Novo",
+        href: "",
+        title: "Área",
         icon: {
           element: "font-awesome-icon",
           attributes: {
-            icon: "fa-solid fa-plus",
+            icon: "fa-solid fa-hexagon-nodes",
             size: "lg",
             transform: "shrink-8",
           },
         },
+        child: [
+          {
+            href: "/area",
+            title: "Novo",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-plus",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+          {
+            href: "/areas",
+            title: "Consultar",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-search",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+        ],
       },
       {
-        href: "/areas",
-        title: "Consultar",
+        href: "",
+        title: "Censitário",
         icon: {
           element: "font-awesome-icon",
           attributes: {
-            icon: "fa-solid fa-search",
+            icon: "fa-solid fa-hexagon-nodes",
             size: "lg",
             transform: "shrink-8",
           },
         },
+        child: [
+          {
+            href: "/censitario",
+            title: "Novo",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-plus",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+          {
+            href: "/censitarios",
+            title: "Consultar",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-search",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+        ],
       },
-    ],
-  },
-  {
-    href: "",
-    title: "Censitário",
-    icon: {
-      element: "font-awesome-icon",
-      attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
-        size: "lg",
-        transform: "shrink-8",
-      },
-    },
-    child: [
       {
-        href: "/censitario",
-        title: "Novo",
+        href: "",
+        title: "Quarteirão",
         icon: {
           element: "font-awesome-icon",
           attributes: {
-            icon: "fa-solid fa-plus",
+            icon: "fa-solid fa-hexagon-nodes",
             size: "lg",
             transform: "shrink-8",
           },
         },
-      },
-      {
-        href: "/censitarios",
-        title: "Consultar",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+        child: [
+          {
+            href: "/quarteirao",
+            title: "Novo",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-plus",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
           },
-        },
+          {
+            href: "/quarteiraos",
+            title: "Consultar",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-search",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+        ],
       },
-    ],
-  },
+    ]
+  }
 
 
 

@@ -41,7 +41,7 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="create" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard @submit="update" @cancel="null" @aux="details" :cFooter="cFooter" />
           </footer>
         </div>
       </div>
@@ -63,8 +63,10 @@ import {
   combo$,
 } from "@/components/forms/validators";
 import { ref, onMounted, reactive, watch } from "vue";
-import { useCurrentUser } from '@/composables/currentUser'
+import { useCurrentUser } from '@/composables/currentUser';
+import { useRoute } from 'vue-router';
 
+const route = useRoute();
 
 const { currentUser } = useCurrentUser()
 
@@ -74,6 +76,7 @@ var areas = ref([]);
 
 var id_prop = ref(0);
 
+var id_censitario = ref(0);
 var codigo = ref("");
 var id_municipio = ref(0);
 var id_area = ref(0);
@@ -82,6 +85,7 @@ var id_area = ref(0);
 var censitario = reactive({
   id_municipio,
   id_area,
+  id_censitario,
   codigo,
 });
 
@@ -105,23 +109,45 @@ const rules = {
 
 const v$ = useValidate(rules, censitario);
 
+function loadData() {
+  isLoading.value = true;
 
-function create() {
+  censitarioService.getCensitario(id_censitario.value).then(
+    (response) => {
+      let data = response.data;
+      codigo.value = data.codigo.trim();
+      id_municipio.value = data.id_municipio;
+      id_area.value = data.id_area;
+    },
+    (error) => {
+      message.value = error.data;
+      showMessage.value = true;
+      type.value = "alert";
+      caption.value = "Censitário";
+      setTimeout(() => (showMessage.value = false), 3000);
+    }
+  );
+
+  isLoading.value = false;
+}
+
+
+function update() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    censitarioService.create(censitario).then(
+    censitarioService.update(censitario).then(
       (response) => {
         showMessage.value = true;
-        message.value = "Área cadastrada com sucesso.";
+        message.value = "Censitário alterado com sucesso.";
         type.value = "success";
-        caption.value = "Área";
+        caption.value = "Censitário";
         setTimeout(() => (showMessage.value = false), 3000);
       },
       (error) => {
         message.value = error;
         showMessage.value = true;
         type.value = "alert";
-        caption.value = "Área";
+        caption.value = "Censitário";
         setTimeout(() => (showMessage.value = false), 3000);
       }
     )
@@ -132,7 +158,7 @@ function create() {
     message.value = "Corrija os erros para enviar as informações";
     showMessage.value = true;
     type.value = "alert";
-    caption.value = "Área";
+    caption.value = "Censitário";
     setTimeout(() => (showMessage.value = false), 3000);
   }
 }
@@ -155,6 +181,8 @@ onMounted(() => {
   if (cUser.value) {
     id_prop.value = cUser.value.id;
   }
+  id_censitario.value = route.params.id;
+  loadData();
 
 });
 </script>

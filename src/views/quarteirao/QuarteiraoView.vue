@@ -6,7 +6,7 @@
         <Message v-if="showMessage" @do-close="closeMessage" :msg="message" :type="type" :caption="caption" />
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title is-centered">Setor Censitário</p>
+            <p class="card-header-title is-centered">Quarteirão</p>
           </header>
           <div class="card-content">
             <div class="content">
@@ -29,13 +29,33 @@
                 </span>
               </div>
             </div>
-            <div class="field">
-              <label class="label">Codigo</label>
+            <div class="content">
+              <label class="label">Censitário</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Código da Área" v-model="codigo"
-                  :class="{ 'is-danger': v$.codigo.$error }" />
-                <span class="is-error" v-if="v$.codigo.$error">
-                  {{ v$.codigo.$errors[0].$message }}
+                <CmbGeneric :sel="id_censitario" :data="censitarios" @selGen="id_censitario = $event"
+                  :errclass="{ 'is-danger': v$.id_censitario.$error }" />
+                <span class="is-error" v-if="v$.id_censitario.$error">
+                  {{ v$.id_censitario.$errors[0].$message }}
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Número</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Número do Quarteirão" v-model="numero_quarteirao"
+                  :class="{ 'is-danger': v$.numero_quarteirao.$error }" />
+                <span class="is-error" v-if="v$.numero_quarteirao.$error">
+                  {{ v$.numero_quarteirao.$errors[0].$message }}
+                </span>
+              </div>
+            </div>
+            <div class="field">
+              <label class="label">Sub-Número</label>
+              <div class="control">
+                <input class="input" type="text" placeholder="Número do Quarteirão" v-model="sub_numero"
+                  :class="{ 'is-danger': v$.sub_numero.$error }" />
+                <span class="is-error" v-if="v$.sub_numero.$error">
+                  {{ v$.sub_numero.$errors[0].$message }}
                 </span>
               </div>
             </div>
@@ -55,6 +75,7 @@ import Loader from "@/components/general/MyLoader.vue";
 import footerCard from '@/components/general/FooterCard.vue'
 import censitarioService from "@/services/cadastro/censitario.service";
 import areaService from "@/services/cadastro/area.service";
+import quarteiraoService from "@/services/cadastro/quarteirao.service";
 import useValidate from "@vuelidate/core";
 import CmbTerritorio from "@/components/forms/CmbTerritorio.vue";
 import CmbGeneric from "@/components/forms/CmbGeneric.vue";
@@ -74,15 +95,19 @@ var areas = ref([]);
 
 var id_prop = ref(0);
 
-var codigo = ref("");
 var id_municipio = ref(0);
 var id_area = ref(0);
+var id_censitario = ref(0);
+var numero_quarteirao = ref('');
+var sub_numero = ref('');
 
 
-var censitario = reactive({
+var quarteirao = reactive({
   id_municipio,
   id_area,
-  codigo,
+  id_censitario,
+  numero_quarteirao,
+  sub_numero
 });
 
 var isLoading = ref(false);
@@ -103,25 +128,25 @@ const rules = {
   id_area: { required$, minValue: combo$(1) }
 }
 
-const v$ = useValidate(rules, censitario);
+const v$ = useValidate(rules, quarteirao);
 
 
 function create() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    censitarioService.create(censitario).then(
+    quarteiraoService.create(quarteirao).then(
       (response) => {
         showMessage.value = true;
-        message.value = "Área cadastrada com sucesso.";
+        message.value = "Quarteirão cadastrada com sucesso.";
         type.value = "success";
-        caption.value = "Área";
+        caption.value = "Quarteirão";
         setTimeout(() => (showMessage.value = false), 3000);
       },
       (error) => {
         message.value = error;
         showMessage.value = true;
         type.value = "alert";
-        caption.value = "Área";
+        caption.value = "Quarteirão";
         setTimeout(() => (showMessage.value = false), 3000);
       }
     )
@@ -132,7 +157,7 @@ function create() {
     message.value = "Corrija os erros para enviar as informações";
     showMessage.value = true;
     type.value = "alert";
-    caption.value = "Área";
+    caption.value = "Quarteirão";
     setTimeout(() => (showMessage.value = false), 3000);
   }
 }
