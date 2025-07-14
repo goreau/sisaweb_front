@@ -1,0 +1,45 @@
+$primary-color: #031346;
+$base-bg: #a37c29;
+$text-color: #333;
+
+.v-sidebar-menu {
+  background-color: #a37c29 !important;
+}
+
+.v-sidebar-menu .vsm--item {
+  color: rgb(23, 15, 133) !important;
+}
+
+.v-sidebar-menu .vsm-item-open {
+  color: rgb(128, 10, 10) !important;
+}
+
+.v-sidebar-menu.vsm_expanded .vsm--link_level-1.vsm--link_open {
+  color: rgb(23, 15, 133) !important;
+  background-color: #977937 !important;
+}
+
+.v-sidebar-menu .vsm--dropdown {
+  background-color: #ecd5a3 !important;
+}
+
+/* Ítens ativos */
+.v-sidebar-menu .vsm-item.is-active > .vsm-link {
+  background-color: #444 !important;
+  color: yellow !important;
+}
+
+/* Ícones */
+.v-sidebar-menu .vsm--icon {
+  color: rgb(23, 15, 133) !important;
+}
+
+/* Ícones ativos */
+.v-sidebar-menu .vsm-item.is-active .vsm-icon {
+  color: yellow !important;
+}
+
+/* Submenu aberto */
+.v-sidebar-menu .vsm-item.open > .vsm-link {
+  color: aqua !important;
+}
