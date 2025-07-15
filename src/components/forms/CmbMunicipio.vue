@@ -16,7 +16,7 @@
 </template>
 
 <script setup>
-import TerritorioService from "@/services/territorio.service.js";
+import TerritorioService from "@/services/general/territorio.service.js";
 import { onMounted, ref } from "vue";
 
 

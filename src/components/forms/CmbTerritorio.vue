@@ -12,7 +12,7 @@
 </template>
 
 <script setup>
-import TerritorioService from "@/services/territorio.service.js";
+import TerritorioService from "@/services/general/territorio.service.js";
 import { onMounted, ref, watch } from "vue";
 
 const territorios = ref([]);

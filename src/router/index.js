@@ -112,6 +112,23 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "user" */ '../views/quarteirao/EditQuarteiraoView.vue'),
       meta: { onlyUser: true }
     },
+    {
+      path: '/imovel',
+      name: 'imovel',
+      component: () => import(/* webpackChunkName: "user" */ '../views/imovel/ImovelView.vue'),
+      meta: { onlyUser: true }
+    },
+    {
+      path: '/imovels',
+      name: 'imovels',
+      component: () => import(/* webpackChunkName: "user" */ '../views/imovel/ListImovelView.vue'),
+    },
+    {
+      path: '/editImovel/:id',
+      name: 'editImovel',
+      component: () => import(/* webpackChunkName: "user" */ '../views/imovel/EditImovelView.vue'),
+      meta: { onlyUser: true }
+    },
   ],
 });
 

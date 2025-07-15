@@ -204,6 +204,45 @@ export const menuData = [
           },
         ],
       },
+      {
+        href: "",
+        title: "Imóvel",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-school",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+        child: [
+          {
+            href: "/imovel",
+            title: "Novo",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-plus",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+          {
+            href: "/imovels",
+            title: "Consultar",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-search",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+        ],
+      },
+      //**** */
     ]
   }
 

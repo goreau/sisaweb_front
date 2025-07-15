@@ -63,7 +63,7 @@
 </template>
 
 <script setup>
-import censitarioService from "@/services/cadastro/censitario.service";
+import quarteiraoService from "@/services/cadastro/quarteirao.service";
 import MyTable from '@/components/general/MyTable.vue';
 import CmbTerritorio from "@/components/forms/CmbTerritorio.vue";
 import ConfirmDialog from "@/components/general/ConfirmDialog.vue";
@@ -103,7 +103,7 @@ function newFilter() {
 function loadData() {
   localStorage.setItem('censSW', JSON.stringify(filter));
 
-  censitarioService.getCensitarios(JSON.stringify(filter))
+  quarteiraoService.getQuarteiraos(JSON.stringify(filter))
     .then((response) => {
       dataTable.value = response.data;
       hasRows.value = true;
@@ -117,12 +117,13 @@ function loadData() {
 onMounted(() => {
   columns.value = [
     { title: 'Município', field: 'municipio', minWidth: 200, responsive: 3 },
-    { title: 'Área', field: 'area', minWidth: 150 },
+    { title: 'Área', field: 'area', minWidth: 100 },
     { title: 'Censitário', field: 'censitario', minWidth: 150 },
-    { title: 'Número', field: 'numero', minWidth: 150 },
+    { title: 'Número', field: 'numero', minWidth: 100 },
+    { title: 'Sub-Número', field: 'sub_numero', minWidth: 100 },
     { title: 'Responsável', field: 'owner', minWidth: 100 },
     {
-      title: 'Ações', responsive: 0, minWidth: 350,
+      title: 'Ações', responsive: 0, minWidth: 150,
       formatter: (cell) => {
         const row = cell.getRow().getData();
 
