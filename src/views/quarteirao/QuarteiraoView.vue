@@ -342,7 +342,7 @@ function create() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     quarteiraoService.create(quarteirao).then(
-      (response) => {
+      () => {
         showMessage.value = true;
         message.value = "Quarteirão cadastrado com sucesso.";
         type.value = "success";
@@ -416,11 +416,5 @@ onMounted(() => {
 .radio {
   display: block;
   margin-left: 0.5em !important;
-}
-
-.divisor {
-  text-align: center;
-  padding: 1rem 0 2rem 0;
-  font-weight: bold;
 }
 </style>

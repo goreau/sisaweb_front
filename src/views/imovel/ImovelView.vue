@@ -286,7 +286,7 @@ function create() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     imovelService.create(imovel).then(
-      (response) => {
+      () => {
         showMessage.value = true;
         message.value = "Imóvel cadastrado com sucesso.";
         type.value = "success";

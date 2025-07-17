@@ -145,7 +145,7 @@ function download_xlsx() {
   this.tabulator.download("xlsx", "data.xlsx", {
     sheetName: "Capop",
     exportConfig: {
-      formatCells: (cell, row, column) => {
+      formatCells: (cell) => {
         let value = cell.getValue();
 
         // Verifica se o valor é numérico e não vazio
@@ -165,7 +165,8 @@ function download_pdf() {
       orientation: "landscape", //set page orientation to portrait
       title: "Sistema Capop", //add title to report
     });
-  } catch (error) {
+  } catch (err) {
+    console.log(err);
     this.$router.go();
   }
 

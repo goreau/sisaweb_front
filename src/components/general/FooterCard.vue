@@ -3,7 +3,7 @@
     <div class="columns is-centered">
       <div class="column is-4">
         <div class="control">
-          <button class="button is-link submit-btn is-fullwidth" id="login" @click="onSubmit">
+          <button class="button is-link submit-btn is-fullwidth" id="login" @click="onSubmit" :disabled="!props.ready">
             <span class="btico"><font-awesome-icon icon="fa-solid fa-check" /></span>
             {{ props.cFooter.strSubmit }}
           </button>
@@ -35,7 +35,14 @@ import { useRouter } from 'vue-router';
 const router = useRouter();
 
 const props = defineProps({
-  cFooter: Array
+  cFooter: {
+    type: Object,
+    required: true
+  },
+  ready: {
+    type: Boolean,
+    default: true
+  }
 });
 const emit = defineEmits(['submit', 'aux']);
 

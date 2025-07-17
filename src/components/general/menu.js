@@ -242,6 +242,70 @@ export const menuData = [
           },
         ],
       },
+      {
+        href: "",
+        title: "Equipe",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-school",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+        child: [
+          {
+            href: "/equipe",
+            title: "Novo",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-search",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+        ],
+      },
+      {
+        href: "",
+        title: "Área de Transmissão",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-school",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+        child: [
+          {
+            href: "/areaNav",
+            title: "Novo",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-plus",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+          {
+            href: "/areaNavs",
+            title: "Consultar",
+            icon: {
+              element: "font-awesome-icon",
+              attributes: {
+                icon: "fa-solid fa-search",
+                size: "lg",
+                transform: "shrink-8",
+              },
+            },
+          },
+        ],
+      },
       //**** */
     ]
   }

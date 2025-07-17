@@ -129,6 +129,40 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "user" */ '../views/imovel/EditImovelView.vue'),
       meta: { onlyUser: true }
     },
+    {
+      path: '/areaNav',
+      name: 'areanav',
+      component: () => import(/* webpackChunkName: "user" */ '../views/areaNav/AreaNavView.vue'),
+      meta: { onlyUser: true }
+    },
+    {
+      path: '/areaNavs',
+      name: 'areanavs',
+      component: () => import(/* webpackChunkName: "user" */ '../views/areaNav/ListAreaNavView.vue'),
+    },
+    {
+      path: '/editAreaNav/:id',
+      name: 'editAreaNav',
+      component: () => import(/* webpackChunkName: "user" */ '../views/imovel/EditImovelView.vue'),
+      meta: { onlyUser: true }
+    },
+    {
+      path: '/areaNavChild',
+      name: 'areaNavChild',
+      component: () => import(/* webpackChunkName: "user" */ '../views/areaNav/child/AreaNavScView.vue'),
+      meta: { onlyUser: true }
+    },
+    {
+      path: '/equipe',
+      name: 'equipe',
+      component: () => import(/* webpackChunkName: "user" */ '../views/imovel/ImovelView.vue'),
+      meta: { onlyUser: true }
+    },
+    {
+      path: '/equipes',
+      name: 'equipes',
+      component: () => import(/* webpackChunkName: "user" */ '../views/imovel/ListImovelView.vue'),
+    },
   ],
 });
 

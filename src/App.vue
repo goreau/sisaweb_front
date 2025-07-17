@@ -3,7 +3,7 @@ import { RouterView } from 'vue-router'//RouterLink,
 import Header from "@/components/general/MyHeader.vue";
 import Footer from "@/components/general/MyFooter.vue";
 import { SidebarMenu } from "vue-sidebar-menu";
-import { onMounted, ref, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { menuData } from './components/general/menu';
 
@@ -60,8 +60,7 @@ watch(mainDiv, (el) => {
   </div>
 </template>
 
-<style>
-@import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+<style lang="scss">
 
 * {
   font-family: Helvetica;
@@ -70,6 +69,12 @@ watch(mainDiv, (el) => {
   margin: 0;
   box-sizing: border-box;
 }
+
+$toggle-btn-bg: red;
+$toggle-btn-color: white;
+
+@import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+@import "@fortawesome/fontawesome-free/css/all.css";
 
 /* Container que engloba menu + conteúdo */
 .app-container {
@@ -105,6 +110,12 @@ watch(mainDiv, (el) => {
 
 .select {
   width: 100%;
+}
+
+.divisor {
+  text-align: center;
+  padding: 1rem 0 2rem 0;
+  font-weight: bold;
 }
 
 .card {
