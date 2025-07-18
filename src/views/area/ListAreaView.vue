@@ -44,6 +44,7 @@
               </div>
             </section>
             <section v-show="hasRows">
+              <Message v-if="showMessage" @do-close="closeMessage" :msg="message" :type="type" :caption="caption" />
               <MyTable :tableData="dataTable" :columns="columns" :filtered="true" :tableName="tableName" />
             </section>
             <div style="display: none;">
@@ -65,15 +66,18 @@
 <script setup>
 import areaService from "@/services/cadastro/area.service";
 import MyTable from '@/components/general/MyTable.vue';
+import Message from "@/components/general/CustomMessage.vue";
 import CmbTerritorio from "@/components/forms/CmbTerritorio.vue";
 import ConfirmDialog from "@/components/general/ConfirmDialog.vue";
 import { ref, onMounted, reactive } from "vue";
 import { useRouter } from 'vue-router';
 import { useCurrentUser } from '@/composables/currentUser';
+import { useToast } from "vue-toastification";
 
 const { currentUser } = useCurrentUser();
 
 const router = useRouter();
+const toast = useToast();
 
 
 var tpUser = ref(0);
@@ -85,6 +89,11 @@ var hasRows = ref(false);
 var dataTable = ref([]);
 var id_user = 1;
 const tableName = 'AreasSW';
+
+var message = ref('');
+var caption = ref('');
+var type = ref('');
+var showMessage = ref(false);
 
 const filter = reactive({
   id_municipio
@@ -132,7 +141,7 @@ onMounted(() => {
         btEdit.classList.add('button', 'is-primary', 'is-outlined');
         btEdit.innerHTML = myspan.value.innerHTML;
         btEdit.addEventListener('click', () => {
-          router.push(`/editArea/${row.id}`);
+          router.push(`/area/${row.id}`);
         });
 
         /* const teste = document.createElement('div');
@@ -153,25 +162,13 @@ onMounted(() => {
             okButton: 'Confirmar',
           })
           if (ok) {
-            areaService.delete(row.id)
-              .then(resp => {
-                if (resp.status == '200') {
-                  location.reload();
-                } else {
-                  this.message = resp;
-                  this.showMessage = true;
-                  this.type = "alert";
-                  this.caption = "Área";
-                  setTimeout(() => (this.showMessage = false), 3000);
-                }
-              })
-              .catch(err => {
-                this.message = err;
-                this.showMessage = true;
-                this.type = "alert";
-                this.caption = "Área";
-                setTimeout(() => (this.showMessage = false), 3000);
-              })
+            const resultado = await areaService.delete(row.id);
+            if (resultado.error) {
+              toast.error(resultado.msg);
+            } else {
+              toast.success("Área excluída com sucesso!");
+              loadData();
+            }
           }
         });
 

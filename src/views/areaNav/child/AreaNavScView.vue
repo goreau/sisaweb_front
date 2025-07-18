@@ -22,7 +22,8 @@
                 <div class="content">
                   <label class="label">Censitário</label>
                   <div class="control">
-                    <CmbGeneric :sel="censitario.id_censitario" :data="censitarios" @selGen="censitario.id_censitario = $event" />
+                    <CmbGeneric :sel="censitario.id_censitario" :data="censitarios"
+                      @selGen="censitario.id_censitario = $event" />
                   </div>
                 </div>
               </div>
@@ -52,12 +53,7 @@
         <Modal v-if="showModal" @confirm="handleConfirm" @cancel="handleCancel">
           <!-- Conteúdo específico do modal -->
           <p class="divisor">Quarteirões</p>
-          <Check
-            v-model="selecionados"
-            :options="quarteiroes"
-            :checked-ids="qChecked"
-            :columns-count="4"
-          />
+          <Check v-model="selecionados" :options="quarteiroes" :checked-ids="qChecked" :columns-count="4" />
         </Modal>
       </div>
     </div>
@@ -131,7 +127,9 @@ function handleConfirm() {
   const index = filhos.value.findIndex(f => f.id_censitario === currentCens.value);
 
   if (index !== -1) {
-    filhos.value[index].quarteiroes = selecionados.value;
+    filhos.value[index].quarteiroes = selecionados.value.map(id => ({
+      id_quarteirao: id
+    }));
   }
   selecionados.value = [];
   //console.log('Valor confirmado:', selecionados.value);
@@ -229,18 +227,18 @@ function handleDelete(cens) {
 function handleView(row) {
   currentCens.value = row.id_censitario;
   quarteiraoService.getCombo(JSON.stringify({ id_censitario: row.id_censitario }))
-      .then((res) => {
-        quarteiroes.value = res.data;
-      })
-      .catch((err) => {
-        console.log(err.response);
-        quarteiroes.value = [];
-      })
+    .then((res) => {
+      quarteiroes.value = res.data;
+    })
+    .catch((err) => {
+      console.log(err.response);
+      quarteiroes.value = [];
+    })
 
   const index = filhos.value.findIndex(f => f.id_censitario === currentCens.value);
 
   if (index !== -1) {
-    qChecked.value = filhos.value[index].quarteiroes;
+    qChecked.value = filhos.value[index].quarteiroes.map(q => q.id_quarteirao);//filhos.value[index].quarteiroes;
   }
 
   showModal.value = true;

@@ -31,14 +31,17 @@ class ImovelService {
         })
   }
 
-  delete(id) {
-    return axios.delete(`/imovel/${id}`)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          return error.data;
-        })
+  async delete(id) {
+    try {
+      const res = await axios.delete(`/imovel/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
   getImovels(filter) {

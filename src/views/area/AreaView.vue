@@ -3,7 +3,6 @@
     <div class="columns is-centered">
       <div class="column is-two-fifths">
         <Loader v-if="isLoading" />
-        <Message v-if="showMessage" @do-close="closeMessage" :msg="message" :type="type" :caption="caption" />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Área</p>
@@ -12,8 +11,8 @@
             <div class="content">
               <label class="label">Município</label>
               <div class="control">
-                <CmbTerritorio :id_prop="id_prop" :tipo="99" :sel="id_municipio" @selTerr="id_municipio = $event"
-                  :errclass="{ 'is-danger': v$.id_municipio.$error }" />
+                <CmbTerritorio :id_prop="id_prop" :tipo="99" :sel="area.id_municipio"
+                  @selTerr="area.id_municipio = $event" :errclass="{ 'is-danger': v$.id_municipio.$error }" />
                 <span class="is-error" v-if="v$.id_municipio.$error">
                   {{ v$.id_municipio.$errors[0].$message }}
                 </span>
@@ -22,7 +21,7 @@
             <div class="field">
               <label class="label">Codigo</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Código da Área" v-model="codigo"
+                <input class="input" type="text" placeholder="Código da Área" v-model="area.codigo"
                   :class="{ 'is-danger': v$.codigo.$error }" />
                 <span class="is-error" v-if="v$.codigo.$error">
                   {{ v$.codigo.$errors[0].$message }}
@@ -31,7 +30,7 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="create" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard @submit="save" @cancel="null" @aux="details" :cFooter="cFooter" />
           </footer>
         </div>
       </div>
@@ -40,7 +39,6 @@
 </template>
 
 <script setup>
-import Message from "@/components/general/CustomMessage.vue";
 import Loader from "@/components/general/MyLoader.vue";
 import footerCard from '@/components/general/FooterCard.vue'
 import areaService from "@/services/cadastro/area.service";
@@ -50,31 +48,26 @@ import {
   required$,
   combo$,
 } from "@/components/forms/validators";
-import { ref, onMounted, reactive } from "vue";
-import { useCurrentUser } from '@/composables/currentUser'
+import { ref, onMounted, reactive, computed } from "vue";
+import { useCurrentUser } from '@/composables/currentUser';
+import { useRoute } from 'vue-router';
+import { useToast } from "vue-toastification";
 
-
+const toast = useToast();
+const route = useRoute();
 const { currentUser } = useCurrentUser()
-
-//var tpUser = ref(0);
-//var nvUser = ref(0);
 
 var id_prop = ref(0);
 
-var codigo = ref("");
-var id_municipio = ref(0);
 
-
-var area = reactive({
-  id_municipio,
-  codigo,
+const area = reactive({
+  id_area: 0,
+  id_municipio: 0,
+  codigo: '',
 });
 
 var isLoading = ref(false);
-var message = ref('');
-var caption = ref('');
-var type = ref('');
-var showMessage = ref(false);
+
 var cFooter = ref({
   strSubmit: 'Salvar',
   strCancel: 'Cancelar',
@@ -90,38 +83,43 @@ const rules = {
 const v$ = useValidate(rules, area);
 
 
-function create() {
+async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    areaService.create(area).then(
-      (response) => {
-        showMessage.value = true;
-        message.value = "Área cadastrada com sucesso.";
-        type.value = "success";
-        caption.value = "Área";
-        setTimeout(() => (showMessage.value = false), 3000);
-      },
-      (error) => {
-        message.value = error;
-        showMessage.value = true;
-        type.value = "alert";
-        caption.value = "Área";
-        setTimeout(() => (showMessage.value = false), 3000);
-      }
-    )
-      .finally(() => {
-        document.getElementById("login").classList.remove("is-loading");
-      });
+    var resultado = null;
+    if (isEditMode.value) {
+      resultado = await areaService.update(area);
+    } else {
+      resultado = await areaService.create(area);
+    }
+
+    if (resultado.error) {
+      toast.error(resultado.msg);
+    } else {
+      toast.success("Área inserida com sucesso!");
+    }
   } else {
-    message.value = "Corrija os erros para enviar as informações";
-    showMessage.value = true;
-    type.value = "alert";
-    caption.value = "Área";
-    setTimeout(() => (showMessage.value = false), 3000);
+    toast.warning("Corrija os erros para enviar as informações");
   }
 }
 
-onMounted(() => {
+const isEditMode = computed(() => Number(route.params.id) > 0);
+
+onMounted(async () => {
+  if (isEditMode.value) {
+    const result = await areaService.getArea(route.params.id);
+    if (result.error) {
+      toast.error(result.msg);
+    } else {
+      Object.assign(area, result);
+    }
+  } else {
+    Object.assign(area, {
+      id_area: 0,
+      id_municipio: 0,
+      codigo: '',
+    });
+  }
   let cUser = currentUser;
   if (cUser.value) {
     id_prop.value = cUser.value.id;

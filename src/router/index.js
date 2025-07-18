@@ -34,6 +34,14 @@ const router = createRouter({
       component: () => import('../views/general/AboutView.vue'),
     },
     {
+      path: '/ajuda',
+      name: 'ajuda',
+      // route level code-splitting
+      // this generates a separate chunk (About.[hash].js) for this route
+      // which is lazy-loaded when the route is visited.
+      component: () => import('../views/general/AjudaView.vue'),
+    },
+    {
       path: '/user',
       name: 'user',
       component: () => import(/* webpackChunkName: "user" */ '../views/user/UserView.vue'),
@@ -62,7 +70,7 @@ const router = createRouter({
       component: () => import(/* webpackChunkName: "home" */ '../views/user/MyCadastroView.vue'),
     },
     {
-      path: '/area',
+      path: '/area/:id',
       name: 'area',
       component: () => import(/* webpackChunkName: "user" */ '../views/area/AreaView.vue'),
       meta: { onlyUser: true }

@@ -64,7 +64,7 @@ api.interceptors.response.use(
             });
           }, 1000);
       }
-      return Promise.reject(error.response);
+      return Promise.reject(error);
 
     }
   }

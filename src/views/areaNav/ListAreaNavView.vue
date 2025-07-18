@@ -70,10 +70,14 @@ import ConfirmDialog from "@/components/general/ConfirmDialog.vue";
 import { ref, onMounted, reactive } from "vue";
 import { useRouter } from 'vue-router';
 import { useCurrentUser } from '@/composables/currentUser';
+import { useAreaNavStore } from '@/stores/areaNavStore';
+import { useToast } from "vue-toastification";
 
 const { currentUser } = useCurrentUser();
 
 const router = useRouter();
+const store = useAreaNavStore();
+const toast = useToast();
 
 
 var tpUser = ref(0);
@@ -86,10 +90,6 @@ var dataTable = ref([]);
 var id_user = 1;
 const tableName = 'AreaNavSW';
 
-var message = ref('');
-var caption = ref('');
-var type = ref('');
-var showMessage = ref(false);
 
 const filter = reactive({
   id_municipio
@@ -122,8 +122,9 @@ function loadData() {
 onMounted(() => {
   columns.value = [
     { title: 'Município', field: 'municipio', minWidth: 200, responsive: 3 },
+    { title: 'Tipo', field: 'tipo', minWidth: 100, responsive: 4 },
     { title: 'Nome', field: 'descricao', minWidth: 150 },
-    { title: 'Data', field: 'data', minWidth: 150 },
+    { title: 'Data', field: 'data', minWidth: 150, responsive: 3 },
     { title: 'Responsável', field: 'owner', minWidth: 100 },
     {
       title: 'Ações', responsive: 0, minWidth: 350,
@@ -137,8 +138,12 @@ onMounted(() => {
         btEdit.style.cssText = 'height: fit-content; margin-left: 1rem;';
         btEdit.classList.add('button', 'is-primary', 'is-outlined');
         btEdit.innerHTML = myspan.value.innerHTML;
-        btEdit.addEventListener('click', () => {
-          router.push(`/editCensitario/${row.id}`);
+        btEdit.addEventListener('click', async () => {
+          const ret = await areaNavService.getAreaNav(row.id);
+
+          store.setObjeto({ ...ret.data.data });
+
+          router.push({ name: 'areanav', query: { returnFrom: 'edit' } });
         });
 
         /* const teste = document.createElement('div');
@@ -159,25 +164,13 @@ onMounted(() => {
             okButton: 'Confirmar',
           })
           if (ok) {
-            areaNavService.delete(row.id)
-              .then(resp => {
-                if (resp.status == '200') {
-                  location.reload();
-                } else {
-                  message.value = resp;
-                  showMessage.value = true;
-                  type.value = "alert";
-                  caption.value = "Área de Transmissão";
-                  setTimeout(() => (showMessage.value = false), 3000);
-                }
-              })
-              .catch(err => {
-                message.value = err;
-                showMessage.value = true;
-                type.value = "alert";
-                caption.value = "Área de Transmissão";
-                setTimeout(() => (showMessage.value = false), 3000);
-              })
+            const resultado = await areaNavService.delete(row.id)
+            if (resultado.error) {
+              toast.error(resultado.msg);
+            } else {
+              toast.success("Área de transmissão excluída com sucesso!");
+              loadData();
+            }
           }
         });
 

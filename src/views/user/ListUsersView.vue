@@ -94,10 +94,12 @@ import CmbTerritorio from "@/components/forms/CmbTerritorio.vue";
 import { ref, onMounted, reactive } from "vue";
 import { useRouter } from 'vue-router';
 import { useCurrentUser } from '@/composables/currentUser';
+import { useToast } from "vue-toastification";
 
 const { currentUser } = useCurrentUser();
 
 const router = useRouter();
+const toast = useToast();
 
 
 var tpUser = ref(0);
@@ -182,25 +184,13 @@ onMounted(() => {
             okButton: 'Confirmar',
           })
           if (ok) {
-            authService.delete(row.id)
-              .then(resp => {
-                if (resp.status == '200') {
-                  location.reload();
-                } else {
-                  this.message = resp;
-                  this.showMessage = true;
-                  this.type = "alert";
-                  this.caption = "Usuário";
-                  setTimeout(() => (this.showMessage = false), 3000);
-                }
-              })
-              .catch(err => {
-                this.message = err;
-                this.showMessage = true;
-                this.type = "alert";
-                this.caption = "Usuário";
-                setTimeout(() => (this.showMessage = false), 3000);
-              })
+            const resultado = await authService.delete(row.id);
+            if (resultado.error) {
+              toast.error(resultado.msg);
+            } else {
+              toast.success("Usuário excluído com sucesso!");
+              loadData();
+            }
           }
         });
 

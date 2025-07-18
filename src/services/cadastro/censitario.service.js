@@ -31,14 +31,17 @@ class CensitarioService {
         })
   }
 
-  delete(id) {
-    return axios.delete(`/censitario/${id}`)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          return error.data;
-        })
+  async delete(id) {
+    try {
+      const res = await axios.delete(`/censitario/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
   getCensitarios(filter) {

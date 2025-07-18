@@ -1,64 +1,83 @@
 import axios from "@/services/api.js";
 
 class AreaService {
-  create(data) {
-    return axios.post("/area", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
+  async create(data) {
+    try {
+      const res = await axios.post("/area", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getArea(id) {
-    return axios.get(`/area/${id}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error;
-        })
+  async getArea(id) {
+    try {
+      const res = await axios.get(`/area/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  update(data) {
-    return axios.put("/area", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
+  async update(data) {
+    try {
+      const res = await axios.put("/area", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  delete(id) {
-    return axios.delete(`/area/${id}`)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          return error.data;
-        })
+  async delete(id) {
+    try {
+      const res = await axios.delete(`/area/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getAreas(filter) {
-    return axios.get(`/areas/${filter}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error.response.data;
-        })
+
+  async getAreas(filter) {
+    try {
+      const res = await axios.get(`/areas/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getCombo(filter) {
-    return axios.get(`/comboArea/${filter}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error.response.data;
-        })
+  async getCombo(filter) {
+    try {
+      const res = await axios.get(`/comboArea/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
 }

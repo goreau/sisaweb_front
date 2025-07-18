@@ -12,8 +12,8 @@
             <div class="content">
               <label class="label">Município</label>
               <div class="control">
-                <CmbTerritorio :id_prop="id_prop" :tipo="99" :sel="areaNav.id_municipio" @selTerr="areaNav.id_municipio = $event"
-                  :errclass="{ 'is-danger': v$.id_municipio.$error }" />
+                <CmbTerritorio :id_prop="id_prop" :tipo="99" :sel="areaNav.id_municipio"
+                  @selTerr="areaNav.id_municipio = $event" :errclass="{ 'is-danger': v$.id_municipio.$error }" />
                 <span class="is-error" v-if="v$.id_municipio.$error">
                   {{ v$.id_municipio.$errors[0].$message }}
                 </span>
@@ -22,7 +22,8 @@
             <fieldset class="fieldset">
               <legend>Tipo</legend>
               <div class="field">
-                <RadioGeneric v-model="areaNav.tipo_area" :options="tipos" name="tipo_area" :modelValue="2" :inline="true" />
+                <RadioGeneric v-model="areaNav.tipo_area" :options="tipos" name="tipo_area" :modelValue="2"
+                  :inline="true" />
               </div>
             </fieldset>
             <div class="field">
@@ -174,10 +175,9 @@ const readyToGo = computed(() => {
 });
 
 onMounted(() => {
-  if (route.query.returnFrom === 'filho') {
+  if (route.query.returnFrom === 'filho' || route.query.returnFrom === 'edit') {
+    console.log(store.objetoPrincipal);
     Object.assign(areaNav, JSON.parse(JSON.stringify(store.objetoPrincipal)));
-   //cFooter.value.podeEnviar = Array.isArray(store.objetoPrincipal?.filhos) && store.objetoPrincipal.filhos.length > 0;
-
   } else {
     Object.assign(areaNav, {
       id_municipio: 0,

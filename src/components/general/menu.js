@@ -103,7 +103,7 @@ export const menuData = [
         },
         child: [
           {
-            href: "/area",
+            href: "/area/0",
             title: "Novo",
             icon: {
               element: "font-awesome-icon",
