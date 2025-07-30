@@ -90,7 +90,7 @@ import { ref, watch } from 'vue'
 //import { ResponsiveLayoutModule } from 'tabulator-tables';
 import lang from "./lang";
 import { onMounted } from "vue";
-//import Loader from "@/components/general/Loader.vue";
+import Loader from "@/components/general/MyLoader.vue";
 
 var tabulator = ref(null);
 var form = ref({

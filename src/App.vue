@@ -1,27 +1,26 @@
 <script setup>
-import { RouterView } from 'vue-router'//RouterLink,
-import Header from "@/components/general/MyHeader.vue";
-import Footer from "@/components/general/MyFooter.vue";
-import { SidebarMenu } from "vue-sidebar-menu";
-import { ref, watch } from 'vue';
-import { useRoute } from 'vue-router';
-import { menuData } from './components/general/menu';
+import { RouterView } from 'vue-router' //RouterLink,
+import Header from '@/components/general/MyHeader.vue'
+import Footer from '@/components/general/MyFooter.vue'
+import { SidebarMenu } from 'vue-sidebar-menu'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { menuData } from './menus/menu'
 
 const route = useRoute()
 
-const mainDiv = ref(null);
-const showMenu = ref(false);
+const mainDiv = ref(null)
+const showMenu = ref(false)
 
 ///********************************** */
 function onToggleCollapse(collapsed) {
   if (mainDiv.value) {
     if (collapsed) {
-      mainDiv.value.className = "main_colapsed";
+      mainDiv.value.className = 'main_colapsed'
     } else {
-      mainDiv.value.className = "main";
+      mainDiv.value.className = 'main'
     }
   }
-
 }
 
 /********************************* */
@@ -29,14 +28,15 @@ function onToggleCollapse(collapsed) {
 watch(
   () => route.path,
   (newPath) => {
-    showMenu.value = newPath !== "/" && newPath !== "/login" && newPath !== "/forgot" && newPath !== "/reset"
+    showMenu.value =
+      newPath !== '/' && newPath !== '/login' && newPath !== '/forgot' && newPath !== '/reset'
   },
   { immediate: true }
 )
 
 watch(mainDiv, (el) => {
   if (el) {
-    onToggleCollapse(true);
+    onToggleCollapse(true)
   }
 })
 
@@ -48,7 +48,12 @@ watch(mainDiv, (el) => {
     <Header />
     <div class="app-container">
       <div class="menu-content" v-show="showMenu">
-        <sidebar-menu :menu="menuData" :relative="true" @update:collapsed="onToggleCollapse" :showOneChild="true" />
+        <sidebar-menu
+          :menu="menuData"
+          :relative="true"
+          @update:collapsed="onToggleCollapse"
+          :showOneChild="true"
+        />
       </div>
 
       <!-- Conteúdo principal -->
@@ -61,7 +66,6 @@ watch(mainDiv, (el) => {
 </template>
 
 <style lang="scss">
-
 * {
   font-family: Helvetica;
   font-size: large;
@@ -73,8 +77,8 @@ watch(mainDiv, (el) => {
 $toggle-btn-bg: red;
 $toggle-btn-color: white;
 
-@import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
-@import "@fortawesome/fontawesome-free/css/all.css";
+@import 'vue-sidebar-menu/src/scss/vue-sidebar-menu.scss';
+@import '@fortawesome/fontawesome-free/css/all.css';
 
 /* Container que engloba menu + conteúdo */
 .app-container {
@@ -141,7 +145,7 @@ $toggle-btn-color: white;
 .fieldset {
   background-color: #fff;
   border-radius: 6px;
-  box-shadow: 0 0.3em 0.3em -0.125em rgba(10, 10, 10, .1), 0 0 0 1px rgba(10, 10, 10, .02);
+  box-shadow: 0 0.3em 0.3em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
   display: block;
   padding: 1.25rem;
@@ -150,7 +154,7 @@ $toggle-btn-color: white;
   margin-bottom: 1rem;
 }
 
-.fieldset>legend {
+.fieldset > legend {
   color: #363636;
   display: block;
   font-size: 1rem;
@@ -158,6 +162,16 @@ $toggle-btn-color: white;
   background-color: #fff;
   padding: 0 5px;
   width: max-content;
-  border: 0 none
+  border: 0 none;
+}
+
+/********* */
+.v-sidebar-menu .vsm--link_level-3 {
+  background-color: #a07311;
+}
+
+.v-sidebar-menu.vsm_expanded .vsm--link_level-2.vsm--link_open {
+  color: var(--vsm-item-open-color);
+  background-color: #926502;
 }
 </style>

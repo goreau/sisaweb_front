@@ -1,39 +1,9 @@
 import axios from "@/services/api.js";
 
 class CensitarioService {
-  create(data) {
-    return axios.post("/censitario", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
-  }
-
-  getCensitario(id) {
-    return axios.get(`/censitario/${id}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error;
-        })
-  }
-
-  update(data) {
-    return axios.put("/censitario", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
-  }
-
-  async delete(id) {
+  async create(data) {
     try {
-      const res = await axios.delete(`/censitario/${id}`);
+      const res = await axios.post("/api/cadastro/censitario", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -44,24 +14,69 @@ class CensitarioService {
     }
   }
 
-  getCensitarios(filter) {
-    return axios.get(`/censitarios/${filter}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error.response.data;
-        })
+  async getCensitario(id) {
+    try {
+      const res = await axios.get(`/api/cadastro/censitario/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getCombo(filter) {
-    return axios.get(`/comboCensitario/${filter}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error.response.data;
-        })
+  async update(data) {
+    try {
+      const res = await axios.put("/api/cadastro/censitario", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async delete(id) {
+    try {
+      const res = await axios.delete(`/api/cadastro/censitario/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async getCensitarios(filter) {
+    try {
+      const res = await axios.get(`/api/cadastro/censitarios/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async getCombo(filter) {
+    try {
+      const res = await axios.get(`/api/cadastro/comboCensitario/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
 }

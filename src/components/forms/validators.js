@@ -31,4 +31,18 @@ export const requiredIf$ = (cond) => helpers.withMessage('Informe o valor desse 
 
 export const minLengthIfFilled$ = (min) => helpers.withMessage(({ $params }) => `O tamanho mínimo permitido é de ${$params.min} caracteres.`, (value) => value.length === 0 || value.length >= min)
 
+export const coordenada$ = helpers.withMessage('O valor deve ser um número decimal, negativo ou zero',
+  value => {
+    if (value === null || value === '') return true; // Permitir vazio se necessário
+    return /^-?\d+(\.\d+)?$/.test(value) && parseFloat(value) <= 0;
+  }
+)
+
+export const horaValida$ = helpers.withMessage(
+  'Hora inválida. Use o formato HH:mm',
+  value => {
+    if (!value) return true // permite vazio, remova se quiser obrigar
+    return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value)
+  }
+)
 //export const minLengthIfFilled$ = (min) => helpers.withMessage(({ $params }) => `O tamanho mínimo permitido é de ${$params.min} caracteres.`,   minLength(min) || maxLength(0))

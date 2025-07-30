@@ -3,7 +3,7 @@ import axios from "@/services/api.js";
 class AreaService {
   async create(data) {
     try {
-      const res = await axios.post("/area", data);
+      const res = await axios.post("/api/cadastro/area", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -16,7 +16,7 @@ class AreaService {
 
   async getArea(id) {
     try {
-      const res = await axios.get(`/area/${id}`);
+      const res = await axios.get(`/api/cadastro/area/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -29,7 +29,7 @@ class AreaService {
 
   async update(data) {
     try {
-      const res = await axios.put("/area", data);
+      const res = await axios.put("/api/cadastro/area", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -42,7 +42,7 @@ class AreaService {
 
   async delete(id) {
     try {
-      const res = await axios.delete(`/area/${id}`);
+      const res = await axios.delete(`/api/cadastro/area/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -56,7 +56,7 @@ class AreaService {
 
   async getAreas(filter) {
     try {
-      const res = await axios.get(`/areas/${filter}`);
+      const res = await axios.get(`/api/cadastro/areas/${filter}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -69,7 +69,7 @@ class AreaService {
 
   async getCombo(filter) {
     try {
-      const res = await axios.get(`/comboArea/${filter}`);
+      const res = await axios.get(`/api/cadastro/comboArea/${filter}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {

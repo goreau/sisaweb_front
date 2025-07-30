@@ -17,7 +17,7 @@ import { onMounted, ref, watch } from "vue";
 
 const territorios = ref([]);
 
-const props = defineProps(['id_prop', 'sel', 'errclass', 'tipo']);
+const props = defineProps(['sel', 'errclass', 'tipo']);
 
 const emit = defineEmits(['selTerr']);
 
@@ -25,15 +25,14 @@ function onChange(event) {
   emit('selTerr', event.target.value);
 }
 
-function loadData() {
-  TerritorioService.getCombo(props.tipo, props.id_prop)
-    .then((res) => {
-      territorios.value = res.data;
-    })
-    .catch((err) => {
-      console.log(err.response);
-      territorios.value = [];
-    })
+async function loadData() {
+  const result = await TerritorioService.getCombo(props.tipo);
+  if (result.error) {
+    console.log(result.error);
+    territorios.value = [];
+  } else {
+    territorios.value = result;
+  }
 }
 
 watch(

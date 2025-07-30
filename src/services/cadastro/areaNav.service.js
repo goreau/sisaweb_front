@@ -1,39 +1,9 @@
 import axios from "@/services/api.js";
 
 class AreaNavService {
-  create(data) {
-    return axios.post("/areaNav", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
-  }
-
-  getAreaNav(id) {
-    return axios.get(`/areaNav/${id}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error;
-        })
-  }
-
-  update(data) {
-    return axios.put("/areaNav", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
-  }
-
-  async delete(id) {
+  async create(data) {
     try {
-      const res = await axios.delete(`/areaNav/${id}`);
+      const res = await axios.post("/api/cadastro/areaNav", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -44,24 +14,69 @@ class AreaNavService {
     }
   }
 
-  getAreaNavs(filter) {
-    return axios.get(`/areaNavs/${filter}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error.response.data;
-        })
+  async getAreaNav(id) {
+    try {
+      const res = await axios.get(`/api/cadastro/areaNav/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getCombo(filter) {
-    return axios.get(`/comboAreaNav/${filter}`)
-      .then(response => {
-        return { data: response.data };
-      },
-        (error) => {
-          return error.response.data;
-        })
+  async update(data) {
+    try {
+      const res = await axios.put("/api/cadastro/areaNav", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async delete(id) {
+    try {
+      const res = await axios.delete(`/api/cadastro/areaNav/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async getAreaNavs(filter) {
+    try {
+      const res = await axios.get(`/api/cadastro/areaNavs/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async getCombo(filter) {
+    try {
+      const res = await axios.get(`/api/cadastro/comboAreaNav/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
 }

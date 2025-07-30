@@ -1,99 +1,119 @@
 import axios from "@/services/api.js";
-import authHeader from './auth.header.js';
 
 class AuthService {
-  login(user) {
-    return axios.post("/login", user)
-      .then(response => {
-        if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-        }
-
-        return response.data;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
+  async login(user) {
+    try {
+      const res = await axios.post("/api/user/login", user);
+      localStorage.setItem('user', JSON.stringify(res.data));
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
   logout() {
     localStorage.removeItem('user');
   }
 
-  register(data) {
-    return axios.post("/user", data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        });
+  async register(data) {
+    try {
+      const res = await axios.post("/api/user/user", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  list(filter) {
-    return axios.get(`/users/${filter}`)
-      .then(response => {
-        return response.data;
-      })
+  async list(filter) {
+    try {
+      const res = await axios.get(`/api/user/users/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  update(data) {
-    return axios.put("/user", data)
-      .then(response => {
-        return response.data;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        });
+  async update(data) {
+    try {
+      const res = await axios.put("/api/user/user", data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  impersonate(user) {
-    return axios.post("/impersonate", user)
-      .then(response => {
-        if (response.data.token) {
-          localStorage.setItem('user', JSON.stringify(response.data));
-        }
-
-        return response.data;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        })
+  async impersonate(user) {
+    try {
+      const res = await axios.post("/api/user/impersonate", user);
+      localStorage.setItem('user', JSON.stringify(res.data));
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  restart(data) {
-    return axios.put(`/restart`, data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          return error.data;
-        })
+  async restart(data) {
+    try {
+      const res = await axios.put(`/api/user/restart`, data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  firstAccess(data) {
-    return axios.put("/firstaccess", data)
-      .then(response => {
-        return response.data;
-      },
-        (error) => {
-          throw new Error(error.data.msg);
-        });
+  async firstAccess(data) {
+    try {
+      const res = await axios.put("/api/user/firstaccess", data)
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  edit(data) {
-    return axios.put('/editUser', data)
-      .then(response => {
-        return response.data;
-      },
-        (error) => {
-          return error.response.data;
-        })
+  async edit(data) {
+    try {
+      const res = await axios.put('/api/user/editUser', data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
   async delete(id) {
     try {
-      const res = await axios.delete(`/user/${id}`);
+      const res = await axios.delete(`/api/user/user/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -105,31 +125,43 @@ class AuthService {
   }
 
 
-  getUserData(id) {
-    return axios.get(`/user/${id}`)
-      .then(response => {
-        return response;
-      })
+  async getUserData(id) {
+    try {
+      const res = await axios.get(`/api/user/user/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  forgot(data) {
-    return axios.post(`/forgot`, data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data);
-        })
+  async forgot(data) {
+    try {
+      const res = await axios.post(`/api/user/forgot`, data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  reset(data) {
-    return axios.post(`/reset`, data)
-      .then(response => {
-        return response;
-      },
-        (error) => {
-          throw new Error(error.data);
-        })
+  async reset(data) {
+    try {
+      const res = await axios.post(`/api/user/reset`, data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
 }

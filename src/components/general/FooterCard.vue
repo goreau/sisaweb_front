@@ -3,7 +3,12 @@
     <div class="columns is-centered">
       <div class="column is-4">
         <div class="control">
-          <button class="button is-link submit-btn is-fullwidth" id="login" @click="onSubmit" :disabled="!props.ready">
+          <button
+            class="button is-link submit-btn is-fullwidth"
+            id="login"
+            @click="onSubmit"
+            :disabled="!props.ready"
+          >
             <span class="btico"><font-awesome-icon icon="fa-solid fa-check" /></span>
             {{ props.cFooter.strSubmit }}
           </button>
@@ -30,33 +35,41 @@
 </template>
 
 <script setup>
-import { useRouter } from 'vue-router';
+import { useRouter } from 'vue-router'
 
-const router = useRouter();
+const router = useRouter()
 
 const props = defineProps({
   cFooter: {
     type: Object,
-    required: true
+    required: true,
   },
   ready: {
     type: Boolean,
-    default: true
-  }
-});
-const emit = defineEmits(['submit', 'aux']);
+    default: true,
+  },
+  customBack: {
+    type: Boolean,
+    default: false,
+  },
+})
+const emit = defineEmits(['submit', 'aux', 'cancel'])
 
 function onSubmit() {
-  return emit('submit');
+  return emit('submit')
 }
 
 function onAux() {
-  return emit('aux');
+  return emit('aux')
 }
 
 function onCancel() {
-  if (router.path != "/") {
-    router.go(-1);
+  if (props.customBack) {
+    return emit('cancel')
+  } else {
+    if (router.path != '/') {
+      router.go(-1)
+    }
   }
 }
 </script>

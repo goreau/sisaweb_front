@@ -1,44 +1,52 @@
 <template>
   <div ref="table" class="tabela is-striped"></div>
+  {{ tableData }}
 </template>
 
 <script setup>
-import { TabulatorFull as Tabulator } from "tabulator-tables"; //import Tabulator library
-import lang from "./lang";
-import { watch, ref } from 'vue';
+import { TabulatorFull as Tabulator } from 'tabulator-tables'
+import lang from './lang'
+import { watch, ref, onMounted } from 'vue'
 
+const tabulator = ref(null)
+const table = ref(null)
 
-  const tabulator = ref(null); //variable to hold your table
+const props = defineProps({
+  tableData: Array,
+  columns: Array,
+  onRowDelete: Function,
+})
 
-  const table = ref(null);
-
-  const props = defineProps({
-    tableData: Array,
-    columns: Array,
-    onRowDelete: Function
+function initTable() {
+  tabulator.value = new Tabulator(table.value, {
+    langs: lang,
+    locale: 'pt-br',
+    data: props.tableData, // dados iniciais
+    layout: 'fitColumns',
+    placeholder: 'Nenhum registro atende aos critérios escolhidos!',
+    columns: props.columns,
+    pagination: false,
+    movableColumns: true,
+    // reactiveData: true,
   })
+}
 
-  function loadData(data){
-      tabulator.value = new Tabulator(table.value, {
-        langs: lang,
-        locale: "pt-br",
-        data: data, //link data to table
-        layout: "fitColumns",
-        placeholder:"Nenhum registro atende aos critérios escolhidos!",
-        reactiveData: true, //enable data reactivity
-        columns: props.columns, //define table columns
-        pagination: false,
-        movableColumns: true,
-      });
-  }
+watch(
+  () => props.tableData,
+  (newVal) => {
+    if (tabulator.value) {
+      tabulator.value.replaceData(newVal)
+    }
+  },
+  { deep: true }
+)
 
-  watch(() => props.tableData,
-    (newVal) => {
-      loadData(newVal)
-    },
-  );
-
+onMounted(() => {
+  initTable()
+})
 </script>
+
+
 <style scoped>
 .tabela {
   width: auto;
@@ -77,7 +85,7 @@ import { watch, ref } from 'vue';
 
 .slider:before {
   position: absolute;
-  content: "";
+  content: '';
   height: 1rem;
   width: 1rem;
   left: 0.5rem;

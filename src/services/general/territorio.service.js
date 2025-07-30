@@ -1,86 +1,71 @@
 import axios from "@/services/api.js";
 
 class TerritorioService {
-  create(data) {
-    return axios.post("/territorio", data)
-    .then(response => {
-      return response;
-    },
-    (error) => {
-      throw new Error(error.data.msg);
-    })
-  }
-
-  getTerritorio(id) {
-    return axios.get(`/territorio/${id}`)
-    .then(response => {
-        return {data: response.data};
-    },
-    (error) => {
-        return error;
-    })
-  } 
-
-  update(data) {
-    return axios.put("/territorio", data)
-    .then(response => {
-      return response;
-    },
-    (error) => {
-      throw new Error(error.data.msg);
-    })
-  }
-
-  delete(id) {
-    return axios.delete(`/territorio/${id}`)
-    .then(response => {
-      return response;
-    },
-    (error) => {
-      return error.response.data;
-    })
-  }  
-
-  getTerritorios(filter){
-    return axios.get(`/territorios/${filter}`)
-    .then(response => {
-        return {data: response.data};
-    },
-    (error) => {
+  async getTerritorio(id) {
+    try {
+      const res = await axios.get(`/api/general/territorio/${id}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
         return error.response.data;
-    })
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getCombo(tipo, id_prop){
-    return axios.get(`/localcombo/${tipo}/${id_prop}`)
-    .then(response => {
-        return {data: response.data};
-    },
-    (error) => {
+  async getTerritorios(filter) {
+    try {
+      const res = await axios.get(`/api/general/territorios/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
         return error.response.data;
-    })
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getComboMun(tipo, id_prop){
-    return axios.get(`/muncombo/${tipo}`)
-    .then(response => {
-        return {data: response.data};
-    },
-    (error) => {
+  async getCombo(tipo) {
+    try {
+      const res = await axios.get(`/api/general/localcombo/${tipo}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
         return error.response.data;
-    })
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
 
-  getComboAll(){
-    return axios.get('/muncomboall')
-    .then(response => {
-        return {data: response.data};
-    },
-    (error) => {
+  async getComboMun(tipo) {
+    try {
+      const res = await axios.get(`/api/general/muncombo/${tipo}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
         return error.response.data;
-    })
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
   }
-  
+
+  async getComboAll() {
+    try {
+      const res = await axios.get('/muncomboall');
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
 }
 
 export default new TerritorioService();
