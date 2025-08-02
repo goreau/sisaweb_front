@@ -157,7 +157,7 @@ export const cadastrosMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-school",
+        icon: "fa-solid fa-glass-water-droplet",
         size: "lg",
         transform: "shrink-8",
       },
@@ -195,7 +195,7 @@ export const cadastrosMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-school",
+        icon: "fa-solid fa-people-group",
         size: "lg",
         transform: "shrink-8",
       },
@@ -221,7 +221,7 @@ export const cadastrosMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-school",
+        icon: "fa-solid fa-square-virus",
         size: "lg",
         transform: "shrink-8",
       },

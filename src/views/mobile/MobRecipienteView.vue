@@ -170,12 +170,14 @@ import MyDataTable from '@/components/general/gptTable.vue'
 import auxiliarService from '@/services/general/auxiliar.service'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import { ref, onMounted, watch, reactive } from 'vue'
-import { useVcImovelStore } from '@/stores/vcImovelStore'
+import { useMobileStore } from '@/stores/mobileStore'
 import { useRouter, useRoute } from 'vue-router'
 
-const store = useVcImovelStore()
+const store = useMobileStore()
 const router = useRouter()
 const route = useRoute()
+
+const isImovel = ref(false)
 
 //var tpUser = ref(0);
 //var nvUser = ref(0);
@@ -219,7 +221,11 @@ function voltar() {
 }
 
 function back() {
-  router.push({ name: 'imCadastrado', query: { returnFrom: 'recipiente' } }) // params: { id: 0 }
+  if (isImovel.value) {
+    router.push({ name: 'mobVcImovel', query: { returnFrom: 'recipiente' } }) // params: { id: 0 }
+  } else {
+    router.push({ name: 'mobVcVisita', query: { returnFrom: 'recipiente' } }) // params: { id: 0 }
+  }
 }
 
 function limpar() {
@@ -270,6 +276,8 @@ function onDeleteRow(item) {
 }
 
 onMounted(async () => {
+  isImovel.value = route.query.from === 'mob_vc_imovel'
+
   const obj = store.visita
   let oldData = obj?.recipientes ?? []
 

@@ -12,26 +12,26 @@
 </template>
 
 <script setup>
-import TerritorioService from "@/services/general/territorio.service.js";
-import { onMounted, ref, watch } from "vue";
+import TerritorioService from '@/services/general/territorio.service.js'
+import { onMounted, ref, watch } from 'vue'
 
-const territorios = ref([]);
+const territorios = ref([])
 
-const props = defineProps(['sel', 'errclass', 'tipo']);
+const props = defineProps(['sel', 'errclass', 'tipo'])
 
-const emit = defineEmits(['selTerr']);
+const emit = defineEmits(['selTerr'])
 
 function onChange(event) {
-  emit('selTerr', event.target.value);
+  emit('selTerr', event.target.value)
 }
 
 async function loadData() {
-  const result = await TerritorioService.getCombo(props.tipo);
+  const result = await TerritorioService.getCombo(props.tipo)
   if (result.error) {
-    console.log(result.error);
-    territorios.value = [];
+    console.log(result.error)
+    territorios.value = []
   } else {
-    territorios.value = result;
+    territorios.value = result
   }
 }
 
@@ -40,12 +40,11 @@ watch(
   (newVal) => {
     loadData(newVal)
   }
-);
+)
 
 onMounted(() => {
-  loadData(props.tipo);
-});
-
+  loadData(props.tipo)
+})
 </script>
 
 <style scoped></style>

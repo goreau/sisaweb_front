@@ -1,0 +1,31 @@
+import axios from "@/services/api.js";
+
+class ReportService {
+  async getConfig(tipo, nome) {
+    try {
+      const res = await axios.get(`/api/report/getConfig/${tipo}/${nome}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async getData(tipo, nome, filtros) {
+    try {
+      const res = await axios.post(`/api/report/getData/${tipo}/${nome}`, filtros);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+}
+
+export default new ReportService();

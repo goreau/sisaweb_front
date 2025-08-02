@@ -1,9 +1,9 @@
 import axios from "@/services/api.js";
 
-class VcImovelService {
-  async create(data) {
+class MobVcFolhaService {
+  async sync(data) {
     try {
-      const res = await axios.post("/api/atividades/vc_imovel", data);
+      const res = await axios.post("/api/mobile/syncVcFolha", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -14,9 +14,9 @@ class VcImovelService {
     }
   }
 
-  async getVcImovel(id) {
+  async getMobVcFolha(id) {
     try {
-      const res = await axios.get(`/api/atividades/vc_imovel/${id}`);
+      const res = await axios.get(`/api/mobile/mobVcFolha/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -29,7 +29,7 @@ class VcImovelService {
 
   async update(data) {
     try {
-      const res = await axios.put("/api/atividades/vc_imovel", data);
+      const res = await axios.put("/api/mobile/mobVcFolha", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -42,7 +42,7 @@ class VcImovelService {
 
   async delete(id) {
     try {
-      const res = await axios.delete(`/api/atividades/vc_imovel/${id}`);
+      const res = await axios.delete(`/api/mobile/mobVcFolha/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -54,35 +54,9 @@ class VcImovelService {
   }
 
 
-  async getVcImovels(filter) {
+  async getMobVcFolhas(filter) {
     try {
-      const res = await axios.get(`/api/atividades/vc_imovels/${filter}`);
-      return res.data;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        return error.response.data;
-      } else {
-        return { error: true, msg: 'Erro de comunicação com o servidor.' };
-      }
-    }
-  }
-
-  async getDuplica(filter) {
-    try {
-      const res = await axios.get(`/api/atividades/getUserIm/${filter}`);
-      return res.data;
-    } catch (error) {
-      if (error.response && error.response.data) {
-        return error.response.data;
-      } else {
-        return { error: true, msg: 'Erro de comunicação com o servidor.' };
-      }
-    }
-  }
-
-  async troca(data) {
-    try {
-      const res = await axios.post('/api/atividades/trocaUserIm', data);
+      const res = await axios.get(`/api/mobile/mobVcFolhas/${filter}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -95,4 +69,4 @@ class VcImovelService {
 
 }
 
-export default new VcImovelService();
+export default new MobVcFolhaService();

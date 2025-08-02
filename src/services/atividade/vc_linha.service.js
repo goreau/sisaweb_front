@@ -82,6 +82,32 @@ class VcLinhaService {
     }
   }
 
+  async getDuplica(filter) {
+    try {
+      const res = await axios.get(`/api/atividades/getUserVc/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async troca(data) {
+    try {
+      const res = await axios.post('/api/atividades/trocaUserVc', data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
 }
 
 export default new VcLinhaService();

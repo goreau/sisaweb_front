@@ -164,6 +164,32 @@ class AuthService {
     }
   }
 
+  async getDuplica(filter) {
+    try {
+      const res = await axios.get(`/api/user/duplicaUser/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async troca(data) {
+    try {
+      const res = await axios.post('/api/user/trocaUser', data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
 }
 
 export default new AuthService();

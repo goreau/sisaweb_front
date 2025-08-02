@@ -109,7 +109,6 @@ import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { useAuthStore } from '@/stores/auth'
-import { c } from 'vite/dist/node/types.d-aGj9QkWt'
 
 const { currentUser } = useCurrentUser()
 const auth = useAuthStore()

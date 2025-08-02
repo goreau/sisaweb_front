@@ -3,6 +3,10 @@
 import { ref, watch } from 'vue'
 import { VueGoodTable } from 'vue-good-table-next'
 import 'vue-good-table-next/dist/vue-good-table-next.css'
+import * as XLSX from 'xlsx'
+import { saveAs } from 'file-saver'
+import jsPDF from 'jspdf'
+import autoTable from 'jspdf-autotable'
 
 const props = defineProps({
   data: {
@@ -29,11 +33,39 @@ const props = defineProps({
     type: Number,
     default: 0,
   },
+  hasExports: {
+    type: Boolean,
+    default: true,
+  },
 })
 
-const emit = defineEmits(['edit', 'delete', 'quarteirao', 'reset', 'impersonate', 'recipiente'])
+const filtro = ref('')
+
+const emit = defineEmits([
+  'edit',
+  'delete',
+  'quarteirao',
+  'reset',
+  'impersonate',
+  'recipiente',
+  'search',
+])
 
 const rows = ref([...props.data]) // cópia reativa
+
+function onSearch(params) {
+  filtro.value = params.searchTerm
+  filtrados()
+}
+
+function filtrados() {
+  if (!filtro.value) return rows.value
+  const rowsFiltered = rows.value.filter((row) =>
+    Object.values(row).some((val) => String(val).toLowerCase().includes(filtro.value.toLowerCase()))
+  )
+  emit('search', rowsFiltered)
+  return rowsFiltered
+}
 
 function shouldDisableButton(row) {
   if (props.loggedUser === 0) {
@@ -41,6 +73,44 @@ function shouldDisableButton(row) {
   } else {
     return row.owner_id != props.loggedUser
   }
+}
+
+function download_xlsx() {
+  const filename = 'Sisaweb3.xlsx'
+  const exportCols = props.columns.filter((col) => col.field !== 'acoes')
+
+  const myRows = filtrados()
+
+  // Monta nova estrutura de dados
+  const exportData = myRows.map((row) =>
+    Object.fromEntries(exportCols.map((col) => [col.label, row[col.field]]))
+  )
+
+  const worksheet = XLSX.utils.json_to_sheet(exportData)
+  const workbook = XLSX.utils.book_new()
+  XLSX.utils.book_append_sheet(workbook, worksheet, 'Dados')
+  const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
+  const blob = new Blob([excelBuffer], { type: 'application/octet-stream' })
+  saveAs(blob, filename)
+}
+
+function download_pdf() {
+  const filename = 'Sisaweb3.pdf'
+
+  const doc = new jsPDF()
+
+  const myRows = filtrados()
+
+  const exportCols = props.columns.filter((col) => col.field !== 'acoes')
+  const headers = exportCols.map((col) => col.label)
+  const linhas = myRows.map((row) => exportCols.map((col) => row[col.field]))
+
+  autoTable(doc, {
+    head: [headers],
+    body: linhas,
+  })
+
+  doc.save(filename)
 }
 
 watch(
@@ -53,6 +123,18 @@ watch(
 </script>
 
 <template>
+  <div class="has-text-right export" v-if="hasExports">
+    <button
+      id="download-xlsx"
+      class="button is-success is-outlined is-small"
+      @click="download_xlsx"
+    >
+      <font-awesome-icon icon="fa-solid fa-file-excel" />
+    </button>
+    <button id="download-pdf" class="button is-danger is-outlined is-small" @click="download_pdf">
+      <font-awesome-icon icon="fa-solid fa-file-pdf" />
+    </button>
+  </div>
   <VueGoodTable
     :columns="columns"
     :rows="rows"
@@ -68,6 +150,7 @@ watch(
       allLabel: 'Todos',
     }"
     :search-options="{ enabled: search, placeholder: 'Procurar nessa tabela' }"
+    v-on:search="onSearch"
     class="table is-bordered is-hoverable is-fullwidth"
   >
     <!-- slot para ações -->
@@ -148,6 +231,9 @@ watch(
   margin-left: 1rem;
   padding: 1rem;
   border-radius: 0.4rem !important;
+}
+.export {
+  padding: 1rem;
 }
 /* Aplicar estilos com profundidade */
 /*::v-deep .vgt-table {

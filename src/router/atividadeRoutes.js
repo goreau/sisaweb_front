@@ -142,11 +142,4 @@ export default [
       import(/* webpackChunkName: "user" */ '@/views/atividade/bri/ListVcBriView.vue'),
     meta: { onlyUser: true },
   },
-  {
-    path: '/teste',
-    name: 'teste',
-    component: () =>
-      import(/* webpackChunkName: "user" */ '@/views/atividade/recipiente/newTesteView.vue'),
-    meta: { onlyUser: true },
-  },
 ]

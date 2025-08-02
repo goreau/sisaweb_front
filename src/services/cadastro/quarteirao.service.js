@@ -79,6 +79,32 @@ class QuarteiraoService {
     }
   }
 
+  async getDuplica(filter) {
+    try {
+      const res = await axios.get(`/api/cadastro/duplicaQuarteirao/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
+  async troca(data) {
+    try {
+      const res = await axios.post('/api/cadastro/trocaQuarteirao', data);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
+
 }
 
 export default new QuarteiraoService();

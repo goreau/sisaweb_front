@@ -22,13 +22,15 @@ import { FontAwesomeIcon } from '@fortawesome/vue-fontawesome'
 import {
   faUserSecret, faFilePdf, faFileExcel, faFileCsv, faFileLines, faHouse, faUser, faUsers, faLock, faEdit, faTrash, faCheck, faBan, faSearch, faPlusCircle, faBroom,
   faShirt, faList, faPersonWalking, faPersonCircleCheck, faMicroscope, faMoneyBillTransfer, faCalendarDays, faWrench, faRepeat, faMobileScreen, faEye, faPowerOff, faHexagonNodes,
-  faPlus, faGears, faSchool, faGlassWaterDroplet
+  faPlus, faGears, faSchool, faGlassWaterDroplet, faFolderTree, faHouseCircleCheck, faSchoolCircleCheck, faMosquito, faSmog,
+  faSprayCan, faPeopleGroup, faSquareVirus, faArrowsTurnRight, faArrowRight,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faUserSecret, faFilePdf, faFileExcel, faFileCsv, faFileLines, faHouse, faUser, faUsers, faLock, faEdit, faTrash, faCheck, faBan, faSearch, faPlusCircle, faBroom,
   faShirt, faList, faPersonWalking, faPersonCircleCheck, faMicroscope, faMoneyBillTransfer, faCalendarDays, faWrench, faRepeat, faMobileScreen, faEye, faPowerOff, faHexagonNodes,
-  faPlus, faGears, faSchool, faGlassWaterDroplet);
+  faPlus, faGears, faSchool, faGlassWaterDroplet, faFolderTree, faHouseCircleCheck, faSchoolCircleCheck, faMosquito, faSmog, faSprayCan, faPeopleGroup, faSquareVirus, faArrowsTurnRight,
+  faArrowRight);
 
 const options = {
   position: "top-right",

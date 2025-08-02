@@ -1,11 +1,11 @@
 <template>
   <div class="main-container">
     <div class="columns is-centered">
-      <div class="column is-11">
+      <div class="column is-8">
         <Loader v-if="isLoading" />
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title is-centered">Cadastro de Visita: Imóvel Cadastrado</p>
+            <p class="card-header-title is-centered">Mobile: Visita a imóveis</p>
           </header>
           <div class="card-content">
             <div class="columns">
@@ -15,8 +15,8 @@
                   <div class="control">
                     <CmbTerritorio
                       :tipo="99"
-                      :sel="vc_imovel.id_municipio"
-                      @selTerr="vc_imovel.id_municipio = $event"
+                      :sel="vc_linha.id_municipio"
+                      @selTerr="vc_linha.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -25,12 +25,12 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-2">
+              <div class="column is-3">
                 <div class="field">
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
-                      v-model="vc_imovel.dt_cadastro"
+                      v-model="vc_linha.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
                       :class="{ 'is-danger': v$.dt_cadastro.$error }"
@@ -41,36 +41,76 @@
                   </div>
                 </div>
               </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Imóvel</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="Ordem"
+                      v-model="vc_linha.imovel"
+                    />
+                    <span class="is-error" v-if="v$.imovel.$error">
+                      {{ v$.imovel.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="field">
+                  <label class="label">Casa</label>
+                  <div class="control">
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="Número da Casa"
+                      v-model="vc_linha.casa"
+                    />
+                    <span class="is-error" v-if="v$.casa.$error">
+                      {{ v$.casa.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="columns">
-              <div class="column is-6">
+              <div class="column">
                 <div class="content">
                   <fieldset class="fieldset">
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
-                        v-model="vc_imovel.id_atividade"
+                        v-model="vc_linha.id_atividade"
                         :options="atividades"
                         name="id_atividade"
                         :inline="true"
                       />
                     </div>
                   </fieldset>
+                  <span class="is-error" v-if="v$.id_atividade.$error">
+                    {{ v$.id_atividade.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
-              <div class="column is-3">
+            </div>
+            <div class="columns">
+              <div class="column is-6">
                 <div class="content">
                   <fieldset class="fieldset">
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
-                        v-model="vc_imovel.id_execucao"
+                        v-model="vc_linha.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
                         :inline="true"
                       />
                     </div>
                   </fieldset>
+                  <span class="is-error" v-if="v$.id_execucao.$error">
+                    {{ v$.id_execucao.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
               <div class="column">
@@ -79,40 +119,78 @@
                     <legend>Tipo de Trabalho</legend>
                     <div class="field">
                       <RadioGeneric
-                        v-model="vc_imovel.id_tipo"
+                        v-model="vc_linha.id_tipo"
                         :options="tipos"
                         name="id_tipo"
                         :inline="true"
                       />
                     </div>
                   </fieldset>
+                  <span class="is-error" v-if="v$.id_tipo.$error">
+                    {{ v$.id_tipo.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
             </div>
             <div class="columns">
               <div class="column is-4">
                 <div class="content">
-                  <label class="label">Imóvel</label>
+                  <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_imovel.id_imovel"
-                      :data="imoveis"
-                      @selGen="vc_imovel.id_imovel = $event"
-                      :errclass="{ 'is-danger': v$.id_imovel.$error }"
+                      :sel="vc_linha.id_area"
+                      :data="areas"
+                      @selGen="vc_linha.id_area = $event"
+                      :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
-                    <span class="is-error" v-if="v$.id_imovel.$error">
-                      {{ v$.id_imovel.$errors[0].$message }}
+                    <span class="is-error" v-if="v$.id_area.$error">
+                      {{ v$.id_area.$errors[0].$message }}
                     </span>
                   </div>
                 </div>
               </div>
-              <div class="column is-6">
+              <div class="column is-4">
+                <div class="content">
+                  <label class="label">Censitário</label>
+                  <div class="control">
+                    <CmbGeneric
+                      :sel="vc_linha.id_censitario"
+                      :data="censitarios"
+                      @selGen="vc_linha.id_censitario = $event"
+                      :errclass="{ 'is-danger': v$.id_censitario.$error }"
+                    />
+                    <span class="is-error" v-if="v$.id_censitario.$error">
+                      {{ v$.id_censitario.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-4">
+                <div class="content">
+                  <label class="label">Quarteirão</label>
+                  <div class="control">
+                    <CmbGeneric
+                      :sel="vc_linha.id_quarteirao"
+                      :data="quarteiraos"
+                      @selGen="vc_linha.id_quarteirao = $event"
+                      :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
+                    />
+                    <span class="is-error" v-if="v$.id_quarteirao.$error">
+                      {{ v$.id_quarteirao.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <hr />
+            <div class="columns">
+              <div class="column is-8">
                 <div class="content">
                   <fieldset class="fieldset">
                     <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
-                        v-model="vc_imovel.id_situacao"
+                        v-model="vc_linha.id_situacao"
                         :options="situacoes"
                         name="id_situacao"
                         :inline="true"
@@ -121,17 +199,17 @@
                   </fieldset>
                 </div>
               </div>
-              <div class="column is-2">
+              <div class="column is-4">
                 <div class="content">
                   <fieldset class="fieldset">
                     <legend>Controle</legend>
                     <div class="field">
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="vc_imovel.mecanico" />
+                        <input type="checkbox" value="1" v-model="vc_linha.mecanico" />
                         Mecânico
                       </label>
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="vc_imovel.alternativo" />
+                        <input type="checkbox" value="1" v-model="vc_linha.alternativo" />
                         Alternativo
                       </label>
                     </div>
@@ -139,7 +217,7 @@
                 </div>
               </div>
             </div>
-            <hr />
+
             <div class="columns">
               <div class="column is-6">
                 <fieldset class="fieldset">
@@ -149,7 +227,7 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.focal" />
+                          <input type="checkbox" value="1" v-model="vc_linha.focal" />
                           Tratado
                         </label>
                       </div>
@@ -159,9 +237,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_focal"
+                            :sel="vc_linha.id_prod_focal"
                             :data="prod_focais"
-                            @selGen="vc_imovel.id_prod_focal = $event"
+                            @selGen="vc_linha.id_prod_focal = $event"
                             :errclass="{ 'is-danger': v$.id_prod_focal.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_focal.$error">
@@ -178,7 +256,7 @@
                             class="input"
                             type="text"
                             placeholder="Opcional"
-                            v-model="vc_imovel.qt_focal"
+                            v-model="vc_linha.qt_focal"
                           />
                         </div>
                       </div>
@@ -194,7 +272,7 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.perifocal" />
+                          <input type="checkbox" value="1" v-model="vc_linha.perifocal" />
                           Tratado
                         </label>
                       </div>
@@ -204,9 +282,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_peri"
+                            :sel="vc_linha.id_prod_peri"
                             :data="prod_peris"
-                            @selGen="vc_imovel.id_prod_peri = $event"
+                            @selGen="vc_linha.id_prod_peri = $event"
                             :errclass="{ 'is-danger': v$.id_prod_peri.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_peri.$error">
@@ -223,7 +301,7 @@
                             class="input"
                             type="text"
                             placeholder="Opcional"
-                            v-model="vc_imovel.qt_peri"
+                            v-model="vc_linha.qt_peri"
                           />
                         </div>
                       </div>
@@ -241,7 +319,7 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.nebulizacao" />
+                          <input type="checkbox" value="1" v-model="vc_linha.nebulizacao" />
                           Tratado
                         </label>
                       </div>
@@ -251,9 +329,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_neb"
+                            :sel="vc_linha.id_prod_neb"
                             :data="prod_nebs"
-                            @selGen="vc_imovel.id_prod_neb = $event"
+                            @selGen="vc_linha.id_prod_neb = $event"
                             :errclass="{ 'is-danger': v$.id_prod_neb.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_neb.$error">
@@ -270,7 +348,7 @@
                             class="input"
                             type="text"
                             placeholder="Opcional"
-                            v-model="vc_imovel.qt_neb"
+                            v-model="vc_linha.qt_neb"
                           />
                         </div>
                       </div>
@@ -286,7 +364,7 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.br_aedes" />
+                          <input type="checkbox" value="1" v-model="vc_linha.br_aedes" />
                           Tratado
                         </label>
                       </div>
@@ -296,9 +374,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_br"
+                            :sel="vc_linha.id_prod_br"
                             :data="prod_peris"
-                            @selGen="vc_imovel.id_prod_br = $event"
+                            @selGen="vc_linha.id_prod_br = $event"
                             :errclass="{ 'is-danger': v$.id_prod_br.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_br.$error">
@@ -315,7 +393,7 @@
                             class="input"
                             type="text"
                             placeholder="Opcional"
-                            v-model="vc_imovel.qt_br"
+                            v-model="vc_linha.qt_br"
                           />
                         </div>
                       </div>
@@ -333,26 +411,19 @@
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
-                      v-model="vc_imovel.agente"
+                      v-model="vc_linha.agente"
                     />
+                    <span class="is-error" v-if="v$.agente.$error">
+                      {{ v$.agente.$errors[0].$message }}
+                    </span>
                   </div>
                 </div>
               </div>
             </div>
-            <div class="columns is-centered">
-              <div class="column is-narrow">
-                <button class="button is-warning" @click="canSend">Sem Recipientes</button>
-              </div>
-            </div>
           </div>
+          {{ isEditMode }}
           <footer class="card-footer">
-            <footerCard
-              @submit="save"
-              :ready="readyToGo"
-              @cancel="null"
-              @aux="recipientes"
-              :cFooter="cFooter"
-            />
+            <footerCard @submit="save" @cancel="null" @aux="recipientes" :cFooter="cFooter" />
           </footer>
         </div>
       </div>
@@ -363,8 +434,11 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import vc_imovelService from '@/services/atividade/vc_imovel.service'
+import vc_linhaService from '@/services/atividade/vc_linha.service'
 import auxiliarService from '@/services/general/auxiliar.service'
+import areaService from '@/services/cadastro/area.service'
+import censitarioService from '@/services/cadastro/censitario.service'
+import quarteiraoService from '@/services/cadastro/quarteirao.service'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import useValidate from '@vuelidate/core'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
@@ -373,8 +447,7 @@ import DatePicker from '@/components/forms/MyDatePicker.vue'
 import { required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
-import imovelService from '@/services/cadastro/imovel.service'
-import { useVcImovelStore } from '@/stores/vcImovelStore'
+import { useMobileStore } from '@/stores/mobileStore'
 import { useDefautValues } from '@/composables/defaultValues'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
@@ -391,7 +464,7 @@ const { defValues } = useDefautValues('defaultValues', {
 })
 
 const { currentUser } = useCurrentUser()
-const store = useVcImovelStore()
+const store = useMobileStore()
 
 const atividades = ref([])
 var execucoes = ref([])
@@ -402,23 +475,26 @@ var prod_focais = ref([])
 var prod_peris = ref([])
 var prod_nebs = ref([])
 
-var imoveis = ref([])
+var areas = ref([])
+var censitarios = ref([])
+var quarteiraos = ref([])
 
 var id_prop = ref(0)
 
-var readyToGo = ref(false)
-
-var vc_imovel = reactive({
-  id_vc_imovel: 0,
+var vc_linha = reactive({
+  id: 0,
+  id_vc_linha: 0,
   id_municipio: 0,
   dt_cadastro: '',
   id_atividade: 0,
   id_execucao: 0,
-  id_tipo: 0,
   id_situacao: 0,
-  id_imovel: 0,
   mecanico: 0,
   alternativo: 0,
+  id_tipo: 0,
+  id_area: 0,
+  id_censitario: 0,
+  id_quarteirao: 0,
   focal: 0,
   id_prod_focal: 0,
   qt_focal: '',
@@ -432,6 +508,8 @@ var vc_imovel = reactive({
   id_prod_br: 0,
   qt_br: '',
   agente: '',
+  imovel: '',
+  casa: '',
   recipientes: [],
 })
 
@@ -447,48 +525,44 @@ var cFooter = ref({
 const rules = {
   id_municipio: { required$, minValue: combo$(1) },
   dt_cadastro: { required$ },
-  id_situacao: { required$, minValue: combo$(1) },
   id_tipo: { required$, minValue: combo$(1) },
   id_execucao: { required$, minValue: combo$(1) },
   id_atividade: { required$, minValue: combo$(1) },
-  id_imovel: { required$, minValue: combo$(1) },
+  id_situacao: { required$, minValue: combo$(1) },
+  id_area: { required$, minValue: combo$(1) },
+  id_censitario: { required$, minValue: combo$(1) },
+  id_quarteirao: { required$, minValue: combo$(1) },
   id_prod_focal: { required$, minValue: combo$(1) },
   id_prod_peri: { required$, minValue: combo$(1) },
   id_prod_neb: { required$, minValue: combo$(1) },
   id_prod_br: { required$, minValue: combo$(1) },
   agente: { required$ },
+  imovel: { required$ },
+  casa: { required$ },
 }
 
-const v$ = useValidate(rules, vc_imovel)
+const v$ = useValidate(rules, vc_linha)
 
 async function recipientes() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    store.setVisita({ ...vc_imovel })
-    router.push({ name: 'recipientes', query: { from: 'vc_imovel' } })
+    store.setVisita({ ...vc_linha })
+    router.push({ name: 'mobRecipiente', query: { from: 'mob_vc_folha' } })
   }
 }
-
-function canSend() {
-  readyToGo.value = true
-}
-
-/*const readyToGo = true  computed(() => {
-  return Array.isArray(store.objetoPrincipal?.filhos) && store.objetoPrincipal.filhos.length > 0
-})*/
 
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     var resultado = null
     if (isEditMode.value) {
-      resultado = await vc_imovelService.update(vc_imovel)
+      resultado = await vc_linhaService.update(vc_linha)
     } else {
-      resultado = await vc_imovelService.create(vc_imovel)
+      resultado = await vc_linhaService.create(vc_linha)
     }
 
     if (resultado.status) {
-      vc_imovel.id_vc_imovel = resultado.master
+      vc_linha.id_vc_linha = resultado.master
       toast.success(resultado.msg)
     } else {
       toast.error(resultado.error.msg)
@@ -498,45 +572,61 @@ async function save() {
   }
 }
 
+const isEditMode = computed(() => Number(vc_linha.id_vc_folha) > 0)
+
 watch(
-  () => vc_imovel.id_atividade,
+  () => vc_linha.id_municipio,
   async (val) => {
-    if (vc_imovel.id_municipio == 0) return
-    const filter = { id_municipio: vc_imovel.id_municipio, id_atividade: val }
-    const result = await imovelService.getCombo(JSON.stringify(filter))
+    const result = await areaService.getCombo(JSON.stringify({ id_municipio: val }))
     if (result.error) {
       console.log(result.error)
-      imoveis.value = []
+      areas.value = []
     } else {
-      imoveis.value = result
+      areas.value = result
     }
   }
 )
 
 watch(
-  () => vc_imovel.id_municipio,
+  () => vc_linha.id_area,
   async (val) => {
-    if (vc_imovel.id_atividade == 0) return
-    const filter = { id_municipio: vc_imovel.id_municipio, id_atividade: val }
-    const result = await imovelService.getCombo(JSON.stringify(filter))
+    const result = await censitarioService.getCombo(JSON.stringify({ id_area: val }))
     if (result.error) {
       console.log(result.error)
-      imoveis.value = []
+      censitarios.value = []
     } else {
-      imoveis.value = result
+      censitarios.value = result
     }
   }
 )
 
-const isEditMode = computed(() => Number(vc_imovel.id_vc_imovel) > 0)
+watch(
+  () => vc_linha.id_censitario,
+  async (val) => {
+    const result = await quarteiraoService.getCombo(JSON.stringify({ id_censitario: val }))
+    if (result.error) {
+      console.log(result.error)
+      quarteiraos.value = []
+    } else {
+      quarteiraos.value = result
+    }
+  }
+)
 
 async function loadCombos() {
-  const result = await auxiliarService.getAtividadeCombo(1)
+  const result = await auxiliarService.getAtividadeCombo(2)
   if (result.error) {
     console.log(result.error)
     atividades.value = []
   } else {
     atividades.value = result
+  }
+
+  const result0 = await auxiliarService.getAtividadeCombo(3)
+  if (result0.error) {
+    console.log(result0.error)
+  } else {
+    atividades.value = [...atividades.value, ...result0]
   }
 
   const result1 = await auxiliarService.getProdutoCombo(1)
@@ -591,35 +681,33 @@ async function loadCombos() {
 }
 
 watch(
-  () => vc_imovel.id_prod_focal,
+  () => vc_linha.id_prod_focal,
   (val) => (defValues.prodFocal = val)
 )
 watch(
-  () => vc_imovel.id_prod_peri,
+  () => vc_linha.id_prod_peri,
   (val) => (defValues.prodPeri = val)
 )
 watch(
-  () => vc_imovel.id_prod_neb,
+  () => vc_linha.id_prod_neb,
   (val) => (defValues.prodNeb = val)
 )
 watch(
-  () => vc_imovel.id_prod_br,
+  () => vc_linha.id_prod_br,
   (val) => (defValues.prodBr = val)
 )
 
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
     console.log(store.visita)
-    readyToGo.value = true
-    Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
+    Object.assign(vc_linha, JSON.parse(JSON.stringify(store.visita)))
   } else {
     store.setVisita({})
-    vc_imovel.id_prod_focal = defValues.prodFocal
-    vc_imovel.id_prod_peri = defValues.prodPeri
-    vc_imovel.id_prod_neb = defValues.prodNeb
-    vc_imovel.id_prod_br = defValues.prodBr
+    vc_linha.id_prod_focal = defValues.prodFocal
+    vc_linha.id_prod_peri = defValues.prodPeri
+    vc_linha.id_prod_neb = defValues.prodNeb
+    vc_linha.id_prod_br = defValues.prodBr
   }
-
   let cUser = currentUser
   if (cUser.value) {
     id_prop.value = cUser.value.id

@@ -253,7 +253,8 @@
             <footerCard
               @submit="save"
               :ready="readyToGo"
-              @cancel="null"
+              :customBack="true"
+              @cancel="voltar"
               @aux="recipientes"
               :cFooter="cFooter"
             />
@@ -422,6 +423,10 @@ function onRecipiente(item) {
 async function save() {
   store.updateImoveis(colImoveis.value)
   router.push({ name: 'vigLinha', query: { returnFrom: 'imovel' } })
+}
+
+function voltar() {
+  router.push({ name: 'vigLinha', query: { returnFrom: 'imovel' } }) // params: { id: 0 }
 }
 
 async function loadCombos() {

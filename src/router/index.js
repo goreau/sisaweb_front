@@ -6,6 +6,8 @@ import { storeToRefs } from 'pinia';
 import cadastroRoutes from './cadastroRoutes';
 import gerenciamentoRoutes from './gerenciamentoRoutes';
 import atividadeRoutes from './atividadeRoutes';
+import mobileRoutes from './mobileRoutes';
+import reportRoutes from './reportRoutes';
 
 
 const routes = [
@@ -13,6 +15,8 @@ const routes = [
   ...cadastroRoutes,
   ...gerenciamentoRoutes,
   ...atividadeRoutes,
+  ...mobileRoutes,
+  ...reportRoutes,
   {
     path: '/acesso-negado',
     name: 'AcessoNegado',

@@ -5,7 +5,7 @@
         <Loader v-if="isLoading" />
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title is-centered">Cadastro de Visita: Imóvel Cadastrado</p>
+            <p class="card-header-title is-centered">Mobile: Imóvel Cadastrado</p>
           </header>
           <div class="card-content">
             <div class="columns">
@@ -76,7 +76,7 @@
               <div class="column">
                 <div class="content">
                   <fieldset class="fieldset">
-                    <legend>Situação</legend>
+                    <legend>Tipo de Trabalho</legend>
                     <div class="field">
                       <RadioGeneric
                         v-model="vc_imovel.id_tipo"
@@ -124,7 +124,7 @@
               <div class="column is-2">
                 <div class="content">
                   <fieldset class="fieldset">
-                    <legend>Situação</legend>
+                    <legend>Controle</legend>
                     <div class="field">
                       <label class="checkbox">
                         <input type="checkbox" value="1" v-model="vc_imovel.mecanico" />
@@ -339,11 +339,12 @@
                 </div>
               </div>
             </div>
-            <div class="columns">
-              <button class="button" @click="canSend">Sem Recipientes</button>
+            <div class="columns is-centered">
+              <div class="column is-narrow">
+                <button class="button is-warning" @click="canSend">Sem Recipientes</button>
+              </div>
             </div>
           </div>
-          {{ isEditMode }}
           <footer class="card-footer">
             <footerCard
               @submit="save"
@@ -362,7 +363,7 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import vc_imovelService from '@/services/atividade/vc_imovel.service'
+import vc_imovelService from '@/services/mobile/mobVc_imovel.service'
 import auxiliarService from '@/services/general/auxiliar.service'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import useValidate from '@vuelidate/core'
@@ -372,7 +373,9 @@ import DatePicker from '@/components/forms/MyDatePicker.vue'
 import { required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
-import { useVcImovelStore } from '@/stores/vcImovelStore'
+import imovelService from '@/services/cadastro/imovel.service'
+import { useMobileStore } from '@/stores/mobileStore'
+import { useDefautValues } from '@/composables/defaultValues'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
@@ -380,8 +383,15 @@ const toast = useToast()
 const route = useRoute()
 const router = useRouter()
 
+const { defValues } = useDefautValues('defaultValues', {
+  prodFocal: 0,
+  prodPeri: 0,
+  prodNeb: 0,
+  prodBr: 0,
+})
+
 const { currentUser } = useCurrentUser()
-const store = useVcImovelStore()
+const store = useMobileStore()
 
 const atividades = ref([])
 var execucoes = ref([])
@@ -399,7 +409,7 @@ var id_prop = ref(0)
 var readyToGo = ref(false)
 
 var vc_imovel = reactive({
-  id_vc_imovel: 0,
+  id_mob_vc_imovel: 0,
   id_municipio: 0,
   dt_cadastro: '',
   id_atividade: 0,
@@ -442,10 +452,10 @@ const rules = {
   id_execucao: { required$, minValue: combo$(1) },
   id_atividade: { required$, minValue: combo$(1) },
   id_imovel: { required$, minValue: combo$(1) },
-  id_prod_focal: { required$ },
-  id_prod_peri: { required$ },
-  id_prod_neb: { required$ },
-  id_prod_br: { required$ },
+  id_prod_focal: { required$, minValue: combo$(1) },
+  id_prod_peri: { required$, minValue: combo$(1) },
+  id_prod_neb: { required$, minValue: combo$(1) },
+  id_prod_br: { required$, minValue: combo$(1) },
   agente: { required$ },
 }
 
@@ -455,7 +465,7 @@ async function recipientes() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     store.setVisita({ ...vc_imovel })
-    router.push({ name: 'recipientes', query: { from: 'vc_imovel' } })
+    router.push({ name: 'mobRecipiente', query: { from: 'mob_vc_imovel' } })
   }
 }
 
@@ -464,7 +474,7 @@ function canSend() {
 }
 
 /*const readyToGo = true  computed(() => {
-  return Array.isArray(store.objetoPrincipal?.filhos) && store.objetoPrincipal.filhos.length > 0
+  return Array.isArray(store.objetoVisita?.filhos) && store.objetoVisita.filhos.length > 0
 })*/
 
 async function save() {
@@ -473,8 +483,6 @@ async function save() {
     var resultado = null
     if (isEditMode.value) {
       resultado = await vc_imovelService.update(vc_imovel)
-    } else {
-      resultado = await vc_imovelService.create(vc_imovel)
     }
 
     if (resultado.status) {
@@ -518,7 +526,7 @@ watch(
   }
 )
 
-const isEditMode = computed(() => Number(vc_imovel.id_vc_imovel) > 0)
+const isEditMode = computed(() => Number(vc_imovel.id_mob_vc_imovel) > 0)
 
 async function loadCombos() {
   const result = await auxiliarService.getAtividadeCombo(1)
@@ -580,39 +588,37 @@ async function loadCombos() {
   ]
 }
 
+watch(
+  () => vc_imovel.id_prod_focal,
+  (val) => (defValues.prodFocal = val)
+)
+watch(
+  () => vc_imovel.id_prod_peri,
+  (val) => (defValues.prodPeri = val)
+)
+watch(
+  () => vc_imovel.id_prod_neb,
+  (val) => (defValues.prodNeb = val)
+)
+watch(
+  () => vc_imovel.id_prod_br,
+  (val) => (defValues.prodBr = val)
+)
+
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
-    console.log(store.objetoVisita)
+    console.log(store.visita)
     readyToGo.value = true
-    Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.objetoVisita)))
+    Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
+    if (vc_imovel.id_prod_br == 0) {
+      vc_imovel.id_prod_br = defValues.prodBr
+    }
   } else {
-    Object.assign(vc_imovel, {
-      id_vc_imovel: 0,
-      id_municipio: 0,
-      dt_cadastro: '',
-      id_atividade: 0,
-      id_execucao: 0,
-      id_tipo: 0,
-      id_situacao: 0,
-      id_imovel: 0,
-      mecanico: 0,
-      alternativo: 0,
-      focal: 0,
-      id_prod_focal: 0,
-      qt_focal: '',
-      perifocal: 0,
-      id_prod_peri: 0,
-      qt_peri: '',
-      nebulizacao: 0,
-      id_prod_neb: 0,
-      qt_neb: '',
-      br_aedes: 0,
-      id_prod_br: 0,
-      qt_br: '',
-      agente: '',
-      recipientes: [],
-    })
     store.setVisita({})
+    vc_imovel.id_prod_focal = defValues.prodFocal
+    vc_imovel.id_prod_peri = defValues.prodPeri
+    vc_imovel.id_prod_neb = defValues.prodNeb
+    vc_imovel.id_prod_br = defValues.prodBr
   }
   let cUser = currentUser
   if (cUser.value) {

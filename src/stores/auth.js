@@ -26,16 +26,16 @@ export const useAuthStore = defineStore('auth', {
         if (user.token) {
           this.status.loggedIn = true
           this.user = user
-          return user
+          return { status: true, user }
         } else {
           this.status.loggedIn = false
           this.user = null
-          return Promise.reject(user.message)
+          return { status: false, msg: user.msg || 'Login inválido' }
         }
       } catch (error) {
         this.status.loggedIn = false
         this.user = null
-        return Promise.reject(error)
+        return { status: false, msg: error.msg || 'Erro de rede' }
       }
     },
 

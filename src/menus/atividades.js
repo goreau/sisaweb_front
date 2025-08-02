@@ -5,7 +5,7 @@ export const atividadesMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-school-circle-check",
         size: "lg",
         transform: "shrink-8",
       },
@@ -55,7 +55,7 @@ export const atividadesMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-house-circle-check",
         size: "lg",
         transform: "shrink-8",
       },
@@ -106,7 +106,7 @@ export const atividadesMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-glass-water-droplet",
         size: "lg",
         transform: "shrink-8",
       },
@@ -168,7 +168,7 @@ export const atividadesMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-mosquito",
         size: "lg",
         transform: "shrink-8",
       },
@@ -206,7 +206,7 @@ export const atividadesMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-smog",
         size: "lg",
         transform: "shrink-8",
       },
@@ -244,7 +244,7 @@ export const atividadesMenu = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
+        icon: "fa-solid fa-spray-can",
         size: "lg",
         transform: "shrink-8",
       },

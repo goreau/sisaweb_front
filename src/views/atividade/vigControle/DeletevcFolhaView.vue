@@ -25,7 +25,7 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-2">
+              <div class="column is-3">
                 <div class="field">
                   <label class="label">Data</label>
                   <div class="control">
@@ -76,7 +76,7 @@
               <div class="column">
                 <div class="content">
                   <fieldset class="fieldset">
-                    <legend>Tipo de Trabalho</legend>
+                    <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
                         v-model="vc_imovel.id_tipo"
@@ -124,7 +124,7 @@
               <div class="column is-2">
                 <div class="content">
                   <fieldset class="fieldset">
-                    <legend>Controle</legend>
+                    <legend>Situação</legend>
                     <div class="field">
                       <label class="checkbox">
                         <input type="checkbox" value="1" v-model="vc_imovel.mecanico" />
@@ -339,12 +339,11 @@
                 </div>
               </div>
             </div>
-            <div class="columns is-centered">
-              <div class="column is-narrow">
-                <button class="button is-warning" @click="canSend">Sem Recipientes</button>
-              </div>
+            <div class="columns">
+              <button class="button" @click="canSend">Sem Recipientes</button>
             </div>
           </div>
+          {{ isEditMode }}
           <footer class="card-footer">
             <footerCard
               @submit="save"
@@ -373,22 +372,13 @@ import DatePicker from '@/components/forms/MyDatePicker.vue'
 import { required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
-import imovelService from '@/services/cadastro/imovel.service'
 import { useVcImovelStore } from '@/stores/vcImovelStore'
-import { useDefautValues } from '@/composables/defaultValues'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
-
-const { defValues } = useDefautValues('defaultValues', {
-  prodFocal: 0,
-  prodPeri: 0,
-  prodNeb: 0,
-  prodBr: 0,
-})
 
 const { currentUser } = useCurrentUser()
 const store = useVcImovelStore()
@@ -452,10 +442,10 @@ const rules = {
   id_execucao: { required$, minValue: combo$(1) },
   id_atividade: { required$, minValue: combo$(1) },
   id_imovel: { required$, minValue: combo$(1) },
-  id_prod_focal: { required$, minValue: combo$(1) },
-  id_prod_peri: { required$, minValue: combo$(1) },
-  id_prod_neb: { required$, minValue: combo$(1) },
-  id_prod_br: { required$, minValue: combo$(1) },
+  id_prod_focal: { required$ },
+  id_prod_peri: { required$ },
+  id_prod_neb: { required$ },
+  id_prod_br: { required$ },
   agente: { required$ },
 }
 
@@ -590,36 +580,40 @@ async function loadCombos() {
   ]
 }
 
-watch(
-  () => vc_imovel.id_prod_focal,
-  (val) => (defValues.prodFocal = val)
-)
-watch(
-  () => vc_imovel.id_prod_peri,
-  (val) => (defValues.prodPeri = val)
-)
-watch(
-  () => vc_imovel.id_prod_neb,
-  (val) => (defValues.prodNeb = val)
-)
-watch(
-  () => vc_imovel.id_prod_br,
-  (val) => (defValues.prodBr = val)
-)
-
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
-    console.log(store.visita)
+    console.log(store.objetoVisita)
     readyToGo.value = true
-    Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
+    Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.objetoVisita)))
   } else {
+    Object.assign(vc_imovel, {
+      id_vc_imovel: 0,
+      id_municipio: 0,
+      dt_cadastro: '',
+      id_atividade: 0,
+      id_execucao: 0,
+      id_tipo: 0,
+      id_situacao: 0,
+      id_imovel: 0,
+      mecanico: 0,
+      alternativo: 0,
+      focal: 0,
+      id_prod_focal: 0,
+      qt_focal: '',
+      perifocal: 0,
+      id_prod_peri: 0,
+      qt_peri: '',
+      nebulizacao: 0,
+      id_prod_neb: 0,
+      qt_neb: '',
+      br_aedes: 0,
+      id_prod_br: 0,
+      qt_br: '',
+      agente: '',
+      recipientes: [],
+    })
     store.setVisita({})
-    vc_imovel.id_prod_focal = defValues.prodFocal
-    vc_imovel.id_prod_peri = defValues.prodPeri
-    vc_imovel.id_prod_neb = defValues.prodNeb
-    vc_imovel.id_prod_br = defValues.prodBr
   }
-
   let cUser = currentUser
   if (cUser.value) {
     id_prop.value = cUser.value.id

@@ -25,7 +25,7 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-2">
+              <div class="column is-3">
                 <div class="field">
                   <label class="label">Data</label>
                   <div class="control">
@@ -56,6 +56,9 @@
                       />
                     </div>
                   </fieldset>
+                  <span class="is-error" v-if="v$.id_atividade.$error">
+                    {{ v$.id_atividade.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -73,6 +76,9 @@
                       />
                     </div>
                   </fieldset>
+                  <span class="is-error" v-if="v$.id_execucao.$error">
+                    {{ v$.id_execucao.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
               <div class="column">
@@ -88,6 +94,9 @@
                       />
                     </div>
                   </fieldset>
+                  <span class="is-error" v-if="v$.id_tipo.$error">
+                    {{ v$.id_tipo.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
             </div>
@@ -226,6 +235,9 @@
                       placeholder="Executor da visita"
                       v-model="vc_linha.agente"
                     />
+                    <span class="is-error" v-if="v$.agente.$error">
+                      {{ v$.agente.$errors[0].$message }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -264,6 +276,7 @@ import { required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useVcVisitaStore } from '@/stores/vcVisitaStore'
+import { useDefautValues } from '@/composables/defaultValues'
 import { useRouter, useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import { generateId } from '@/utils/myUtils'
@@ -271,6 +284,13 @@ import { generateId } from '@/utils/myUtils'
 const toast = useToast()
 const route = useRoute()
 const router = useRouter()
+
+const { defValues } = useDefautValues('defaultValues', {
+  prodFocal: 0,
+  prodPeri: 0,
+  prodNeb: 0,
+  prodBr: 0,
+})
 
 const { currentUser } = useCurrentUser()
 const store = useVcVisitaStore()
@@ -325,10 +345,10 @@ const rules = {
   id_area: { required$, minValue: combo$(1) },
   id_censitario: { required$, minValue: combo$(1) },
   id_quarteirao: { required$, minValue: combo$(1) },
-  id_prod_focal: { required$ },
-  id_prod_peri: { required$ },
-  id_prod_neb: { required$ },
-  id_prod_br: { required$ },
+  id_prod_focal: { required$, minValue: combo$(1) },
+  id_prod_peri: { required$, minValue: combo$(1) },
+  id_prod_neb: { required$, minValue: combo$(1) },
+  id_prod_br: { required$, minValue: combo$(1) },
   agente: { required$ },
 }
 
@@ -462,38 +482,34 @@ async function loadCombos() {
   ]
 }
 
+watch(
+  () => vc_linha.id_prod_focal,
+  (val) => (defValues.prodFocal = val)
+)
+watch(
+  () => vc_linha.id_prod_peri,
+  (val) => (defValues.prodPeri = val)
+)
+watch(
+  () => vc_linha.id_prod_neb,
+  (val) => (defValues.prodNeb = val)
+)
+watch(
+  () => vc_linha.id_prod_br,
+  (val) => (defValues.prodBr = val)
+)
+
 onMounted(async () => {
   if (route.query.returnFrom === 'imovel' || route.query.from === 'edit') {
     console.log(store.objetoFolha)
     readyToGo.value = true
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
   } else {
-    Object.assign(vc_linha, {
-      id_vc_linha: 0,
-      id_municipio: 0,
-      dt_cadastro: '',
-      id_atividade: 0,
-      id_execucao: 0,
-      id_tipo: 0,
-      id_situacao: 0,
-      mecanico: 0,
-      alternativo: 0,
-      focal: 0,
-      id_prod_focal: 0,
-      qt_focal: '',
-      perifocal: 0,
-      id_prod_peri: 0,
-      qt_peri: '',
-      nebulizacao: 0,
-      id_prod_neb: 0,
-      qt_neb: '',
-      br_aedes: 0,
-      id_prod_br: 0,
-      qt_br: '',
-      agente: '',
-      recipientes: [],
-    })
     store.setFolha({})
+    vc_linha.id_prod_focal = defValues.prodFocal
+    vc_linha.id_prod_peri = defValues.prodPeri
+    vc_linha.id_prod_neb = defValues.prodNeb
+    vc_linha.id_prod_br = defValues.prodBr
   }
   let cUser = currentUser
   if (cUser.value) {

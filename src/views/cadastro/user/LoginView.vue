@@ -95,9 +95,9 @@ onMounted(() => {
 async function login() {
   try {
     const log = await auth.login(user.value)
-    if (log.error) {
-      let msg = log.error.message
-      if (msg == 'Alterar senha') {
+
+    if (log.status === false && log.msg) {
+      if (log.msg == 'Alterar senha') {
         const password = await newSenhaDialog.value.show({
           okButton: 'Confirmar',
         })

@@ -3,6 +3,8 @@ import { atividadesMenu } from './atividades.js'
 import { gerenciamentoMenu } from './gerenciamento.js'
 import { homeMenu } from './home.js'
 import { usuariosMenu } from './usuarios.js'
+import { mobileMenu } from './mobile.js'
+import { reportMenu } from './report.js'
 
 export const menuData = [
   {
@@ -40,7 +42,7 @@ export const menuData = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-gears",
+        icon: "fa-solid fa-folder-tree",
         size: "lg",
         transform: "shrink-8",
       },
@@ -66,12 +68,38 @@ export const menuData = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-gears",
+        icon: "fa-solid fa-person-walking",
         size: "lg",
         transform: "shrink-8",
       },
     },
     child: atividadesMenu
+  },
+  {
+    href: "",
+    title: "Mobile",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-mobile-screen",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: mobileMenu
+  },
+  {
+    href: "",
+    title: "Relatórios",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-mobile-screen",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: reportMenu
   },
   ////******* */
 
