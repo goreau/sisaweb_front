@@ -3,7 +3,6 @@
     <div class="columns is-centered">
       <div class="column is-two-fifths">
         <Loader v-if="isLoading" />
-        <Message v-if="showMessage" @do-close="closeMessage" :msg="message" :type="type" :caption="caption" />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Setor Censitário</p>
@@ -12,8 +11,12 @@
             <div class="content">
               <label class="label">Município</label>
               <div class="control">
-                <CmbTerritorio :tipo="99" :sel="censitario.id_municipio" @selTerr="censitario.id_municipio = $event"
-                  :errclass="{ 'is-danger': v$.id_municipio.$error }" />
+                <CmbTerritorio
+                  :tipo="99"
+                  :sel="censitario.id_municipio"
+                  @selTerr="censitario.id_municipio = $event"
+                  :errclass="{ 'is-danger': v$.id_municipio.$error }"
+                />
                 <span class="is-error" v-if="v$.id_municipio.$error">
                   {{ v$.id_municipio.$errors[0].$message }}
                 </span>
@@ -22,8 +25,12 @@
             <div class="content">
               <label class="label">Área</label>
               <div class="control">
-                <CmbGeneric :sel="censitario.id_area" :data="areas" @selGen="censitario.id_area = $event"
-                  :errclass="{ 'is-danger': v$.id_area.$error }" />
+                <CmbGeneric
+                  :sel="censitario.id_area"
+                  :data="areas"
+                  @selGen="censitario.id_area = $event"
+                  :errclass="{ 'is-danger': v$.id_area.$error }"
+                />
                 <span class="is-error" v-if="v$.id_area.$error">
                   {{ v$.id_area.$errors[0].$message }}
                 </span>
@@ -32,8 +39,13 @@
             <div class="field">
               <label class="label">Codigo</label>
               <div class="control">
-                <input class="input" type="text" placeholder="Código da Área" v-model="censitario.codigo"
-                  :class="{ 'is-danger': v$.codigo.$error }" />
+                <input
+                  class="input"
+                  type="text"
+                  placeholder="Código da Área"
+                  v-model="censitario.codigo"
+                  :class="{ 'is-danger': v$.codigo.$error }"
+                />
                 <span class="is-error" v-if="v$.codigo.$error">
                   {{ v$.codigo.$errors[0].$message }}
                 </span>
@@ -50,82 +62,74 @@
 </template>
 
 <script setup>
-import Message from "@/components/general/CustomMessage.vue";
-import Loader from "@/components/general/MyLoader.vue";
+import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import censitarioService from "@/services/cadastro/censitario.service";
-import areaService from "@/services/cadastro/area.service";
-import useValidate from "@vuelidate/core";
-import CmbTerritorio from "@/components/forms/CmbTerritorio.vue";
-import CmbGeneric from "@/components/forms/CmbGeneric.vue";
-import {
-  required$,
-  combo$,
-} from "@/components/forms/validators";
-import { ref, onMounted, reactive, watch, computed } from "vue";
-import { useCurrentUser } from '@/composables/currentUser';
-import { useRoute } from 'vue-router';
-import { useToast } from "vue-toastification";
+import censitarioService from '@/services/cadastro/censitario.service'
+import areaService from '@/services/cadastro/area.service'
+import useValidate from '@vuelidate/core'
+import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
+import CmbGeneric from '@/components/forms/CmbGeneric.vue'
+import { required$, combo$ } from '@/components/forms/validators'
+import { ref, onMounted, reactive, watch, computed } from 'vue'
+import { useCurrentUser } from '@/composables/currentUser'
+import { useRoute } from 'vue-router'
+import { useToast } from 'vue-toastification'
 
-const toast = useToast();
-const route = useRoute();
+const toast = useToast()
+const route = useRoute()
 const { currentUser } = useCurrentUser()
 
 //var tpUser = ref(0);
 //var nvUser = ref(0);
-var areas = ref([]);
+var areas = ref([])
 
-var id_prop = ref(0);
-
+var id_prop = ref(0)
 
 var censitario = reactive({
   id_censitario: 0,
   id_area: 0,
   id_municipio: 0,
   codigo: '',
-});
+})
 
-var isLoading = ref(false);
-var message = ref('');
-var caption = ref('');
-var type = ref('');
-var showMessage = ref(false);
+var isLoading = ref(false)
+
 var cFooter = ref({
   strSubmit: 'Salvar',
   strCancel: 'Cancelar',
   strAux: '',
-  aux: false
-});
+  aux: false,
+})
 
 const rules = {
   codigo: { required$ },
   id_municipio: { required$, minValue: combo$(1) },
-  id_area: { required$, minValue: combo$(1) }
+  id_area: { required$, minValue: combo$(1) },
 }
 
-const v$ = useValidate(rules, censitario);
-
+const v$ = useValidate(rules, censitario)
 
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    var resultado = null;
-    var msg = '';
+    var resultado = null
+    var msg = ''
     if (isEditMode.value) {
-      resultado = await censitarioService.update(censitario);
-      msg = "Censitário alterado com sucesso!"
+      resultado = await censitarioService.update(censitario)
+      msg = 'Censitário alterado com sucesso!'
     } else {
-      resultado = await censitarioService.create(censitario);
-      msg = "Censitário inserido com sucesso!"
+      resultado = await censitarioService.create(censitario)
+      msg = 'Censitário inserido com sucesso!'
     }
 
     if (resultado.error) {
-      toast.error(resultado.msg);
+      toast.error(resultado.msg)
     } else {
-      toast.success(msg);
+      censitario.id_censitario = resultado.master
+      toast.success(msg)
     }
   } else {
-    toast.warning("Corrija os erros para enviar as informações");
+    toast.warning('Corrija os erros para enviar as informações')
   }
 }
 
@@ -134,23 +138,23 @@ watch(
   async (val) => {
     const result = await areaService.getCombo(JSON.stringify({ id_municipio: val }))
     if (result.error) {
-      console.log(result.error);
-      areas.value = [];
+      console.log(result.error)
+      areas.value = []
     } else {
-      areas.value = result;
+      areas.value = result
     }
+  }
+)
 
-  });
-
-const isEditMode = computed(() => Number(route.params.id) > 0);
+const isEditMode = computed(() => Number(censitario.id_censitario) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {
-    const result = await censitarioService.getCensitario(route.params.id);
+    const result = await censitarioService.getCensitario(route.params.id)
     if (result.error) {
-      toast.error(result.msg);
+      toast.error(result.msg)
     } else {
-      Object.assign(censitario, result);
+      Object.assign(censitario, result)
     }
   } else {
     Object.assign(censitario, {
@@ -158,15 +162,14 @@ onMounted(async () => {
       id_area: 0,
       id_municipio: 0,
       codigo: '',
-    });
+    })
   }
 
-  let cUser = currentUser;
+  let cUser = currentUser
   if (cUser.value) {
-    id_prop.value = cUser.value.id;
+    id_prop.value = cUser.value.id
   }
-
-});
+})
 </script>
 
 

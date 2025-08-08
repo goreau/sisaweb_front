@@ -83,15 +83,16 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
+                ref="tabelaRef"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
-                @search="onSearch"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
               <hr />
               <div class="columns">
@@ -115,7 +116,7 @@
 
 <script setup>
 import mobVcImovelService from '@/services/mobile/mobVc_imovel.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
@@ -141,7 +142,7 @@ var hasRows = ref(false)
 var dataTable = ref([])
 const atividades = ref([])
 
-const filteredRows = ref([])
+const tabelaRef = ref(null)
 
 const filter = reactive({
   id_municipio: 0,
@@ -197,17 +198,18 @@ async function onDeleteRow(item) {
   }
 }
 
-async function onSearch(rows) {
-  filteredRows.value = rows
-}
-
 async function sincroniza() {
-  const ret = await mobVcImovelService.sync(filteredRows.value)
-  if (ret.error) {
-    toast.error(ret.msg)
-  } else {
-    toast.success(`${ret.master} ${ret.msg}`)
-    loadData()
+  if (tabelaRef.value) {
+    const linhas = tabelaRef.value.getFilteredRows()
+
+    const ret = await mobVcImovelService.sync(linhas)
+    if (ret.error) {
+      toast.error(ret.msg)
+    } else {
+      tabelaRef.value.clearFilters()
+      toast.success(`${ret.master} ${ret.msg}`)
+      loadData()
+    }
   }
 }
 
@@ -223,22 +225,26 @@ async function loadCombos() {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Atividade', field: 'atividade' },
-    { label: 'Imóvel', field: 'imovel' },
-    { label: 'Data', field: 'data' },
-    { label: 'Agente', field: 'agente' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Atividade', field: 'atividade' },
+    { headerName: 'Imóvel', field: 'imovel' },
+    { headerName: 'Data', field: 'data' },
+    { headerName: 'Agente', field: 'agente' },
     {
-      label: 'Amostras',
+      headerName: 'Amostras',
       field: 'amostras',
-      formatter: (value) => {
+      valueFormatter: (params) => {
+        const value = params.value
         if (!value || value.length === 0 || (value.length === 1 && value[0] === '-')) {
           return '-'
         }
-        return value.join(', ')
+        if (Array.isArray(value)) {
+          return value.join(', ')
+        } else {
+          return value
+        }
       },
     },
-    { label: 'Ações', field: 'acoes' },
   ]
 
   loadCombos()

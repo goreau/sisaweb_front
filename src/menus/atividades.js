@@ -35,18 +35,6 @@ export const atividadesMenu = [
           },
         },
       },
-      {
-        href: "/teste",
-        title: "Teste",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
-          },
-        },
-      },
     ],
   },
   {

@@ -26,7 +26,6 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
-                        :id_prop="id_prop"
                         :tipo="99"
                         :sel="id_municipio"
                         @selTerr="id_municipio = $event"
@@ -47,15 +46,16 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :loggedUser="idUser"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
             </section>
           </div>
@@ -68,7 +68,7 @@
 
 <script setup>
 import areaNavService from '@/services/cadastro/areaNav.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { ref, onMounted, reactive } from 'vue'
@@ -141,13 +141,12 @@ async function onDeleteRow(item) {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Tipo', field: 'tipo' },
-    { label: 'Nome', field: 'descricao' },
-    { label: 'Data', field: 'data' },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'OwnerId', field: 'owner_id', hidden: true },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Tipo', field: 'tipo' },
+    { headerName: 'Nome', field: 'descricao' },
+    { headerName: 'Data', field: 'data' },
+    { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser

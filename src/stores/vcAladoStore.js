@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useVcAladoStore = defineStore('objeto', {
+export const useVcAladoStore = defineStore('vcAlado', {
   state: () => ({
     objetoAlado: null
   }),

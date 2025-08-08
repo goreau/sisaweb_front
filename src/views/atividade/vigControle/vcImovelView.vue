@@ -234,14 +234,15 @@
               </div>
             </div>
             <hr />
-            <span v-show="colImoveis.length > 0">
-              <p class="divisor">Recipientes</p>
+            <span v-if="colImoveis.length > 0">
+              <p class="divisor">Imóveis</p>
               <MyDataTable
                 :data="colImoveis"
                 :columns="columns"
-                :search="false"
+                :calcHeight="true"
                 :pagination="false"
-                :buttons="['e', 'd', 'v']"
+                :hasExports="false"
+                :buttons="['edit', 'delete', 'recipiente']"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
                 @recipiente="onRecipiente"
@@ -270,7 +271,7 @@ import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import auxiliarService from '@/services/general/auxiliar.service'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import useValidate from '@vuelidate/core'
 import {
   required$,
@@ -478,33 +479,16 @@ watch(
 )
 
 onMounted(async () => {
-  /* if (route.query.returnFrom === 'recipiente') {
-    console.log('voltou')
-  } else {
-    Object.assign(colImoveis, JSON.parse(JSON.stringify(store.objetoVisita.imoveis)))
-  }*/
-
   Object.assign(colImoveis.value, JSON.parse(JSON.stringify(store.objetoFolha.imoveis)))
-  //  console.log(store.objetoVisita)
-  //  readyToGo.value = true
 
-  // } else {
-  //  Object.assign(imovel, {
-  //  id_imovel: 0,
-  //
-  //    recipientes: [],
-  //   })
-  //store.setVisita({})
-  //  }
   let cUser = currentUser
   if (cUser.value) {
     id_prop.value = cUser.value.id
   }
 
   columns.value = [
-    { label: 'Ordem', field: 'ordem' },
-    { label: 'Situação', field: 'fant_sit' },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Ordem', field: 'ordem' },
+    { headerName: 'Situação', field: 'fant_sit' },
   ]
 
   loadCombos()

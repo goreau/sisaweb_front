@@ -26,6 +26,19 @@ class ReportService {
       }
     }
   }
+
+  async getVariaveis(tipo) {
+    try {
+      const res = await axios.get(`/api/report/getVariaveis/${tipo}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
 }
 
 export default new ReportService();

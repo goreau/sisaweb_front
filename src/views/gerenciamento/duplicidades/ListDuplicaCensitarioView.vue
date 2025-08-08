@@ -69,7 +69,7 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :data="dataTable"
                 :columns="columns"
@@ -115,7 +115,7 @@
 <script setup>
 import censitarioService from '@/services/cadastro/censitario.service'
 import areaService from '@/services/cadastro/area.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
@@ -196,10 +196,10 @@ watch(
 
 onMounted(() => {
   columns.value = [
-    { label: 'ID', field: 'id' },
-    { label: 'Censitário', field: 'censitario' },
-    { label: 'Área', field: 'area' },
-    { label: 'Quarteirões', field: 'quarts' },
+    { headerName: 'ID', field: 'id' },
+    { headerName: 'Censitário', field: 'censitario' },
+    { headerName: 'Área', field: 'area' },
+    { headerName: 'Quarteirões', field: 'quarts' },
   ]
 
   let cUser = currentUser

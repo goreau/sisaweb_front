@@ -72,7 +72,7 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :data="dataTable"
                 :columns="columns"
@@ -116,7 +116,7 @@
 </template>
 
 <script setup>
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
@@ -228,10 +228,10 @@ async function loadCombos() {
 
 onMounted(() => {
   columns.value = [
-    { label: 'ID', field: 'id' },
-    { label: 'Atividade', field: 'atividade' },
-    { label: 'Cadastro', field: 'cadastro' },
-    { label: 'Endereço', field: 'endereco' },
+    { headerName: 'ID', field: 'id' },
+    { headerName: 'Atividade', field: 'atividade' },
+    { headerName: 'Cadastro', field: 'cadastro' },
+    { headerName: 'Endereço', field: 'endereco' },
   ]
 
   loadCombos()

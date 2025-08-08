@@ -56,9 +56,10 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :loggedUser="idUser"
+                :buttons="['edit', 'delete']"
                 :data="dataTable"
                 :columns="columns"
                 :search="true"
@@ -76,7 +77,7 @@
 </template>
 
 <script setup>
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { ref, onMounted, reactive } from 'vue'
@@ -147,12 +148,11 @@ async function onDeleteRow(item) {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Ciclo', field: 'ciclo' },
-    { label: 'Término', field: 'data' },
-    { label: 'OwnerId', field: 'owner_id', hidden: true },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Ciclo', field: 'ciclo' },
+    { headerName: 'Término', field: 'data' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
+    { headerName: 'Responsável', field: 'owner' },
   ]
 
   let cUser = currentUser

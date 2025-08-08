@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useVcImovelStore = defineStore('objeto', {
+export const useVcImovelStore = defineStore('vcImovel', {
   state: () => ({
     visita: null // { id, data, ... }
   }),

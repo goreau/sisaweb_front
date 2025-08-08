@@ -77,14 +77,15 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :loggedUser="idUser"
                 :data="dataTable"
                 :columns="columns"
                 :search="true"
                 :pagination="true"
-                :buttons="['e', 'd', 'r', 'p']"
+                :buttons="['edit', 'delete', 'reset', 'impersonate']"
+                :has-exports="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
                 @impersonate="onImpersonate"
@@ -101,7 +102,7 @@
 
 <script setup>
 import authService from '@/services/auth.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -199,13 +200,12 @@ async function onReset(item) {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Nome', field: 'nome' },
-    { label: 'Login', field: 'login' },
-    { label: 'Local', field: 'local' },
-    { label: 'Nivel', field: 'role' },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'OwnerId', field: 'owner_id', hidden: true },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Nome', field: 'nome' },
+    { headerName: 'Login', field: 'login' },
+    { headerName: 'Local', field: 'local' },
+    { headerName: 'Nivel', field: 'role' },
+    { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser

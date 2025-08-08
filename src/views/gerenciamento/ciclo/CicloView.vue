@@ -81,6 +81,7 @@ const { currentUser } = useCurrentUser()
 var id_prop = ref(0)
 
 const ciclo = reactive({
+  id_ciclo: 0,
   id_municipio: 0,
   ciclo: '',
   dt_termino: '',
@@ -120,13 +121,14 @@ async function save() {
       toast.error(resultado.msg)
     } else {
       toast.success(msg)
+      ciclo.id_ciclo = resultado.master
     }
   } else {
     toast.warning('Corrija os erros para enviar as informações')
   }
 }
 
-const isEditMode = computed(() => Number(route.params.id) > 0)
+const isEditMode = computed(() => Number(ciclo.id_ciclo) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

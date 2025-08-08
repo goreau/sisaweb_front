@@ -609,7 +609,6 @@ watch(
 
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
-    console.log(store.visita)
     readyToGo.value = true
     Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
   } else {

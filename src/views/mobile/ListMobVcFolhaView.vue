@@ -83,15 +83,16 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
+                ref="tabelaRef"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
-                @search="onSearch"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
               <hr />
               <div class="columns">
@@ -115,12 +116,12 @@
 
 <script setup>
 import mobVcFolhaService from '@/services/mobile/mobVc_folha.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
-import { ref, onMounted, reactive, computed } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
@@ -140,7 +141,8 @@ var confirmDialog = ref(null)
 var hasRows = ref(false)
 var dataTable = ref([])
 const atividades = ref([])
-const filteredRows = ref([])
+
+const tabelaRef = ref(null)
 
 const filter = reactive({
   id_municipio: 0,
@@ -194,16 +196,19 @@ async function onDeleteRow(item) {
   }
 }
 
-async function onSearch(rows) {
-  filteredRows.value = rows
-}
-
 async function sincroniza() {
-  const ret = await mobVcFolhaService.sync(filteredRows.value)
-  if (ret.error) {
-    toast.error(ret.msg)
-  } else {
-    toast.success(ret.msg)
+  if (tabelaRef.value) {
+    const linhas = tabelaRef.value.getFilteredRows()
+
+    const ret = await mobVcFolhaService.sync(linhas)
+    if (ret.error) {
+      toast.error(ret.msg)
+    } else {
+      tabelaRef.value.clearFilters()
+      //toast.success(ret.msg)
+      toast.success(`${ret.master} ${ret.msg}`)
+      loadData()
+    }
   }
 }
 
@@ -226,14 +231,13 @@ async function loadCombos() {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Atividade', field: 'atividade' },
-    { label: 'Data', field: 'data' },
-    { label: 'Quarteirão', field: 'quarteirao' },
-    { label: 'Imóvel', field: 'imovel' },
-    { label: 'Casa', field: 'casa' },
-    { label: 'Amostras', field: 'amostras' },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Atividade', field: 'atividade' },
+    { headerName: 'Data', field: 'data' },
+    { headerName: 'Quarteirão', field: 'quarteirao' },
+    { headerName: 'Imóvel', field: 'imovel' },
+    { headerName: 'Casa', field: 'casa' },
+    { headerName: 'Amostras', field: 'amostras' },
   ]
 
   loadCombos()

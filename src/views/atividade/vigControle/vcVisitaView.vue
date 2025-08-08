@@ -501,8 +501,6 @@ watch(
 
 onMounted(async () => {
   if (route.query.returnFrom === 'imovel' || route.query.from === 'edit') {
-    console.log(store.objetoFolha)
-    readyToGo.value = true
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
   } else {
     store.setFolha({})

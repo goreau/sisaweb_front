@@ -136,13 +136,15 @@
               </div>
             </div>
             <hr />
-            <span v-show="colRecipientes.length > 0">
+            <span v-if="colRecipientes.length > 0">
               <p class="divisor">Recipientes</p>
               <MyDataTable
                 :data="colRecipientes"
                 :columns="columns"
-                :search="false"
+                :has-exports="false"
                 :pagination="false"
+                :calcHeight="true"
+                :buttons="['edit', 'delete']"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
               />
@@ -166,16 +168,15 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import auxiliarService from '@/services/general/auxiliar.service'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import { ref, onMounted, watch, reactive } from 'vue'
 import { useVcImovelStore } from '@/stores/vcImovelStore'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 
 const store = useVcImovelStore()
 const router = useRouter()
-const route = useRoute()
 
 //var tpUser = ref(0);
 //var nvUser = ref(0);
@@ -270,6 +271,13 @@ function onDeleteRow(item) {
 }
 
 onMounted(async () => {
+  columns.value = [
+    { headerName: 'Tipo', field: 'fantTipo' },
+    { headerName: 'Existentes', field: 'existente' },
+    { headerName: 'Com Larva', field: 'larva' },
+    { headerName: 'Amostra', field: 'amostra' },
+  ]
+
   const obj = store.visita
   let oldData = obj?.recipientes ?? []
 
@@ -282,14 +290,6 @@ onMounted(async () => {
   } else {
     grupos.value = result
   }
-
-  columns.value = [
-    { label: 'Tipo', field: 'fantTipo' },
-    { label: 'Existentes', field: 'existente' },
-    { label: 'Com Larva', field: 'larva' },
-    { label: 'Amostra', field: 'amostra' },
-    { label: 'Ações', field: 'acoes' },
-  ]
 })
 </script>
 

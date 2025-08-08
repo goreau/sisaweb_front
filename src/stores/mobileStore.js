@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useMobileStore = defineStore('objeto', {
+export const useMobileStore = defineStore('mobile', {
   state: () => ({
     visita: null // { id, data, ... }
   }),

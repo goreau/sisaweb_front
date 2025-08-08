@@ -72,14 +72,16 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
+                :logged-user="idUser"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
             </section>
           </div>
@@ -92,7 +94,7 @@
 
 <script setup>
 import veicularService from '@/services/atividade/veicular.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
@@ -106,6 +108,7 @@ const { currentUser } = useCurrentUser()
 const router = useRouter()
 const toast = useToast()
 
+const idUser = ref(0)
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
@@ -160,16 +163,17 @@ async function onDeleteRow(item) {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Área', field: 'area' },
-    { label: 'Ciclo', field: 'ciclo' },
-    { label: 'Data', field: 'data' },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Área', field: 'area' },
+    { headerName: 'Ciclo', field: 'ciclo' },
+    { headerName: 'Data', field: 'data' },
+    { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser
   if (cUser.value) {
+    idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

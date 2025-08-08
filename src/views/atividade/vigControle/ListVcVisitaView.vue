@@ -72,14 +72,17 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
+                ref="dataTableRef"
+                :logged-user="idUser"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
             </section>
             <div style="display: none">
@@ -100,11 +103,11 @@
 
 <script setup>
 import vc_linhaService from '@/services/atividade/vc_linha.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, watch, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
@@ -116,7 +119,9 @@ const router = useRouter()
 const toast = useToast()
 const store = useVcVisitaStore()
 
+const idUser = ref(0)
 var tpUser = ref(0)
+const dataTableRef = ref(null)
 
 var confirmDialog = ref(null)
 
@@ -177,17 +182,26 @@ async function onDeleteRow(item) {
   }
 }
 
+/*watch(hasRows, (visivel) => {
+  if (visivel) {
+    nextTick(() => {
+      dataTableRef.value?.sizeColumnsToFit()
+    })
+  }
+})*/
+
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Tipo', field: 'atividade' },
-    { label: 'Data', field: 'data' },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Tipo', field: 'atividade' },
+    { headerName: 'Data', field: 'data' },
+    { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser
   if (cUser.value) {
+    idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

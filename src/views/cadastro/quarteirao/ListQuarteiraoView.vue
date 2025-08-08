@@ -47,7 +47,7 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :loggedUser="idUser"
                 :data="dataTable"
@@ -56,6 +56,8 @@
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
             </section>
           </div>
@@ -68,7 +70,7 @@
 
 <script setup>
 import quarteiraoService from '@/services/cadastro/quarteirao.service'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { ref, onMounted, reactive } from 'vue'
@@ -134,14 +136,13 @@ async function onDeleteRow(item) {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Área', field: 'area' },
-    { label: 'Censitário', field: 'censitario' },
-    { label: 'Número', field: 'numero' },
-    { label: 'Sub-Número', field: 'sub_numero' },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'OwnerId', field: 'owner_id', hidden: true },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Área', field: 'area' },
+    { headerName: 'Censitário', field: 'censitario' },
+    { headerName: 'Número', field: 'numero' },
+    { headerName: 'Sub-Número', field: 'sub_numero' },
+    { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser

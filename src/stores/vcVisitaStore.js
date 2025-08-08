@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useVcVisitaStore = defineStore('objeto', {
+export const useVcVisitaStore = defineStore('vcVisita', {
   state: () => ({
     objetoFolha: null
   }),

@@ -2,13 +2,6 @@
   <div class="main-container pt-6">
     <div class="columns is-centered">
       <div class="column is-two-fifths mt-1">
-        <Message
-          v-if="showMessage"
-          @do-close="closeMessage"
-          :msg="message"
-          :type="type"
-          :caption="caption"
-        />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Acesso</p>
@@ -59,7 +52,6 @@
 </template>
 
 <script setup>
-import Message from '@/components/general/CustomMessage.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import NewSenhaDialog from '@/components/general/NewSenhaDialog.vue'

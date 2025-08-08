@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-export const useAreaNavStore = defineStore('objeto', {
+export const useAreaNavStore = defineStore('areaNav', {
   state: () => ({
     objetoPrincipal: null
   }),

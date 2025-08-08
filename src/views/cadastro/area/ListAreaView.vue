@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="columns is-centered">
-      <div class="column is-11">
+      <div class="column is-8">
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Áreas</p>
@@ -21,7 +21,7 @@
           <div class="card-content">
             <section v-show="!hasRows">
               <div class="columns" v-if="tpUser < 4">
-                <div class="column is-5 is-offset-3">
+                <div class="column is-6 is-offset-3">
                   <div class="field">
                     <label class="label">Município</label>
                     <div class="control">
@@ -35,7 +35,7 @@
                 </div>
               </div>
               <div class="columns">
-                <div class="field column is-3 is-offset-4">
+                <div class="field column is-4 is-offset-4">
                   <label class="label">&nbsp;</label>
                   <div class="control">
                     <button class="button is-link is-fullwidth" @click="loadData">
@@ -46,22 +46,16 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
-              <Message
-                v-if="showMessage"
-                @do-close="closeMessage"
-                :msg="message"
-                :type="type"
-                :caption="caption"
-              />
+            <section v-if="hasRows">
               <MyDataTable
                 :loggedUser="idUser"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
             </section>
           </div>
@@ -74,8 +68,7 @@
 
 <script setup>
 import areaService from '@/services/cadastro/area.service'
-import MyDataTable from '@/components/general/gptTable.vue'
-import Message from '@/components/general/CustomMessage.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { ref, onMounted, reactive } from 'vue'
@@ -96,11 +89,6 @@ var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
 const idUser = ref(0)
-
-var message = ref('')
-var caption = ref('')
-var type = ref('')
-var showMessage = ref(false)
 
 const filter = reactive({
   id_municipio,
@@ -146,11 +134,10 @@ async function loadData() {
 
 onMounted(() => {
   columns.value = [
-    { label: 'Município', field: 'municipio' },
-    { label: 'Código', field: 'codigo' },
-    { label: 'Responsável', field: 'owner' },
-    { label: 'OwnerId', field: 'owner_id', hidden: true },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Código', field: 'codigo' },
+    { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser

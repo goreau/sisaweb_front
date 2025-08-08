@@ -3,13 +3,6 @@
     <div class="columns is-centered">
       <div class="column is-two-fifths">
         <Loader v-if="isLoading" />
-        <Message
-          v-if="showMessage"
-          @do-close="closeMessage"
-          :msg="message"
-          :type="type"
-          :caption="caption"
-        />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Área de Transmissão</p>
@@ -106,7 +99,6 @@
 </template>
 
 <script setup>
-import Message from '@/components/general/CustomMessage.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import areaNavService from '@/services/cadastro/areaNav.service'
@@ -118,6 +110,9 @@ import { useRouter, useRoute } from 'vue-router'
 import { minLengthIfFilled$, required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const { currentUser } = useCurrentUser()
 const store = useAreaNavStore()
@@ -132,6 +127,7 @@ const tipos = [
 var id_prop = ref(0)
 
 const areaNav = reactive({
+  id_area_nav: 0,
   id_municipio: 0,
   area: '',
   descricao: '',
@@ -141,10 +137,6 @@ const areaNav = reactive({
 })
 
 var isLoading = ref(false)
-var message = ref('')
-var caption = ref('')
-var type = ref('')
-var showMessage = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',
@@ -171,36 +163,28 @@ function details() {
   }
 }
 
-function create() {
+const isEditMode = computed(() => Number(areaNav.id_area_nav) > 0)
+
+async function create() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    areaNavService
-      .create(areaNav)
-      .then(
-        () => {
-          showMessage.value = true
-          message.value = 'Área cadastrada com sucesso.'
-          type.value = 'success'
-          caption.value = 'Área'
-          setTimeout(() => (showMessage.value = false), 3000)
-        },
-        (error) => {
-          message.value = error
-          showMessage.value = true
-          type.value = 'alert'
-          caption.value = 'Área'
-          setTimeout(() => (showMessage.value = false), 3000)
-        }
-      )
-      .finally(() => {
-        document.getElementById('login').classList.remove('is-loading')
-      })
+    var resultado = null
+    var msg = ''
+    if (isEditMode.value) {
+      resultado = await areaNavService.update(areaNav)
+      msg = 'Área alterada com sucesso!'
+    } else {
+      resultado = await areaNavService.create(areaNav)
+      msg = 'Área inserida com sucesso!'
+    }
+    if (resultado.error) {
+      toast.error(resultado.msg)
+    } else {
+      areaNav.id_area_nav = resultado.master
+      toast.success(msg)
+    }
   } else {
-    message.value = 'Corrija os erros para enviar as informações'
-    showMessage.value = true
-    type.value = 'alert'
-    caption.value = 'Área'
-    setTimeout(() => (showMessage.value = false), 3000)
+    toast.warning('Corrija os erros para enviar as informações')
   }
 }
 

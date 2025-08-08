@@ -49,16 +49,17 @@
             </div>
             <hr />
             <p class="divisor">Censitários incluídos</p>
-            <MyDataTable
-              :data="filhos"
-              :columns="columns"
-              :search="false"
-              :pagination="false"
-              @delete="handleDelete"
-              @quarteirao="handleView"
-              :buttons="['d', 'q']"
-            />
-            <MySimpleTable :tableData="filhos" :columns="columns" :onRowDelete="removerFilho" />
+            <section v-if="filhos.length > 0">
+              <MyDataTable
+                :data="filhos"
+                :columns="columns"
+                calc-height="true"
+                :pagination="false"
+                @delete="handleDelete"
+                @quarteirao="handleView"
+                :buttons="['delete', 'quarteirao']"
+              />
+            </section>
           </div>
           <div style="display: none">
             <span class="icon is-small is-left" ref="myspan">
@@ -91,7 +92,7 @@
 import Message from '@/components/general/CustomMessage.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import areaService from '@/services/cadastro/area.service'
 import Modal from '@/components/forms/GenericModal.vue'
 import Check from '@/components/forms/GenericCheckBox.vue'
@@ -184,14 +185,6 @@ watch(
   }
 )
 
-/*watch(
-  () => censitario.id_area,
-  (id) => {
-    const item = areas.value.find((a) => a.id === Number(id))
-    censitario.fantArea = item?.nome || ''
-  }
-)*/
-
 watch(
   () => censitario.id_censitario,
   (id) => {
@@ -201,6 +194,11 @@ watch(
 )
 
 onMounted(async () => {
+  columns.value = [
+    { label: 'Area', field: 'fantArea' },
+    { label: 'Censitario', field: 'fantCensitario' },
+  ]
+
   const obj = store.objetoPrincipal
   let id_mun = obj?.id_municipio
   filhos.value = obj?.filhos ?? []
@@ -212,12 +210,6 @@ onMounted(async () => {
   } else {
     areas.value = result
   }
-
-  columns.value = [
-    { label: 'Area', field: 'fantArea' },
-    { label: 'Censitario', field: 'fantCensitario' },
-    { label: 'Ações', field: 'acoes' },
-  ]
 })
 
 function handleDelete(cens) {

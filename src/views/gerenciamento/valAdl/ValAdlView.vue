@@ -85,7 +85,7 @@ import useValidate from '@vuelidate/core'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
-import { required$, combo$, requiredIf$ } from '@/components/forms/validators'
+import { required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useRoute } from 'vue-router'
@@ -98,6 +98,7 @@ const { currentUser } = useCurrentUser()
 var id_prop = ref(0)
 
 const valAdl = reactive({
+  id_val_adl: 0,
   id_municipio: 0,
   id_execucao: 0,
   id_tipo: 2,
@@ -148,13 +149,14 @@ async function save() {
       toast.error(resultado.msg)
     } else {
       toast.success(msg)
+      valAdl.id_val_adl = resultado.master
     }
   } else {
     toast.warning('Corrija os erros para enviar as informações')
   }
 }
 
-const isEditMode = computed(() => Number(route.params.id) > 0)
+const isEditMode = computed(() => Number(valAdl.id_val_adl) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

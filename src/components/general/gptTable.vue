@@ -1,6 +1,6 @@
 <!-- src/components/MyDataTable.vue -->
 <script setup>
-import { ref, watch } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { VueGoodTable } from 'vue-good-table-next'
 import 'vue-good-table-next/dist/vue-good-table-next.css'
 import * as XLSX from 'xlsx'
@@ -40,6 +40,7 @@ const props = defineProps({
 })
 
 const filtro = ref('')
+const paginationEnabled = ref(true)
 
 const emit = defineEmits([
   'edit',
@@ -56,6 +57,15 @@ const rows = ref([...props.data]) // cópia reativa
 function onSearch(params) {
   filtro.value = params.searchTerm
   filtrados()
+}
+
+function onPageChange(params) {
+  // params.currentPage - current page that pagination is at
+  if (props.pagination) {
+    paginationEnabled.value = params.total > params.currentPerPage
+  }
+  //- number of items per page
+  //- total number of items in the table
 }
 
 function filtrados() {
@@ -120,6 +130,9 @@ watch(
   },
   { deep: true }
 )
+onMounted(async () => {
+  paginationEnabled.value = props.pagination && rows.value.length > 10
+})
 </script>
 
 <template>
@@ -139,7 +152,7 @@ watch(
     :columns="columns"
     :rows="rows"
     :pagination-options="{
-      enabled: pagination,
+      enabled: paginationEnabled,
       perPage: 10,
       dropdownAllowAll: true,
       nextLabel: 'próximo',
@@ -151,6 +164,7 @@ watch(
     }"
     :search-options="{ enabled: search, placeholder: 'Procurar nessa tabela' }"
     v-on:search="onSearch"
+    v-on:per-page-change="onPageChange"
     class="table is-bordered is-hoverable is-fullwidth"
   >
     <!-- slot para ações -->

@@ -3,13 +3,6 @@
     <div class="columns is-centered">
       <div class="column is-11">
         <Loader v-if="isLoading" />
-        <Message
-          v-if="showMessage"
-          @do-close="closeMessage"
-          :msg="message"
-          :type="type"
-          :caption="caption"
-        />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Imóvel Cadastrado</p>
@@ -304,7 +297,6 @@
 </template>
 
 <script setup>
-import Message from '@/components/general/CustomMessage.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import imovelService from '@/services/cadastro/imovel.service'
@@ -351,6 +343,7 @@ var tpAtiv = ref([])
 var id_prop = ref(0)
 
 var imovel = reactive({
+  id_imovel: 0,
   id_area: 0,
   id_municipio: 0,
   id_atividade: 0,
@@ -412,6 +405,7 @@ async function save() {
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
+      imovel.id_imovel = resultado.master
       toast.success(msg)
     }
   } else {
@@ -471,7 +465,7 @@ watch(
   }
 )
 
-const isEditMode = computed(() => Number(route.params.id) > 0)
+const isEditMode = computed(() => Number(imovel.id_imovel) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

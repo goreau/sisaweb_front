@@ -1,7 +1,7 @@
 <template>
   <div class="main-container">
     <div class="columns is-centered">
-      <div class="column is-8">
+      <div class="column is-11">
         <Loader v-if="isLoading" />
         <div class="card">
           <header class="card-header">
@@ -11,15 +11,19 @@
             <section v-if="!hasRows">
               <FiltroWrapper :ativos="options.ativos" @submit="buscar" />
             </section>
-            <section v-if="hasRows">
+            <section v-if="hasRows" class="result">
               <!-- Resultado do filtro -->
               <div class="box mt-5">
-                <h2 class="title is-6">Resultado</h2>
-                <!-- exibição condicional -->
-                <p>Exibir aqui tabela, mapa, gráfico etc.</p>
-                <pre>{{ dataTable }}</pre>
-                {{ msg }}
+                <h2 class="title is-6">{{ options.titulo }}</h2>
+                <MyDataTable
+                  :data="dataTable"
+                  :columns="options.colunas"
+                  :search="true"
+                  :pagination="true"
+                />
               </div>
+              <hr />
+              <div v-html="options.extra" class="content mt-3 extra"></div>
             </section>
           </div>
         </div>
@@ -32,8 +36,9 @@
 import FiltroWrapper from '@/components/report/filtroWrapper.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import reportService from '@/services/report.service'
+import MyDataTable from '@/components/general/gptTable.vue'
 import { useRoute } from 'vue-router'
-import { onMounted, ref } from 'vue'
+import { onMounted, ref, watch } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const route = useRoute()
@@ -57,7 +62,16 @@ async function buscar(filtros) {
   if (result.error) {
     toast.error(result.msg)
   } else {
-    dataTable.value = result.data
+    var res = result.data
+    if ('dados' in res && 'colunas' in res) {
+      dataTable.value = res.dados
+      options.value.colunas = res.colunas
+    } else {
+      // comportamento padrão, caso venha direto como linhas
+      dataTable.value = res
+    }
+
+    // dataTable.value = result.data
     hasRows.value = true
   }
   // resultado.value = await api.getUsuarios(filtros)
@@ -74,3 +88,13 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+.result * {
+  font-size: medium;
+}
+
+.extra * {
+  font-size: small;
+}
+</style>

@@ -55,7 +55,7 @@
                 </div>
               </div>
             </section>
-            <section v-show="hasRows">
+            <section v-if="hasRows">
               <MyDataTable
                 :data="dataTable"
                 :columns="columns"
@@ -99,15 +99,13 @@
 </template>
 
 <script setup>
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
-import { ref, onMounted, reactive, watch } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
-import imovelService from '@/services/cadastro/imovel.service'
-import auxiliarService from '@/services/general/auxiliar.service'
 import authService from '@/services/auth.service'
 
 const { currentUser } = useCurrentUser()
@@ -176,10 +174,10 @@ async function processa() {
 
 onMounted(() => {
   columns.value = [
-    { label: 'ID', field: 'id' },
-    { label: 'Login', field: 'login' },
-    { label: 'Nome', field: 'name' },
-    { label: 'Nível', field: 'role' },
+    { headerName: 'ID', field: 'id' },
+    { headerName: 'Login', field: 'login' },
+    { headerName: 'Nome', field: 'name' },
+    { headerName: 'Nível', field: 'role' },
   ]
 
   let cUser = currentUser
