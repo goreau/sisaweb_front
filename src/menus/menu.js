@@ -5,6 +5,7 @@ import { homeMenu } from './home.js'
 import { usuariosMenu } from './usuarios.js'
 import { mobileMenu } from './mobile.js'
 import { reportMenu } from './report.js'
+import { referenciaMenu } from './referencia.js'
 
 export const menuData = [
   {
@@ -94,12 +95,25 @@ export const menuData = [
     icon: {
       element: "font-awesome-icon",
       attributes: {
-        icon: "fa-solid fa-mobile-screen",
+        icon: "fa-solid fa-file-lines",
         size: "lg",
         transform: "shrink-8",
       },
     },
     child: reportMenu
+  },
+  {
+    href: "",
+    title: "Referências",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-book-atlas",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: referenciaMenu
   },
   ////******* */
 

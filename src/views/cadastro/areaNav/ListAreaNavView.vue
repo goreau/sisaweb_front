@@ -2,6 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-11">
+        <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Áreas de Transmissão</p>
@@ -48,7 +49,7 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="idUser"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
                 :pagination="true"
@@ -71,6 +72,7 @@ import areaNavService from '@/services/cadastro/areaNav.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
+import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -82,6 +84,9 @@ const { currentUser } = useCurrentUser()
 const router = useRouter()
 const store = useAreaNavStore()
 const toast = useToast()
+
+var isLoading = false
+const STORAGE_KEY = 'consulta-areanavsw'
 
 var tpUser = ref(0)
 
@@ -103,14 +108,19 @@ function newFilter() {
 }
 
 async function loadData() {
-  localStorage.setItem('areaNavSW', JSON.stringify(filter))
+  try {
+    isLoading = true
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-  const result = await areaNavService.getAreaNavs(JSON.stringify(filter))
-  if (result.error) {
-    console.log(result.error)
-  } else {
-    dataTable.value = result
-    hasRows.value = true
+    const result = await areaNavService.getAreaNavs(JSON.stringify(filter))
+    if (result.error) {
+      console.log(result.error)
+    } else {
+      dataTable.value = result
+      hasRows.value = true
+    }
+  } finally {
+    isLoading = false
   }
 }
 
@@ -140,6 +150,11 @@ async function onDeleteRow(item) {
 }
 
 onMounted(() => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    Object.assign(filter, JSON.parse(saved))
+  }
+
   columns.value = [
     { headerName: 'Município', field: 'municipio' },
     { headerName: 'Tipo', field: 'tipo' },

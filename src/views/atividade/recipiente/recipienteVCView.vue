@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-three-fifths">
-        <Loader v-if="isLoading" />
+        <Loader :active="isLoading" />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Recipientes VC</p>

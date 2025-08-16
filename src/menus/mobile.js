@@ -23,4 +23,28 @@ export const mobileMenu = [
       },
     },
   },
+  {
+    href: "/mobExecucao",
+    title: "Alterar Execução",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-search",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+  },
+  {
+    href: "/mobSisamob",
+    title: "Baixar Sisamob",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-search",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+  },
 ]

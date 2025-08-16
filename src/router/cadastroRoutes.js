@@ -76,5 +76,16 @@ export default [
     name: 'equipe',
     component: () => import(/* webpackChunkName: "user" */ '@/views/cadastro/equipe/EquipeView.vue'),
     meta: { onlyUser: true }
-  }
+  },
+  {
+    path: '/produto/:id',
+    name: 'produto',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/cadastro/produto/ProdutoView.vue'),
+    meta: { onlyAdmin: true }
+  },
+  {
+    path: '/produtos',
+    name: 'produtos',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/cadastro/produto/ListProdutoView.vue'),
+  },
 ]

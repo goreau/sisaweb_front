@@ -2,6 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-11">
+        <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Visitas a Imóveis</p>
@@ -107,7 +108,8 @@ import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
-import { ref, onMounted, reactive, watch, nextTick } from 'vue'
+import MyLoader from '@/components/general/MyLoader.vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
@@ -124,6 +126,8 @@ var tpUser = ref(0)
 const dataTableRef = ref(null)
 
 var confirmDialog = ref(null)
+var isLoading = false
+const STORAGE_KEY = 'consulta-vcvisitasw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
@@ -144,14 +148,19 @@ function newFilter() {
 }
 
 async function loadData() {
-  localStorage.setItem('censSW', JSON.stringify(filter))
+  try {
+    isLoading = true
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-  const result = await vc_linhaService.getVcLinhas(JSON.stringify(filter))
-  if (result.error) {
-    console.log(result.error)
-  } else {
-    dataTable.value = result.data
-    hasRows.value = true
+    const result = await vc_linhaService.getVcLinhas(JSON.stringify(filter))
+    if (result.error) {
+      console.log(result.error)
+    } else {
+      dataTable.value = result.data
+      hasRows.value = true
+    }
+  } finally {
+    isLoading = false
   }
 }
 
@@ -191,6 +200,11 @@ async function onDeleteRow(item) {
 })*/
 
 onMounted(() => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    Object.assign(filter, JSON.parse(saved))
+  }
+
   columns.value = [
     { headerName: 'Município', field: 'municipio' },
     { headerName: 'Tipo', field: 'atividade' },

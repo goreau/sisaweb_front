@@ -67,6 +67,7 @@ class MobVcFolhaService {
     }
   }
 
+
 }
 
 export default new MobVcFolhaService();

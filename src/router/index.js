@@ -56,9 +56,17 @@ router.beforeEach((to, from, next) => {
 
   const isConv = [6, 7, 8].includes(user.value?.nivel)
 
+  const isAdmin = user.value?.nivel == 1
+
+  if (to.meta.onlyAdmin && !isAdmin) {
+    return next('/acesso-negado')
+  }
+
   if (to.meta.onlyUser && isConv) {
     return next('/acesso-negado')
   }
+
+
 
   next()
 })

@@ -1,5 +1,5 @@
 <template>
-  <div class="conteudo">
+  <div class="header">
     <div class="tile is-ancestor">
       <div class="tile is-vertical">
         <div class="tile is-6">
@@ -16,11 +16,11 @@
 </template>
 
 <script setup>
-
 </script>
 
-<style scoped lang="scss">
-.conteudo {
+<style lang="scss" scoped>
+@use '@/assets/styles/custom-vsm' as *;
+.header {
   height: 6rem;
   background-color: $base-bg;
   border-bottom: 4px solid #020538;
@@ -31,10 +31,7 @@
   z-index: 10;
 }
 
-
-
 nav {
-
   padding: 1px 50px;
   display: flex;
   justify-content: flex-end;
@@ -60,10 +57,8 @@ nav #logo_url {
 }
 
 @media only screen and (max-width: 320px) {
-
   .title {
     font-size: 2rem;
   }
-
 }
 </style>

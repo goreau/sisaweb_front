@@ -7,7 +7,8 @@
 <script setup>
 </script>
 
-<style scoped lang="scss">
+<style lang="scss" scoped>
+@use '@/assets/styles/custom-vsm' as *;
 #footer {
   background-color: $base-bg;
   border-top: 6px solid #020538;

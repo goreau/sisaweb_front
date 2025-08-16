@@ -2,10 +2,9 @@
 import { RouterView } from 'vue-router' //RouterLink,
 import Header from '@/components/general/MyHeader.vue'
 import Footer from '@/components/general/MyFooter.vue'
-import { SidebarMenu } from 'vue-sidebar-menu'
+import MySidebar from '@/components/general/MySidebar.vue'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { menuData } from './menus/menu'
 
 const route = useRoute()
 
@@ -48,12 +47,7 @@ watch(mainDiv, (el) => {
     <Header />
     <div class="app-container">
       <div class="menu-content" v-show="showMenu">
-        <sidebar-menu
-          :menu="menuData"
-          :relative="true"
-          @update:collapsed="onToggleCollapse"
-          :showOneChild="true"
-        />
+        <MySidebar />
       </div>
 
       <!-- Conteúdo principal -->
@@ -66,6 +60,7 @@ watch(mainDiv, (el) => {
 </template>
 
 <style lang="scss">
+@use '@fortawesome/fontawesome-free/css/all.css';
 * {
   font-family: Helvetica;
   font-size: large;
@@ -76,9 +71,6 @@ watch(mainDiv, (el) => {
 
 $toggle-btn-bg: red;
 $toggle-btn-color: white;
-
-@import 'vue-sidebar-menu/src/scss/vue-sidebar-menu.scss';
-@import '@fortawesome/fontawesome-free/css/all.css';
 
 /* Container que engloba menu + conteúdo */
 .app-container {
@@ -163,15 +155,5 @@ $toggle-btn-color: white;
   padding: 0 5px;
   width: max-content;
   border: 0 none;
-}
-
-/********* */
-.v-sidebar-menu .vsm--link_level-3 {
-  background-color: #a07311;
-}
-
-.v-sidebar-menu.vsm_expanded .vsm--link_level-2.vsm--link_open {
-  color: var(--vsm-item-open-color);
-  background-color: #926502;
 }
 </style>

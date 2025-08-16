@@ -25,7 +25,7 @@
             <section v-if="hasRows" class="result">
               <!-- Resultado do filtro -->
               <div class="box mt-5">
-                <h2 class="title is-6">{{ options.titulo }}</h2>
+                <h2 class="title is-6">{{ fantTitle }}</h2>
                 <h4><b>Filtros:</b> {{ fantFiltro }}</h4>
                 <MyDataTable
                   :data="dataTable"
@@ -56,6 +56,7 @@ import { useToast } from 'vue-toastification'
 
 const route = useRoute()
 const toast = useToast()
+const fantTitle = ref('')
 
 const dataTable = ref([])
 const fantFiltro = ref([])
@@ -73,8 +74,10 @@ function newFilter() {
 async function buscar(filtros) {
   try {
     if (filtros.fantVar) {
-      options.value.titulo = options.value.titulo + ' - ' + filtros.fantVar
+      fantTitle.value = options.value.titulo + ' - ' + filtros.fantVar
       delete filtros.fantVar
+    } else {
+      fantTitle.value = options.value.titulo
     }
     // Aqui você pode chamar a API com os filtros
     isLoading.value = true
@@ -108,14 +111,19 @@ async function buscar(filtros) {
 }
 
 async function carregarRelatorio(tipoParam, nomeParam) {
-  tipo.value = tipoParam
-  relat.value = nomeParam
-  const result = await reportService.getConfig(tipo.value, relat.value)
-  if (result.error) {
-    toast.error(result.msg)
-  } else {
-    options.value = result.data
-    hasRows.value = false
+  try {
+    isLoading.value = true
+    tipo.value = tipoParam
+    relat.value = nomeParam
+    const result = await reportService.getConfig(tipo.value, relat.value)
+    if (result.error) {
+      toast.error(result.msg)
+    } else {
+      options.value = result.data
+      hasRows.value = false
+    }
+  } finally {
+    isLoading.value = false
   }
 }
 

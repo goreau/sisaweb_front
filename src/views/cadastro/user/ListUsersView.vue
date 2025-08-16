@@ -2,6 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-11">
+        <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Usuários</p>
@@ -79,7 +80,7 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="idUser"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
                 :search="true"
@@ -104,6 +105,7 @@
 import authService from '@/services/auth.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
+import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -117,15 +119,17 @@ const auth = useAuthStore()
 const router = useRouter()
 const toast = useToast()
 
+const idUser = ref(0)
 var tpUser = ref(0)
 var confirmDialog = ref(null)
+const isLoading = ref(false)
+const STORAGE_KEY = 'consulta-usersw'
 
 var id_regional = ref(0)
 var id_gve = ref(0)
 var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
-const idUser = ref(0)
 
 const filter = reactive({
   id_regional,
@@ -140,14 +144,19 @@ function newFilter() {
 }
 
 async function loadData() {
-  localStorage.setItem('userSW', JSON.stringify(filter))
+  try {
+    isLoading.value = true
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-  const result = await authService.list(JSON.stringify(filter))
-  if (result.error) {
-    console.log(result.error)
-  } else {
-    dataTable.value = result
-    hasRows.value = true
+    const result = await authService.list(JSON.stringify(filter))
+    if (result.error) {
+      console.log(result.error)
+    } else {
+      dataTable.value = result
+      hasRows.value = true
+    }
+  } finally {
+    isLoading.value = false
   }
 }
 
@@ -199,6 +208,10 @@ async function onReset(item) {
 }
 
 onMounted(() => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    Object.assign(filter, JSON.parse(saved))
+  }
   columns.value = [
     { headerName: 'Nome', field: 'nome' },
     { headerName: 'Login', field: 'login' },

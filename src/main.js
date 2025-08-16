@@ -1,6 +1,5 @@
 import '../node_modules/bulma/css/bulma.css'
 import { library } from '@fortawesome/fontawesome-svg-core'
-import 'tabulator-tables/dist/css/tabulator_bulma.min.css'
 import Toast from "vue-toastification";
 // Import the CSS or use your own!
 import "vue-toastification/dist/index.css";
@@ -23,14 +22,14 @@ import {
   faUserSecret, faFilePdf, faFileExcel, faFileCsv, faFileLines, faHouse, faUser, faUsers, faLock, faEdit, faTrash, faCheck, faBan, faSearch, faPlusCircle, faBroom,
   faShirt, faList, faPersonWalking, faPersonCircleCheck, faMicroscope, faMoneyBillTransfer, faCalendarDays, faWrench, faRepeat, faMobileScreen, faEye, faPowerOff, faHexagonNodes,
   faPlus, faGears, faSchool, faGlassWaterDroplet, faFolderTree, faHouseCircleCheck, faSchoolCircleCheck, faMosquito, faSmog,
-  faSprayCan, faPeopleGroup, faSquareVirus, faArrowsTurnRight, faArrowRight,
+  faSprayCan, faPeopleGroup, faSquareVirus, faArrowsTurnRight, faArrowRight, faBookAtlas, faLocationDot, faChartBar, faChartColumn,
 } from '@fortawesome/free-solid-svg-icons'
 
 /* add icons to the library */
 library.add(faUserSecret, faFilePdf, faFileExcel, faFileCsv, faFileLines, faHouse, faUser, faUsers, faLock, faEdit, faTrash, faCheck, faBan, faSearch, faPlusCircle, faBroom,
   faShirt, faList, faPersonWalking, faPersonCircleCheck, faMicroscope, faMoneyBillTransfer, faCalendarDays, faWrench, faRepeat, faMobileScreen, faEye, faPowerOff, faHexagonNodes,
   faPlus, faGears, faSchool, faGlassWaterDroplet, faFolderTree, faHouseCircleCheck, faSchoolCircleCheck, faMosquito, faSmog, faSprayCan, faPeopleGroup, faSquareVirus, faArrowsTurnRight,
-  faArrowRight);
+  faArrowRight, faBookAtlas, faLocationDot, faChartBar, faChartColumn);
 
 const options = {
   position: "top-right",

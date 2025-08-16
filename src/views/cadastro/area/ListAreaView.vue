@@ -2,6 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-8">
+        <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Áreas</p>
@@ -48,7 +49,7 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="idUser"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
                 :pagination="true"
@@ -71,15 +72,19 @@ import areaService from '@/services/cadastro/area.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
+import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 
 const { currentUser } = useCurrentUser()
+const STORAGE_KEY = 'consulta-areasw'
 
 const router = useRouter()
 const toast = useToast()
+
+var isLoading = false
 
 var tpUser = ref(0)
 
@@ -121,18 +126,28 @@ async function onDeleteRow(item) {
 }
 
 async function loadData() {
-  localStorage.setItem('areaSW', JSON.stringify(filter))
+  try {
+    isLoading = true
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-  const result = await areaService.getAreas(JSON.stringify(filter))
-  if (result.error) {
-    console.log(result.error)
-  } else {
-    dataTable.value = result
-    hasRows.value = true
+    const result = await areaService.getAreas(JSON.stringify(filter))
+    if (result.error) {
+      console.log(result.error)
+    } else {
+      dataTable.value = result
+      hasRows.value = true
+    }
+  } finally {
+    isLoading = false
   }
 }
 
 onMounted(() => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    Object.assign(filter, JSON.parse(saved))
+  }
+
   columns.value = [
     { headerName: 'Município', field: 'municipio' },
     { headerName: 'Código', field: 'codigo' },

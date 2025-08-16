@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-three-fifths">
-        <Loader v-if="isLoading" />
+        <Loader :active="isLoading" />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Recipientes</p>
@@ -136,7 +136,7 @@
               </div>
             </div>
             <hr />
-            <span v-show="colRecipientes.length > 0">
+            <span v-if="colRecipientes.length > 0">
               <p class="divisor">Recipientes</p>
               <MyDataTable
                 :data="colRecipientes"
@@ -145,6 +145,10 @@
                 :pagination="false"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="false"
+                :calcHeight="true"
+                :loggedUser="{ id: 0, tipo: 0 }"
               />
             </span>
           </div>
@@ -166,7 +170,7 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import auxiliarService from '@/services/general/auxiliar.service'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import { ref, onMounted, watch, reactive } from 'vue'
@@ -296,7 +300,6 @@ onMounted(async () => {
     { label: 'Existentes', field: 'existente' },
     { label: 'Com Larva', field: 'larva' },
     { label: 'Amostra', field: 'amostra' },
-    { label: 'Ações', field: 'acoes' },
   ]
 })
 </script>

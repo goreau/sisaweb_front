@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-two-fifths">
-        <Loader v-if="isLoading" />
+        <Loader :active="isLoading" />
         <Message
           v-if="showMessage"
           @do-close="closeMessage"

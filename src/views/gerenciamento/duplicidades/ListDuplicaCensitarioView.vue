@@ -2,6 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-11">
+        <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Exclusão de Setores Censitários</p>
@@ -119,6 +120,7 @@ import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
+import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive, watch } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
@@ -130,6 +132,7 @@ const toast = useToast()
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
+var isLoading = false
 
 var hasRows = ref(false)
 var dataTable = ref([])
@@ -151,14 +154,19 @@ function newFilter() {
 }
 
 async function loadData() {
-  localStorage.setItem('censSW', JSON.stringify(filter))
+  try {
+    isLoading = true
+    localStorage.setItem('censSW', JSON.stringify(filter))
 
-  const result = await censitarioService.getDuplica(JSON.stringify(filter))
-  if (result.error) {
-    console.log(result.error)
-  } else {
-    dataTable.value = result.data
-    hasRows.value = true
+    const result = await censitarioService.getDuplica(JSON.stringify(filter))
+    if (result.error) {
+      console.log(result.error)
+    } else {
+      dataTable.value = result.data
+      hasRows.value = true
+    }
+  } finally {
+    isLoading = false
   }
 }
 

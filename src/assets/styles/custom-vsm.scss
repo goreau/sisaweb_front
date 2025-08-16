@@ -1,4 +1,4 @@
-@use "sass:color";
+@use 'sass:color';
 
 $primary-color: #a07210 !default;
 $base-bg: #bc9c56 !default;
@@ -46,8 +46,5 @@ $item-padding: 10px 15px !default;
 $icon-height: 35px !default;
 $icon-width: 35px !default;
 
-
-
-
 // importa os estilos do vue-sidebar-menu
-@import "vue-sidebar-menu/src/scss/vue-sidebar-menu.scss";
+@forward 'vue-sidebar-menu/src/scss/vue-sidebar-menu.scss';

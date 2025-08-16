@@ -25,6 +25,23 @@
         </div>
       </div>
     </div>
+    <div class="columns" v-if="props.ativos?.ref_ativ > 0">
+      <div class="column is-6 is-offset-3">
+        <div class="content">
+          <fieldset class="fieldset">
+            <legend>Tipo de Trabalho</legend>
+            <div class="field">
+              <RadioGeneric
+                v-model="filtros.ref_ativ"
+                :options="ref_ativs"
+                name="ref_ativ"
+                :inline="true"
+              />
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
     <div class="columns" v-if="props.ativos?.atividade > 0">
       <div class="column is-6 is-offset-3">
         <div class="content">
@@ -149,14 +166,18 @@ const { currentUser } = useCurrentUser()
 
 const municipios = ref([])
 const atividades = ref([])
+const ref_ativs = ref([])
 const execucoes = ref([])
 const variaveis = ref([])
 const areas_nav = ref([])
+
+const STORAGE_KEY = 'consulta-reportsw'
 
 const filtros = reactive({
   id_gve: 0,
   id_municipio: '',
   id_atividade: 0,
+  ref_ativ: 0,
   id_execucao: 0,
   id_variavel: 0,
   dt_inicial: '',
@@ -166,6 +187,7 @@ const filtros = reactive({
 })
 
 function processar() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(filtros))
   if (filtros.id_variavel > 0) {
     const opt = variaveis.value.find((o) => o.id === Number(filtros.id_variavel))
     filtros.fantVar = opt.nome
@@ -205,14 +227,30 @@ watch(
         } else {
           atividades.value = result
         }
-        val.atividade = 3
+        const result1 = await auxiliarService.getAtividadeCombo(3)
+        if (result1.error) {
+          atividades.value = []
+        } else {
+          atividades.value = [...atividades.value, ...result1]
+        }
+      } else if (val.atividade == 1) {
+        const result1 = await auxiliarService.getAtividadeCombo(val.atividade)
+        if (result1.error) {
+          atividades.value = []
+        } else {
+          atividades.value = result1
+        }
       }
-      const result1 = await auxiliarService.getAtividadeCombo(val.atividade)
-      if (result1.error) {
-        atividades.value = []
-      } else {
-        atividades.value = [...atividades.value, ...result1]
-      }
+    } else {
+      filtros.id_atividade = 0
+    }
+    if (props.ativos?.ref_ativ && props.ativos?.ref_ativ > 0) {
+      ref_ativs.value = [
+        { id: 10, nome: 'Imóveis Cadastrados' },
+        { id: 9, nome: 'Outras Atividades' },
+      ]
+    } else {
+      filtros.ref_ativ = 0
     }
     if (props.ativos?.variaveis && props.ativos?.variaveis > 0) {
       const result = await reportService.getVariaveis(val.variaveis)
@@ -221,6 +259,8 @@ watch(
       } else {
         variaveis.value = result
       }
+    } else {
+      filtros.id_variavel = 0
     }
   }
 )
@@ -267,6 +307,10 @@ watch(
 )
 
 onMounted(async () => {
+  const saved = localStorage.getItem(STORAGE_KEY)
+  if (saved) {
+    Object.assign(filtros, JSON.parse(saved))
+  }
   loadCombos()
 })
 </script>

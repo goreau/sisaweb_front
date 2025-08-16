@@ -25,8 +25,8 @@ const props = defineProps({
     default: () => [],
   },
   loggedUser: {
-    type: Number,
-    default: 0,
+    type: Object,
+    default: () => {},
   },
   hasExports: Boolean,
   calcHeight: {
@@ -39,7 +39,8 @@ const emit = defineEmits(['edit', 'delete', 'quarteirao', 'reset', 'impersonate'
 const gridApi = ref(null)
 const columnApi = ref(null)
 
-const rowHeight = 40 // altura média de cada linha, ajuste conforme seu grid
+const alturasFixas = ref(0)
+const rowHeight = 50 // altura média de cada linha, ajuste conforme seu grid
 const baseHeight = 60 // altura base (header + margens), ajuste se necessário
 
 const rows = ref([...props.data])
@@ -71,8 +72,13 @@ function autoSizeAll() {
   columnApi.value.autoSizeColumns(allColumnIds, false)
 }
 
-function shouldDisableButton(row) {
-  return props.loggedUser !== 0 && row.owner_id != props.loggedUser
+function shouldDisableButton(row, name) {
+  if (!props.loggedUser) return
+  if (name == 'reset' || name == 'impersonate') {
+    return props.loggedUser.tipo > 1
+  } else {
+    return props.loggedUser.id !== 0 && row.owner_id != props.loggedUser.id
+  }
 }
 
 const getFilteredRows = () => {
@@ -125,6 +131,9 @@ watch(
 )
 
 onMounted(() => {
+  let footer = document.querySelector('#footer')?.offsetHeight || 0
+  let header = document.querySelector('.header')?.offsetHeight || 0
+  alturasFixas.value = footer + header * 4
   nextTick(() => {
     if (gridApi.value && props.pagination) {
       //gridApi.value.setPaginationSetPageSize(20)
@@ -148,7 +157,7 @@ function createActionsColumn() {
         btn.innerHTML = `<i class="${icon}"></i>`
         btn.title = title
         btn.className = `button is-small is-outlined ${className}`
-        btn.disabled = shouldDisableButton(data)
+        btn.disabled = shouldDisableButton(data, emitName)
         btn.onclick = () => emit(emitName, { row: data })
         container.appendChild(btn)
       }
@@ -156,8 +165,10 @@ function createActionsColumn() {
       addButton('fas fa-edit', 'Editar', 'edit')
       addButton('fas fa-trash', 'Excluir', 'delete', 'is-danger')
       addButton('fas fa-location-dot', 'Quarteirão', 'quarteirao', 'is-info')
-      addButton('fas fa-power-off', 'Reset', 'reset', 'is-warning')
-      addButton('fas fa-user-secret', 'Logar como', 'impersonate', 'is-info')
+      if (props.loggedUser.tipo == 1) {
+        addButton('fas fa-power-off', 'Reset', 'reset', 'is-warning')
+        addButton('fas fa-user-secret', 'Logar como', 'impersonate', 'is-info')
+      }
       addButton('fas fa-glass-water-droplet', 'Recipientes', 'recipiente', 'is-info')
 
       return container
@@ -171,8 +182,9 @@ function createActionsColumn() {
 const agGridColumns = ref([])
 
 const gridHeight = computed(() => {
-  if (!props.calcHeight) return 600
-  return Math.min(rows.value.length * rowHeight + baseHeight, 500)
+  if (!props.calcHeight) return `calc(100vh - ${alturasFixas.value}px)`
+  let alt = Math.min(rows.value.length * rowHeight + baseHeight, 500)
+  return alt + 'px'
 })
 
 defineExpose({
@@ -216,11 +228,12 @@ watch(
 
   <AgGridVue
     :theme="themeAlpine"
-    :style="{ width: '100%', height: gridHeight + 'px' }"
+    :style="{ width: '100%', height: gridHeight }"
     :rowData="rows"
     :columnDefs="agGridColumns"
     :pagination="pagination"
     :paginationPageSize="10"
+    :pagination-auto-page-size="true"
     :localeText="localeText"
     :paginationPageSizeSelector="paginationPageSizeSelector"
     @grid-ready="onGridReady"

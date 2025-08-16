@@ -2,7 +2,7 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-11">
-        <Loader v-if="isLoading" />
+        <Loader :active="isLoading" />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Captura de Alados</p>
@@ -281,7 +281,8 @@ async function save() {
 watch(
   () => vc_alado.ref_ativ,
   async (val) => {
-    const result = await auxiliarService.getAtividadeCombo(val)
+    let at = val == 10 ? 1 : 4
+    const result = await auxiliarService.getAtividadeCombo(at)
     if (result.error) {
       atividades.value = []
     } else {
@@ -300,8 +301,8 @@ async function loadCombos() {
   ]
 
   tipos.value = [
-    { id: 1, nome: 'Imóveis Cadastrados' },
-    { id: 4, nome: 'Outras Atividades' },
+    { id: 10, nome: 'Imóveis Cadastrados' },
+    { id: 9, nome: 'Outras Atividades' },
   ]
 }
 

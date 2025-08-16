@@ -2,8 +2,14 @@
   <div class="main-container">
     <div class="columns is-centered">
       <div class="column is-two-fifths">
-        <Loader v-if="isLoading" />
-        <Message v-if="showMessage" @do-close="closeMessage" :msg="message" :type="type" :caption="caption" />
+        <Loader :active="isLoading" />
+        <Message
+          v-if="showMessage"
+          @do-close="closeMessage"
+          :msg="message"
+          :type="type"
+          :caption="caption"
+        />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Usuário</p>
@@ -13,8 +19,13 @@
               <div class="field">
                 <label class="label">Nome</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="Nome" v-model="nome"
-                    :class="{ 'is-danger': v$.nome.$error }" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="Nome"
+                    v-model="nome"
+                    :class="{ 'is-danger': v$.nome.$error }"
+                  />
                   <span class="is-error" v-if="v$.nome.$error">
                     {{ v$.nome.$errors[0].$message }}
                   </span>
@@ -75,8 +86,13 @@
               <div class="field">
                 <label class="label">{{ strLocal }}</label>
                 <div class="control">
-                  <CmbTerritorio :id_prop="id_prop" :tipo="nivel" :sel="id_municipio" @selTerr="id_municipio = $event"
-                    :errclass="{ 'is-danger': v$.id_municipio.$error }" />
+                  <CmbTerritorio
+                    :id_prop="id_prop"
+                    :tipo="nivel"
+                    :sel="id_municipio"
+                    @selTerr="id_municipio = $event"
+                    :errclass="{ 'is-danger': v$.id_municipio.$error }"
+                  />
                   <span class="is-error" v-if="v$.id_municipio.$error">
                     {{ v$.id_municipio.$errors[0].$message }}
                   </span>
@@ -85,8 +101,13 @@
               <div class="field">
                 <label class="label">Email</label>
                 <div class="control">
-                  <input class="input" type="text" placeholder="E-mail" v-model="email"
-                    :class="{ 'is-danger': v$.email.$error }" />
+                  <input
+                    class="input"
+                    type="text"
+                    placeholder="E-mail"
+                    v-model="email"
+                    :class="{ 'is-danger': v$.email.$error }"
+                  />
                   <span class="is-error" v-if="v$.email.$error">
                     {{ v$.email.$errors[0].$message }}
                   </span>
@@ -101,7 +122,12 @@
               <div class="field">
                 <label class="label">Senha</label>
                 <div class="control">
-                  <input class="input" type="password" v-model="senha" :class="{ 'is-danger': v$.senha.$error }" />
+                  <input
+                    class="input"
+                    type="password"
+                    v-model="senha"
+                    :class="{ 'is-danger': v$.senha.$error }"
+                  />
                   <span class="is-error" v-if="v$.senha.$error">
                     {{ v$.senha.$errors[0].$message }}
                   </span>
@@ -110,8 +136,13 @@
               <div class="field">
                 <label class="label">Confirme a Senha</label>
                 <div class="control">
-                  <input class="input" type="password" v-model="confirm" placeholder="Confirme a senha"
-                    :class="{ 'is-danger': v$.confirm.$error }" />
+                  <input
+                    class="input"
+                    type="password"
+                    v-model="confirm"
+                    placeholder="Confirme a senha"
+                    :class="{ 'is-danger': v$.confirm.$error }"
+                  />
                   <span class="is-error" v-if="v$.confirm.$error">
                     {{ v$.confirm.$errors[0].$message }}
                   </span>
@@ -129,39 +160,38 @@
 </template>
 
 <script setup>
-import Message from "@/components/general/CustomMessage.vue";
-import Loader from "@/components/general/MyLoader.vue";
+import Message from '@/components/general/CustomMessage.vue'
+import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import authService from "@/services/auth.service";
-import useValidate from "@vuelidate/core";
-import CmbTerritorio from "@/components/forms/CmbTerritorio.vue";
+import authService from '@/services/auth.service'
+import useValidate from '@vuelidate/core'
+import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import {
   required$,
   minLength$,
   minLengthIfFilled$,
   email$,
   combo$,
-  sameAs$
-} from "@/components/forms/validators";
-import { ref, onMounted, reactive, watch } from "vue";
-import { useRoute } from 'vue-router';
-import { useCurrentUser } from '@/composables/currentUser';
+  sameAs$,
+} from '@/components/forms/validators'
+import { ref, onMounted, reactive, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import { useCurrentUser } from '@/composables/currentUser'
 
-const { currentUser } = useCurrentUser();
+const { currentUser } = useCurrentUser()
 
 const route = useRoute()
 
-
-var id_usuario = ref(0);
-var nome = ref("");
-var login = ref("");
-var confirm = ref('');
-var email = ref("");
-var id_municipio = ref(0);
-var nivel = ref(0);
-var senha = ref('');
-var id_prop = ref(0);
-var strLocal = ref('Município');
+var id_usuario = ref(0)
+var nome = ref('')
+var login = ref('')
+var confirm = ref('')
+var email = ref('')
+var id_municipio = ref(0)
+var nivel = ref(0)
+var senha = ref('')
+var id_prop = ref(0)
+var strLocal = ref('Município')
 
 var user = reactive({
   id_usuario,
@@ -172,20 +202,20 @@ var user = reactive({
   confirm,
   id_municipio,
   nivel,
-  id_prop
-});
+  id_prop,
+})
 
-var isLoading = ref(false);
-var message = ref('');
-var caption = ref('');
-var type = ref('');
-var showMessage = ref(false);
+var isLoading = ref(false)
+var message = ref('')
+var caption = ref('')
+var type = ref('')
+var showMessage = ref(false)
 var cFooter = ref({
   strSubmit: 'Salvar',
   strCancel: 'Cancelar',
   strAux: '',
-  aux: false
-});
+  aux: false,
+})
 
 const rules = {
   id_usuario: { required$ },
@@ -196,84 +226,95 @@ const rules = {
   login: { minLength: minLength$(5) },
   nivel: { required$, minValue: combo$(1) },
   id_municipio: { required$, minValue: combo$(1) },
-  id_prop: { required$ }
+  id_prop: { required$ },
 }
 
-const v$ = useValidate(rules, user);
-
+const v$ = useValidate(rules, user)
 
 function loadData() {
-  isLoading.value = true;
+  isLoading.value = true
 
   authService.getUserData(id_usuario.value).then(
     (response) => {
-      let data = response.data;
-      nome.value = data.nome.trim();
-      email.value = data.email.trim();
-      id_municipio.value = data.id_municipio;
-      nivel.value = data.nivel;
-      login.value = data.login.trim();
-      strLocal.value = ([4, 5, 8].includes(data.nivel) ? 'Município' : ([2, 3, 7].includes(data.nivel) ? 'Regional' : 'Local'));
+      let data = response.data
+      nome.value = data.nome.trim()
+      email.value = data.email.trim()
+      id_municipio.value = data.id_municipio
+      nivel.value = data.nivel
+      login.value = data.login.trim()
+      strLocal.value = [4, 5, 8].includes(data.nivel)
+        ? 'Município'
+        : [2, 3, 7].includes(data.nivel)
+        ? 'Regional'
+        : 'Local'
     },
     (error) => {
-      message.value = error.data;
-      showMessage.value = true;
-      type.value = "alert";
-      caption.value = "Usuário";
-      setTimeout(() => (showMessage.value = false), 3000);
+      message.value = error.data
+      showMessage.value = true
+      type.value = 'alert'
+      caption.value = 'Usuário'
+      setTimeout(() => (showMessage.value = false), 3000)
     }
-  );
+  )
 
-  isLoading.value = false;
+  isLoading.value = false
 }
-
 
 function update() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    authService.update(user).then(
-      (response) => {
-        showMessage.value = true;
-        message.value = "Usuário cadastrado com sucesso.";
-        type.value = "success";
-        caption.value = "Usuário";
-        setTimeout(() => (showMessage.value = false), 3000);
-      },
-      (error) => {
-        message.value = error;
-        showMessage.value = true;
-        type.value = "alert";
-        caption.value = "Usuário";
-        setTimeout(() => (showMessage.value = false), 3000);
-      }
-    )
+    authService
+      .update(user)
+      .then(
+        (response) => {
+          showMessage.value = true
+          message.value = 'Usuário cadastrado com sucesso.'
+          type.value = 'success'
+          caption.value = 'Usuário'
+          setTimeout(() => (showMessage.value = false), 3000)
+        },
+        (error) => {
+          message.value = error
+          showMessage.value = true
+          type.value = 'alert'
+          caption.value = 'Usuário'
+          setTimeout(() => (showMessage.value = false), 3000)
+        }
+      )
       .finally(() => {
-        document.getElementById("login").classList.remove("is-loading");
-      });
+        document.getElementById('login').classList.remove('is-loading')
+      })
   } else {
-    message.value = "Corrija os erros para enviar as informações";
-    showMessage.value = true;
-    type.value = "alert";
-    caption.value = "Usuário";
-    setTimeout(() => (showMessage.value = false), 3000);
+    message.value = 'Corrija os erros para enviar as informações'
+    showMessage.value = true
+    type.value = 'alert'
+    caption.value = 'Usuário'
+    setTimeout(() => (showMessage.value = false), 3000)
   }
 }
 
 onMounted(() => {
-  let cUser = currentUser;
+  let cUser = currentUser
   if (cUser.value) {
-    id_prop.value = cUser.value.id;
+    id_prop.value = cUser.value.id
   }
 
-  id_usuario.value = route.params.id;
-  loadData();
-});
+  id_usuario.value = route.params.id
+  loadData()
+})
 
 watch(
   () => nivel.value,
   (val) => {
-    strLocal.value = [1, 6].includes(val) ? 'Local' : ([2, 3, 7].includes(val) ? 'Regional' : ([9].includes(val) ? 'GVE' : 'Município'));
-  });
+    strLocal.value = [1, 6].includes(val)
+      ? 'Local'
+      : [2, 3, 7].includes(val)
+      ? 'Regional'
+      : [9].includes(val)
+      ? 'GVE'
+      : 'Município'
+  }
+)
 </script>
 
 <!--/**

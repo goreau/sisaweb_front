@@ -211,4 +211,80 @@ export const reportMenu = [
       },
     ]
   },
+  {
+    href: "",
+    title: "Captura de Alados",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-square-virus",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: [
+      {
+        href: "/mainReport/alado/aladoResumo",
+        title: "Resumo de Capturas",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/alado/aladoMensal",
+        title: "Mensal de Capturas",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+    ]
+  },
+  {
+    href: "",
+    title: "Dinâmicos",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-square-virus",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: [
+      {
+        href: "/tabelaCruzada",
+        title: "Construir",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/din/aladoMensal",
+        title: "Mensal de Capturas",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+    ]
+  },
 ]

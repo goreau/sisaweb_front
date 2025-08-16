@@ -1,15 +1,14 @@
 <script setup>
-
 </script>
 
 <template>
   <div class="home">
-    <br>
+    <br />
     <div class="columns">
       <div class="column is-full has-text-centered pt-6 mt-6">
         <div class="box">
           <div class="welcome_image"></div>
-          <p class="title" style="margin-top: 5%;">Sisaweb - Versão 3</p>
+          <p class="title" style="margin-top: 5%">Sisaweb - Versão 3</p>
         </div>
       </div>
     </div>
@@ -17,6 +16,7 @@
 </template>
 
 <style lang="scss" scoped>
+@use '@/assets/styles/custom-vsm' as *;
 .welcome_image {
   background-image: url('../../assets/aedes.png');
   opacity: 0.3;

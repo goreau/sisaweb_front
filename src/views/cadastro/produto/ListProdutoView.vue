@@ -1,11 +1,11 @@
 <template>
   <div class="main-container">
     <div class="columns is-centered">
-      <div class="column is-11">
+      <div class="column is-8">
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Ciclos de Visita</p>
+            <p class="card-header-title is-centered">Produtos</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
@@ -22,31 +22,21 @@
           <div class="card-content">
             <section v-show="!hasRows">
               <div class="columns" v-if="tpUser < 4">
-                <div class="column is-5 is-offset-3">
+                <div class="column is-6 is-offset-3">
                   <div class="field">
-                    <label class="label">Município</label>
+                    <label class="label">Tipo</label>
                     <div class="control">
-                      <CmbTerritorio
-                        :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
+                      <CmbGeneric
+                        :data="tipos"
+                        :sel="filter.tipo_uso"
+                        @selGen="filter.tipo_uso = $event"
                       />
                     </div>
                   </div>
                 </div>
               </div>
               <div class="columns">
-                <div class="column is-5 is-offset-3">
-                  <div class="field">
-                    <label class="label">Ano</label>
-                    <div class="control">
-                      <input class="input" type="text" placeholder="Ano dos Ciclos" v-model="ano" />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="columns">
-                <div class="field column is-3 is-offset-4">
+                <div class="field column is-4 is-offset-4">
                   <label class="label">&nbsp;</label>
                   <div class="control">
                     <button class="button is-link is-fullwidth" @click="loadData">
@@ -59,14 +49,14 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="idUser"
-                :buttons="['edit', 'delete']"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
+                :has-exports="true"
               />
             </section>
           </div>
@@ -78,15 +68,15 @@
 </template>
 
 <script setup>
+import produtoService from '@/services/cadastro/produto.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
-import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
-import cicloService from '@/services/gerenciamento/ciclo.service'
+import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 
 const { currentUser } = useCurrentUser()
 
@@ -96,19 +86,18 @@ const toast = useToast()
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
-var isLoading = false
-const STORAGE_KEY = 'consulta-ciclosw'
 
-var id_municipio = ref(0)
-var ano = ref('')
+var isLoading = false
+const STORAGE_KEY = 'consulta-produtosw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
 const idUser = ref(0)
 
+const tipos = ref([])
+
 const filter = reactive({
-  id_municipio,
-  ano,
+  tipo_uso: 0,
 })
 
 const columns = ref([])
@@ -117,12 +106,32 @@ function newFilter() {
   hasRows.value = false
 }
 
+async function onEditRow(item) {
+  router.push(`/produto/${item.row.id}`)
+}
+
+async function onDeleteRow(item) {
+  const ok = await confirmDialog.value.show({
+    title: 'Excluir',
+    message: 'Deseja mesmo excluir esse produto?',
+    okButton: 'Confirmar',
+  })
+  if (ok) {
+    const resultado = await produtoService.delete(item.row.id)
+    if (resultado.error) {
+      toast.error(resultado.msg)
+    } else {
+      toast.success('Produto excluído com sucesso!')
+    }
+  }
+}
+
 async function loadData() {
   try {
     isLoading = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await cicloService.getCiclos(JSON.stringify(filter))
+    const result = await produtoService.getProdutos(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
@@ -134,38 +143,24 @@ async function loadData() {
   }
 }
 
-async function onEditRow(item) {
-  router.push(`/ciclo/${item.row.id}`)
-}
-
-async function onDeleteRow(item) {
-  const ok = await confirmDialog.value.show({
-    title: 'Excluir',
-    message: 'Deseja mesmo excluir esse Ciclo?',
-    okButton: 'Confirmar',
-  })
-  if (ok) {
-    const resultado = await cicloService.delete(item.row.id)
-    if (resultado.error) {
-      toast.error(resultado.msg)
-    } else {
-      toast.success('Ciclo excluído com sucesso!')
-      loadData()
-    }
-  }
-}
-
 onMounted(() => {
   const saved = localStorage.getItem(STORAGE_KEY)
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
+
   columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Ciclo', field: 'ciclo' },
-    { headerName: 'Término', field: 'data' },
-    { headerName: 'OwnerId', field: 'owner_id', hide: true },
+    { headerName: 'Tipo', field: 'uso' },
+    { headerName: 'Produto', field: 'produto' },
     { headerName: 'Responsável', field: 'owner' },
+    { headerName: 'OwnerId', field: 'owner_id', hide: true },
+  ]
+
+  tipos.value = [
+    { id: 1, nome: 'Focal' },
+    { id: 2, nome: 'Perifocal/BR' },
+    { id: 3, nome: 'Nebulização' },
+    { id: 4, nome: 'Inativo' },
   ]
 
   let cUser = currentUser
