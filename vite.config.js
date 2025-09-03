@@ -5,7 +5,18 @@ import vue from '@vitejs/plugin-vue'
 // https://vite.dev/config/
 export default defineConfig(({ mode }) => {
   return {
-    base: mode === 'production' ? '/vigent/sisaweb_3/' : '/',
+    build: {
+      rollupOptions: {
+        output: {
+          manualChunks: {
+            aggrid: ['ag-grid-vue3', 'ag-grid-community'],
+            excel: ['xlsx', 'file-saver'],
+            pdf: ['jspdf', 'jspdf-autotable']
+          }
+        }
+      }
+    },
+    base: mode === 'production' ? '/sisaweb3/' : '/',
     plugins: [
       vue(),
     ],

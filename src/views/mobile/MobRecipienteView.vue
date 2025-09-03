@@ -141,7 +141,6 @@
               <MyDataTable
                 :data="colRecipientes"
                 :columns="columns"
-                :search="false"
                 :pagination="false"
                 @edit="onEditRow"
                 @delete="onDeleteRow"

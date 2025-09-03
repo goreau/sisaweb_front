@@ -40,4 +40,10 @@ export default [
     component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/MobSisamobView.vue'),
     meta: { onlyUser: true }
   },
+  {
+    path: '/logSisamob',
+    name: 'logSisamob',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/MobLogView.vue'),
+    meta: { onlyUser: true }
+  },
 ]

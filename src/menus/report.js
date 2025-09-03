@@ -273,18 +273,6 @@ export const reportMenu = [
           },
         },
       },
-      {
-        href: "/mainReport/din/aladoMensal",
-        title: "Mensal de Capturas",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
-          },
-        },
-      },
     ]
   },
 ]

@@ -26,6 +26,8 @@
                   :pagination="true"
                   :has-exports="true"
                   :buttons="[]"
+                  :has-graf="true"
+                  @chart="toGrafico"
                 />
               </div>
             </section>
@@ -42,6 +44,14 @@ import crossTab from '@/components/report/crossTab.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
 import reportService from '@/services/report.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
+import { useReportStore } from '@/stores/reportStore'
+import { useRouter, useRoute } from 'vue-router'
+import { useToast } from 'vue-toastification'
+
+const store = useReportStore()
+const route = useRoute()
+const router = useRouter()
+const toast = useToast()
 
 const campos = ref([])
 const pivotData = ref([])
@@ -50,15 +60,27 @@ const pivotFantasia = ref('')
 
 var isLoading = ref(false)
 
+function toGrafico() {
+  store.setTable(pivotData, pivotColumns, campos, pivotFantasia)
+  router.push('/testeChart')
+}
+
 onMounted(async () => {
   try {
     isLoading.value = true
-    const result = await reportService.getCrossVars()
-    if (result.error) {
-      console.log(result.error)
-      campos.value = []
+    if (route.query.returnFrom === 'grafico') {
+      pivotData.value = store.tableData
+      pivotColumns.value = store.tableColumns
+      campos.value = store.tableOptions
+      pivotFantasia.value = store.tableTitle
     } else {
-      campos.value = result.data
+      const result = await reportService.getCrossVars()
+      if (result.error) {
+        console.log(result.error)
+        campos.value = []
+      } else {
+        campos.value = result.data
+      }
     }
   } finally {
     isLoading.value = false
@@ -75,7 +97,7 @@ async function gerarRelatorio(options) {
     isLoading.value = true
     const result = await reportService.getCrossTab(JSON.stringify(options))
     if (result.error) {
-      console.log(result.error)
+      toast.error(result.message)
       campos.value = []
     } else {
       pivotData.value = result.data.rows

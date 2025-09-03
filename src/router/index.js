@@ -8,6 +8,7 @@ import gerenciamentoRoutes from './gerenciamentoRoutes';
 import atividadeRoutes from './atividadeRoutes';
 import mobileRoutes from './mobileRoutes';
 import reportRoutes from './reportRoutes';
+import forumRoutes from './forumRoutes';
 
 
 const routes = [
@@ -17,6 +18,7 @@ const routes = [
   ...atividadeRoutes,
   ...mobileRoutes,
   ...reportRoutes,
+  ...forumRoutes,
   {
     path: '/acesso-negado',
     name: 'AcessoNegado',

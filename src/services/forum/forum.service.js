@@ -1,9 +1,10 @@
 import axios from "@/services/api.js";
 
-class AreaNavService {
-  async create(data) {
+class ForumService {
+  async createTopico(data) {
     try {
-      const res = await axios.post("/api/cadastro/areaNav", data);
+
+      const res = await axios.post("/api/forum/topico", data, { headers: { "Content-Type": "multipart/form-data" } });
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -14,9 +15,9 @@ class AreaNavService {
     }
   }
 
-  async getAreaNav(id) {
+  async createReplica(data) {
     try {
-      const res = await axios.get(`/api/cadastro/areaNav/${id}`);
+      const res = await axios.post("/api/forum/replica", data, { headers: { "Content-Type": "multipart/form-data" } });
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -27,9 +28,10 @@ class AreaNavService {
     }
   }
 
-  async update(data) {
+  async updateTopico(data) {
     try {
-      const res = await axios.put("/api/cadastro/areaNav", data);
+
+      const res = await axios.put("/api/forum/topico", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -40,9 +42,9 @@ class AreaNavService {
     }
   }
 
-  async delete(id) {
+  async updateReplica(data) {
     try {
-      const res = await axios.delete(`/api/cadastro/areaNav/${id}`);
+      const res = await axios.put("/api/forum/replica", data);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -53,9 +55,10 @@ class AreaNavService {
     }
   }
 
-  async getAreaNavs(filter) {
+  async delTopico(id) {
     try {
-      const res = await axios.get(`/api/cadastro/areaNavs/${filter}`);
+
+      const res = await axios.delete(`/api/forum/topico/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -66,9 +69,9 @@ class AreaNavService {
     }
   }
 
-  async getCombo(filter) {
+  async delReplica(id) {
     try {
-      const res = await axios.get(`/api/cadastro/comboAreaNav/${filter}`);
+      const res = await axios.delete(`/api/forum/replica/${id}`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -79,9 +82,10 @@ class AreaNavService {
     }
   }
 
-  async getComboQuart(id) {
+
+  async getItens() {
     try {
-      const res = await axios.get(`/api/cadastro/comboQuartNav/${id}`);
+      const res = await axios.get(`/api/forum/itens`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {
@@ -92,6 +96,18 @@ class AreaNavService {
     }
   }
 
+  async getLista(filter) {
+    try {
+      const res = await axios.get(`/api/forum/lista/${filter}`);
+      return res.data;
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data;
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' };
+      }
+    }
+  }
 }
 
-export default new AreaNavService();
+export default new ForumService();

@@ -68,7 +68,6 @@
                 :buttons="['edit', 'delete']"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"

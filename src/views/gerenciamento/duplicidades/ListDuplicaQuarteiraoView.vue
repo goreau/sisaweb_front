@@ -85,12 +85,7 @@
               </div>
             </section>
             <section v-if="hasRows">
-              <MyDataTable
-                :data="dataTable"
-                :columns="columns"
-                :search="true"
-                :pagination="false"
-              />
+              <MyDataTable :data="dataTable" :columns="columns" :pagination="false" />
               <hr />
               <div class="columns">
                 <div class="column is-4 is-offset-1">

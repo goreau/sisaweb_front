@@ -6,6 +6,7 @@ import { usuariosMenu } from './usuarios.js'
 import { mobileMenu } from './mobile.js'
 import { reportMenu } from './report.js'
 import { referenciaMenu } from './referencia.js'
+import { ajudaMenu } from './ajuda.js';
 
 export const menuData = [
   {
@@ -23,6 +24,19 @@ export const menuData = [
       },
     },
     child: homeMenu
+  },
+  {
+    href: "",
+    title: "Ajuda",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-circle-question",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: ajudaMenu
   },
   {
     href: "",

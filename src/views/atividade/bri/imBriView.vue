@@ -442,7 +442,6 @@
               <MyDataTable
                 :data="colImoveis"
                 :columns="columns"
-                :search="false"
                 :pagination="false"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
@@ -476,7 +475,7 @@
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
-import MyDataTable from '@/components/general/gptTable.vue'
+import MyDataTable from '@/components/general/MyDataTable.vue'
 import useValidate from '@vuelidate/core'
 import {
   required$,

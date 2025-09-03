@@ -83,7 +83,6 @@
                 :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
-                :search="true"
                 :pagination="true"
                 :buttons="['edit', 'delete', 'reset', 'impersonate']"
                 :has-exports="true"

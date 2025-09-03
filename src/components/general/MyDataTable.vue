@@ -2,14 +2,34 @@
 <script setup>
 import { ref, watch, onMounted, nextTick, computed } from 'vue'
 import { AgGridVue } from 'ag-grid-vue3'
-import { AllCommunityModule, ModuleRegistry, themeAlpine } from 'ag-grid-community'
+import {
+  ColumnAutoSizeModule,
+  CustomFilterModule,
+  DateFilterModule,
+  LocaleModule,
+  ModuleRegistry,
+  NumberFilterModule,
+  PaginationModule,
+  TextFilterModule,
+  themeAlpine,
+  ValidationModule,
+} from 'ag-grid-community'
 import localeText from '@/utils/agGridLocale'
-import * as XLSX from 'xlsx'
-import { saveAs } from 'file-saver'
-import jsPDF from 'jspdf'
-import autoTable from 'jspdf-autotable'
+import { ClientSideRowModelModule } from 'ag-grid-community'
+import { CsvExportModule } from 'ag-grid-community'
 
-ModuleRegistry.registerModules([AllCommunityModule])
+ModuleRegistry.registerModules([
+  ClientSideRowModelModule,
+  CsvExportModule,
+  ValidationModule,
+  ColumnAutoSizeModule,
+  TextFilterModule,
+  NumberFilterModule,
+  DateFilterModule,
+  CustomFilterModule,
+  PaginationModule,
+  LocaleModule,
+])
 
 const paginationPageSizeSelector = [10, 20, 50, 100]
 
@@ -29,12 +49,24 @@ const props = defineProps({
     default: () => {},
   },
   hasExports: Boolean,
+  hasGraf: {
+    type: Boolean,
+    default: false,
+  },
   calcHeight: {
     type: Boolean,
     default: false,
   },
 })
-const emit = defineEmits(['edit', 'delete', 'quarteirao', 'reset', 'impersonate', 'recipiente'])
+const emit = defineEmits([
+  'edit',
+  'delete',
+  'quarteirao',
+  'reset',
+  'impersonate',
+  'recipiente',
+  'chart',
+])
 
 const gridApi = ref(null)
 const columnApi = ref(null)
@@ -93,12 +125,20 @@ const getFilteredRows = () => {
   return rows
 }
 
-function download_xlsx() {
+async function download_xlsx() {
+  const XLSX = await import('xlsx')
+  const { saveAs } = await import('file-saver')
+
   const data = getFilteredRows()
 
-  const exportCols = props.columns.filter((col) => col.field !== 'acoes')
+  // achata as colunas (com suporte a children)
+  const exportCols = flattenColumns(props.columns).filter(
+    (col) => col.field && col.field !== 'acoes'
+  )
+
+  // monta os dados já com headers "pai - filho"
   const exportData = data.map((row) =>
-    Object.fromEntries(exportCols.map((col) => [col.headerName, row[col.field]]))
+    Object.fromEntries(exportCols.map((col) => [col.exportHeader, row[col.field]]))
   )
 
   const worksheet = XLSX.utils.json_to_sheet(exportData)
@@ -108,15 +148,46 @@ function download_xlsx() {
   saveAs(new Blob([excelBuffer]), 'Sisaweb3.xlsx')
 }
 
-function download_pdf() {
-  const data = getFilteredRows()
+function flattenColumns(columns, parentHeader = '') {
+  const result = []
+  columns.forEach((col) => {
+    if (col.children) {
+      // recursivo
+      result.push(...flattenColumns(col.children, col.headerName))
+    } else {
+      // monta o header concatenando pai + filho
+      const header = parentHeader ? `${parentHeader} - ${col.headerName}` : col.headerName
+      result.push({ ...col, exportHeader: header })
+    }
+  })
+  return result
+}
 
-  const doc = new jsPDF()
-  const exportCols = props.columns.filter((col) => col.field !== 'acoes')
-  const headers = exportCols.map((col) => col.headerName)
-  const linhas = data.map((row) => exportCols.map((col) => row[col.field]))
-  autoTable(doc, { head: [headers], body: linhas })
+async function download_pdf() {
+  const jsPDF = (await import('jspdf')).default
+  const autoTable = (await import('jspdf-autotable')).default
+
+  const doc = new jsPDF({ orientation: 'landscape' })
+
+  // achata colunas igual ao Excel
+  const exportCols = flattenColumns(props.columns).filter(
+    (col) => col.field && col.field !== 'acoes'
+  )
+
+  const headers = exportCols.map((col) => col.exportHeader)
+
+  const rows = getFilteredRows().map((row) => exportCols.map((col) => row[col.field]))
+
+  autoTable(doc, {
+    head: [headers],
+    body: rows,
+  })
+
   doc.save('Sisaweb3.pdf')
+}
+
+function toGrafico() {
+  emit('chart')
 }
 
 watch(
@@ -217,13 +288,22 @@ watch(
 </script>
 
 <template>
-  <div class="has-text-right export" v-if="hasExports">
-    <button class="button is-success is-outlined is-small" @click="download_xlsx">
-      <font-awesome-icon icon="fa-solid fa-file-excel" />
-    </button>
-    <button class="button is-danger is-outlined is-small" @click="download_pdf">
-      <font-awesome-icon icon="fa-solid fa-file-pdf" />
-    </button>
+  <div class="columns">
+    <div class="column has-text-right">
+      <span class="has-text-right export" v-if="hasGraf">
+        <button class="button is-info is-outlined is-small" title="Gráfico" @click="toGrafico">
+          <font-awesome-icon icon="fa-solid fa-chart-column" />
+        </button>
+      </span>
+      <span class="has-text-right export" v-if="hasExports">
+        <button class="button is-success is-outlined is-small" title="Excel" @click="download_xlsx">
+          <font-awesome-icon icon="fa-solid fa-file-excel" />
+        </button>
+        <button class="button is-danger is-outlined is-small" title="Pdf" @click="download_pdf">
+          <font-awesome-icon icon="fa-solid fa-file-pdf" />
+        </button>
+      </span>
+    </div>
   </div>
 
   <AgGridVue

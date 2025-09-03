@@ -47,4 +47,16 @@ export const mobileMenu = [
       },
     },
   },
+  {
+    href: "/logSisamob",
+    title: "Consultar logs de envio",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-search",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+  },
 ]

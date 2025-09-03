@@ -103,7 +103,7 @@ async function login() {
           }
         }
       } else {
-        toast.error('erro')
+        toast.error(log.msg)
       }
     } else {
       router.push({ name: 'home' })

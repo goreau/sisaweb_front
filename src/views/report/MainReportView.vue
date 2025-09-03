@@ -15,12 +15,7 @@
               <!-- Resultado do filtro -->
               <div class="box mt-5">
                 <h2 class="title is-6">{{ options.titulo }}</h2>
-                <MyDataTable
-                  :data="dataTable"
-                  :columns="options.colunas"
-                  :search="true"
-                  :pagination="true"
-                />
+                <MyDataTable :data="dataTable" :columns="options.colunas" :pagination="true" />
               </div>
               <hr />
               <div v-html="options.extra" class="content mt-3 extra"></div>

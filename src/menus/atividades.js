@@ -226,7 +226,7 @@ export const atividadesMenu = [
       },
     ],
   },
-  {
+  /*{
     href: "",
     title: "BRI",
     icon: {
@@ -263,5 +263,5 @@ export const atividadesMenu = [
         },
       },
     ],
-  },
+  },*/
 ]
