@@ -165,6 +165,7 @@ onMounted(() => {
   ]
 
   let cUser = currentUser
+  console.log(cUser)
   if (cUser.value) {
     idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo

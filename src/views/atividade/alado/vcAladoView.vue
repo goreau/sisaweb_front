@@ -348,8 +348,8 @@ watch(
 
 onMounted(async () => {
   if (route.query.returnFrom === 'imoveis' || route.query.from === 'edit') {
-    console.log(store.objetoAlado)
-    readyToGo.value = true
+    //console.log(store.objetoAlado)
+    //readyToGo.value = true
     Object.assign(vc_alado, JSON.parse(JSON.stringify(store.objetoAlado)))
   } else {
     vc_alado.ref_ativ = 1

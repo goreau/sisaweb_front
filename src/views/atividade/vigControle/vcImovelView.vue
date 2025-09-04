@@ -237,6 +237,7 @@
             <span v-if="colImoveis.length > 0">
               <p class="divisor">Imóveis</p>
               <MyDataTable
+                :loggedUser="{ id: 0, tipo: 0 }"
                 :data="colImoveis"
                 :columns="columns"
                 :calcHeight="true"

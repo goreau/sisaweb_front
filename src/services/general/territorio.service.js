@@ -40,9 +40,9 @@ class TerritorioService {
     }
   }
 
-  async getComboMun(tipo) {
+  async getComboMun() {
     try {
-      const res = await axios.get(`/api/general/muncombo/${tipo}`);
+      const res = await axios.get(`/api/general/muncombo`);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {

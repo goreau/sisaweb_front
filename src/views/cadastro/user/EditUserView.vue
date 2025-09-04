@@ -3,13 +3,6 @@
     <div class="columns is-centered">
       <div class="column is-two-fifths">
         <Loader :active="isLoading" />
-        <Message
-          v-if="showMessage"
-          @do-close="closeMessage"
-          :msg="message"
-          :type="type"
-          :caption="caption"
-        />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Usuário</p>
@@ -87,7 +80,6 @@
                 <label class="label">{{ strLocal }}</label>
                 <div class="control">
                   <CmbTerritorio
-                    :id_prop="id_prop"
                     :tipo="nivel"
                     :sel="id_municipio"
                     @selTerr="id_municipio = $event"
@@ -160,7 +152,6 @@
 </template>
 
 <script setup>
-import Message from '@/components/general/CustomMessage.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import authService from '@/services/auth.service'

@@ -421,11 +421,13 @@
             <section v-if="colImoveis.length > 0">
               <p class="divisor">Imóveis</p>
               <MyDataTable
+                :loggedUser="{ id: 0, tipo: 0 }"
                 :data="colImoveis"
                 :columns="columns"
                 :pagination="false"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
+                :buttons="['edit', 'delete']"
               />
             </section>
             <hr />

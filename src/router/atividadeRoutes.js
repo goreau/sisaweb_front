@@ -142,4 +142,19 @@ export default [
       import(/* webpackChunkName: "user" */ '@/views/atividade/bri/ListVcBriView.vue'),
     meta: { onlyUser: true },
   },
+  {
+    path: '/edl/:id',
+    name: 'edl',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/atividade/edl/EdlView.vue'),
+    meta: { onlyUser: true },
+  },
+  {
+    path: '/edls',
+    name: 'edls',
+    component: () =>
+      import(
+        /* webpackChunkName: "user" */ '@/views/atividade/edl/ListEdlView.vue'
+      ),
+  },
 ]

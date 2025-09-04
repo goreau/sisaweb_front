@@ -88,4 +88,15 @@ export default [
     name: 'produtos',
     component: () => import(/* webpackChunkName: "user" */ '@/views/cadastro/produto/ListProdutoView.vue'),
   },
+  {
+    path: '/edlCadastro/:id',
+    name: 'edlCadastro',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/cadastro/edl/CadastroEdlView.vue'),
+    meta: { onlyUser: true }
+  },
+  {
+    path: '/edlCadastros',
+    name: 'edlCadastros',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/cadastro/edl/ListCadastroEdlView.vue'),
+  },
 ]

@@ -9,44 +9,40 @@
           </option>
           <option value="999" :selected="sel == 999" :v-if="disabled">NÃO SE APLICA</option>
         </select>
-
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import TerritorioService from "@/services/general/territorio.service.js";
-import { onMounted, ref } from "vue";
+import TerritorioService from '@/services/general/territorio.service.js'
+import { onMounted, ref } from 'vue'
 
+var municipios = ref([])
 
-var municipios = ref([]);
+const props = defineProps(['sel', 'errclass'])
 
-
-const props = defineProps(['id_prop', 'sel', 'errclass']);
-
-const emit = defineEmits(['selMun']);
-
+const emit = defineEmits(['selMun'])
 
 function onChange(event) {
-  emit('selMun', event.target.value);
+  emit('selMun', event.target.value)
 }
 
 function loadData() {
-
-  TerritorioService.getComboMun(props.id_prop)
+  console.log(props.sel)
+  TerritorioService.getComboMun()
     .then((res) => {
-      municipios.value = res.data;
+      municipios.value = res.data
     })
     .catch((err) => {
-      console.log(err.response);
-      municipios.value = [];
+      console.log(err.response)
+      municipios.value = []
     })
 }
 
 onMounted(() => {
-  loadData();
-});
+  loadData()
+})
 </script>
 
 <style scoped></style>

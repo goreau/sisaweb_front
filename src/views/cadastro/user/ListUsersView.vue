@@ -26,12 +26,7 @@
                   <div class="field">
                     <label class="label">Regional</label>
                     <div class="control">
-                      <CmbTerritorio
-                        :id_prop="id_prop"
-                        :tipo="2"
-                        :sel="id_regional"
-                        @selTerr="id_regional = $event"
-                      />
+                      <CmbTerritorio :tipo="2" :sel="id_regional" @selTerr="id_regional = $event" />
                     </div>
                   </div>
                 </div>
@@ -41,12 +36,7 @@
                   <div class="field">
                     <label class="label">GVE</label>
                     <div class="control">
-                      <CmbTerritorio
-                        :id_prop="id_prop"
-                        :tipo="9"
-                        :sel="id_gve"
-                        @selTerr="id_gve = $event"
-                      />
+                      <CmbTerritorio :tipo="9" :sel="id_gve" @selTerr="id_gve = $event" />
                     </div>
                   </div>
                 </div>
@@ -57,7 +47,6 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
-                        :id_prop="id_prop"
                         :tipo="99"
                         :sel="id_municipio"
                         @selTerr="id_municipio = $event"
@@ -185,7 +174,7 @@ async function onImpersonate(item) {
   if (resp.error) {
     toast.error(resp.msg)
   } else {
-    auth.login(resp)
+    localStorage.setItem('user', JSON.stringify(resp.data))
     location.href = router.resolve({ name: 'home' }).href
   }
 }

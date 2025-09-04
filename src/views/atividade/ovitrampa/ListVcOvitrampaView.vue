@@ -198,7 +198,7 @@ onMounted(() => {
 
   let cUser = currentUser
   if (cUser.value) {
-    idUser.value = cUser.value.id
+    idUser.value = cUser.value
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

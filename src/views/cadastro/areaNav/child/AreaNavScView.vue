@@ -51,6 +51,7 @@
             <p class="divisor">Censitários incluídos</p>
             <section v-if="filhos.length > 0">
               <MyDataTable
+                :loggedUser="{ id: 0, tipo: 0 }"
                 :data="filhos"
                 :columns="columns"
                 calc-height="true"
@@ -195,8 +196,8 @@ watch(
 
 onMounted(async () => {
   columns.value = [
-    { label: 'Area', field: 'fantArea' },
-    { label: 'Censitario', field: 'fantCensitario' },
+    { headerName: 'Area', field: 'fantArea' },
+    { headerName: 'Censitario', field: 'fantCensitario' },
   ]
 
   const obj = store.objetoPrincipal

@@ -139,6 +139,7 @@
             <span v-if="colRecipientes.length > 0">
               <p class="divisor">Recipientes</p>
               <MyDataTable
+                :loggedUser="{ id: 0, tipo: 0 }"
                 :data="colRecipientes"
                 :columns="columns"
                 :has-exports="false"

@@ -3,13 +3,6 @@
     <div class="columns is-centered">
       <div class="column is-two-fifths">
         <Loader :active="isLoading" />
-        <Message
-          v-if="showMessage"
-          @do-close="closeMessage"
-          :msg="message"
-          :type="type"
-          :caption="caption"
-        />
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Usuário</p>
@@ -87,7 +80,7 @@
                 <label class="label">{{ strLocal }}</label>
                 <div class="control">
                   <CmbTerritorio
-                    :tipo="nivel"
+                    :tipo="user.nivel"
                     :sel="user.id_municipio"
                     @selMun="user.id_municipio = $event"
                     :errclass="{ 'is-danger': v$.id_municipio.$error }"
@@ -159,7 +152,7 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
           </footer>
         </div>
       </div>
@@ -168,7 +161,6 @@
 </template>
 
 <script setup>
-import Message from '@/components/general/CustomMessage.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import authService from '@/services/auth.service'
@@ -194,6 +186,8 @@ const { currentUser } = useCurrentUser()
 
 var tpUser = ref(0)
 var nvUser = ref(0)
+
+var isLoading = false
 
 var strLocal = ref('Município')
 
