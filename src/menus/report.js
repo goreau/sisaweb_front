@@ -24,12 +24,24 @@ export const reportMenu = [
         },
       },
       {
+        href: "/mainReport/cadastro/cadResumoArea",
+        title: "Resumo de Área",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
         href: "/mainReport/cadastro/cadResumoImCadastrado",
         title: "Resumo de Imóveis Cadastrados",
         icon: {
           element: "font-awesome-icon",
           attributes: {
-            icon: "fa-solid fa-search",
+            icon: "fa-solid fa-plus",
             size: "lg",
             transform: "shrink-8",
           },
@@ -41,7 +53,7 @@ export const reportMenu = [
         icon: {
           element: "font-awesome-icon",
           attributes: {
-            icon: "fa-solid fa-search",
+            icon: "fa-solid fa-plus",
             size: "lg",
             transform: "shrink-8",
           },

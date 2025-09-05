@@ -33,7 +33,7 @@ import Loader from '@/components/general/MyLoader.vue'
 import reportService from '@/services/report.service'
 import MyDataTable from '@/components/general/gptTable.vue'
 import { useRoute } from 'vue-router'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const route = useRoute()
