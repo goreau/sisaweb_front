@@ -48,6 +48,18 @@ export const reportMenu = [
         },
       },
       {
+        href: "/mainReport/cadastro/cadResumoEdl",
+        title: "Resumo de EDLs Cadastradas",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
         href: "/mainReport/cadastro/cadEquipe",
         title: "Cadastro de Equipe",
         icon: {

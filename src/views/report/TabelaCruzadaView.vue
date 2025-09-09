@@ -95,7 +95,7 @@ function newFilter() {
 async function gerarRelatorio(options) {
   try {
     isLoading.value = true
-    const result = await reportService.getCrossTab(JSON.stringify(options))
+    const result = await reportService.getCrossTab(options)
     if (result.error) {
       toast.error(result.message)
       campos.value = []

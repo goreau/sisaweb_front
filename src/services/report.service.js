@@ -55,7 +55,7 @@ class ReportService {
 
   async getCrossTab(opcoes) {
     try {
-      const res = await axios.get(`/api/report/getCrossTab/${opcoes}`);
+      const res = await axios.post(`/api/report/getCrossTab`, opcoes);
       return res.data;
     } catch (error) {
       if (error.response && error.response.data) {

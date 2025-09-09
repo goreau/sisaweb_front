@@ -291,4 +291,42 @@ export const cadastrosMenu = [
       },
     ],
   },
+  {
+    href: "",
+    title: "EDL",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-hexagon-nodes",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: [
+      {
+        href: "/edlCadastro/0",
+        title: "Novo",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/edlCadastros",
+        title: "Consultar",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-search",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+    ],
+  },
 ]

@@ -152,11 +152,19 @@
             </fieldset>
             <fieldset class="fieldset">
               <legend>Pesquisa Larvária</legend>
+              <div class="columns is-centered">
+                <div class="column is-4 is-offset-4 colTit has-text-centered">
+                  <label class="label">Larvas</label>
+                </div>
+                <div class="column is-4 colTit has-text-centered">
+                  <label class="label">Pupas</label>
+                </div>
+              </div>
               <div class="columns">
-                <div class="column is-2 is-offset-2">
+                <div class="column is-2">
                   <div class="content">
                     <div class="field">
-                      <label class="label">Com com_larvas</label>
+                      <label class="label">Com larvas</label>
                       <div class="control">
                         <input
                           class="input"
@@ -210,7 +218,7 @@
                 <div class="column is-2">
                   <div class="content">
                     <div class="field">
-                      <label class="label"><i>Ae albopictus</i></label>
+                      <label class="label"><i>Ae albopictus </i></label>
                       <div class="control">
                         <input
                           class="input"
@@ -225,10 +233,54 @@
                     </div>
                   </div>
                 </div>
+                <div class="column is-2">
+                  <div class="content">
+                    <div class="field">
+                      <label class="label"><i>Ae aegypti</i></label>
+                      <div class="control">
+                        <input
+                          class="input"
+                          type="text"
+                          placeholder="Opcional"
+                          v-model="imovel.pupa_aegypti"
+                        />
+                        <span class="is-error" v-if="v$.pupa_aegypti.$error">
+                          {{ v$.pupa_aegypti.$errors[0].$message }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-2">
+                  <div class="content">
+                    <div class="field">
+                      <label class="label"><i>Ae albopictus</i></label>
+                      <div class="control">
+                        <input
+                          class="input"
+                          type="text"
+                          placeholder="Opcional"
+                          v-model="imovel.pupa_albopictus"
+                        />
+                        <span class="is-error" v-if="v$.pupa_albopictus.$error">
+                          {{ v$.pupa_albopictus.$errors[0].$message }}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
             </fieldset>
             <fieldset class="fieldset">
               <legend>Intra</legend>
+              <div class="columns is-centered">
+                <div class="column is-4 is-offset-2 colTit has-text-centered">
+                  <label class="label">Ae. aegypti</label>
+                </div>
+                <div class="column is-4 colTit has-text-centered">
+                  <label class="label">Ae. albopictus</label>
+                </div>
+              </div>
               <div class="columns">
                 <div class="column is-2 is-offset-1">
                   <div class="content">
@@ -324,6 +376,14 @@
             </fieldset>
             <fieldset class="fieldset">
               <legend>Peri</legend>
+              <div class="columns is-centered">
+                <div class="column is-4 is-offset-2 colTit has-text-centered">
+                  <label class="label">Ae. aegypti</label>
+                </div>
+                <div class="column is-4 colTit has-text-centered">
+                  <label class="label">Ae. albopictus</label>
+                </div>
+              </div>
               <div class="columns">
                 <div class="column is-2 is-offset-1">
                   <div class="content">
@@ -501,23 +561,25 @@ var imovel = reactive({
   id_imovel: 0,
   id_situacao: 0,
   hora: '',
-  umidade: '',
-  temperatura: '',
+  umidade: 0,
+  temperatura: 0,
   moradores: 0,
   com_larva: 0,
   amostra: '',
-  aegypti: '',
+  aegypti: 0,
   albopictus: 0,
+  pupa_aegypti: '',
+  pupa_albopictus: 0,
   intra_amostra: '',
   intra_aeg_macho: 0,
   intra_aeg_femea: 0,
   intra_alb_macho: 0,
-  intra_alb_femea: '',
+  intra_alb_femea: 0,
   peri_amostra: '',
   peri_aeg_macho: 0,
   peri_aeg_femea: 0,
   peri_alb_macho: 0,
-  peri_alb_femea: '',
+  peri_alb_femea: 0,
 })
 
 var isLoading = false
@@ -542,6 +604,8 @@ const rules = {
   amostra: { numeric$ },
   aegypti: { numeric$ },
   albopictus: { numeric$ },
+  pupa_aegypti: { numeric$ },
+  pupa_albopictus: { numeric$ },
   intra_amostra: { numeric$ },
   intra_aeg_macho: { numeric$ },
   intra_aeg_femea: { numeric$ },
@@ -580,13 +644,15 @@ function limpar() {
     casa: '',
     id_situacao: 0,
     hora: '',
-    umidade: '',
-    temperatura: '',
+    umidade: 0,
+    temperatura: 0,
     moradores: 0,
     com_larva: 0,
     amostra: '',
-    aegypti: '',
+    aegypti: 0,
     albopictus: 0,
+    pupa_aegypti: 0,
+    pupa_albopictus: 0,
     intra_amostra: '',
     intra_aeg_macho: 0,
     intra_aeg_femea: 0,
@@ -596,7 +662,7 @@ function limpar() {
     peri_aeg_macho: 0,
     peri_aeg_femea: 0,
     peri_alb_macho: 0,
-    peri_alb_femea: '',
+    peri_alb_femea: 0,
   }
   Object.assign(imovel, vazio)
 }
@@ -635,6 +701,7 @@ async function loadCombos() {
     let id_mun = store.objetoAlado.id_municipio
     let id_ativ = store.objetoAlado.id_atividade
     const filter = { id_municipio: id_mun, id_atividade: id_ativ }
+
     const result = await imovelService.getCombo(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
@@ -662,7 +729,7 @@ onMounted(async () => {
 
   Object.assign(colImoveis.value, JSON.parse(JSON.stringify(store.objetoAlado.imoveis)))
 
-  isCadastro.value = store.objetoAlado.id_tipo == 1
+  isCadastro.value = store.objetoAlado.ref_ativ == 10
 
   let cUser = currentUser
   if (cUser.value) {
@@ -684,5 +751,8 @@ onMounted(async () => {
 .radio {
   display: block;
   margin-left: 0.5em !important;
+}
+.colTit {
+  border-bottom: 1px #000 solid;
 }
 </style>

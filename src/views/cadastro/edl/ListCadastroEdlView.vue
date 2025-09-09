@@ -5,7 +5,7 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Ovitrampas</p>
+            <p class="card-header-title is-centered">EDLs Cadastradas</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
@@ -28,34 +28,8 @@
                     <div class="control">
                       <CmbTerritorio
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="columns">
-                <div class="column is-3 is-offset-3">
-                  <div class="field">
-                    <label class="label">Data Inicial</label>
-                    <div class="control">
-                      <DatePicker
-                        v-model="filter.dt_inicial"
-                        :error="false"
-                        placeholder="Escolha a data"
-                      />
-                    </div>
-                  </div>
-                </div>
-                <div class="column is-3">
-                  <div class="field">
-                    <label class="label">Data Final</label>
-                    <div class="control">
-                      <DatePicker
-                        v-model="filter.dt_final"
-                        :error="false"
-                        placeholder="Escolha a data"
+                        :sel="id_municipio"
+                        @selTerr="id_municipio = $event"
                       />
                     </div>
                   </div>
@@ -75,7 +49,7 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :logged-user="idUser"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
                 :pagination="true"
@@ -94,11 +68,10 @@
 </template>
 
 <script setup>
-import ot_ovitrampaService from '@/services/atividade/ot_ovitrampa.service'
+import edlCadastroService from '@/services/cadastro/edlCadastro.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
-import DatePicker from '@/components/forms/MyDatePicker.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -110,20 +83,20 @@ const { currentUser } = useCurrentUser()
 const router = useRouter()
 const toast = useToast()
 
-const idUser = ref(0)
 var tpUser = ref(0)
 
-var confirmDialog = ref(null)
 var isLoading = false
-const STORAGE_KEY = 'consulta-otovitrampasw'
+const STORAGE_KEY = 'consulta-edlCadsw'
 
+var confirmDialog = ref(null)
+
+var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
+const idUser = ref(0)
 
 const filter = reactive({
-  id_municipio: 0,
-  dt_inicial: '',
-  dt_final: '',
+  id_municipio,
 })
 
 const columns = ref([])
@@ -137,11 +110,11 @@ async function loadData() {
     isLoading = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await ot_ovitrampaService.getOtOvitrampas(JSON.stringify(filter))
+    const result = await edlCadastroService.getEdlCadastros(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result.data
+      dataTable.value = result
       hasRows.value = true
     }
   } finally {
@@ -150,22 +123,21 @@ async function loadData() {
 }
 
 async function onEditRow(item) {
-  router.push(`/otOvitrampa/${item.row.id}`)
+  router.push(`/edlCadastro/${item.row.id}`)
 }
 
 async function onDeleteRow(item) {
   const ok = await confirmDialog.value.show({
     title: 'Excluir',
-    message: 'Deseja mesmo excluir essa pesquisa?',
+    message: 'Deseja mesmo excluir essa EDL?',
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await ot_ovitrampaService.delete(item.row.id)
+    const resultado = await edlCadastroService.delete(item.row.id)
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
-      toast.success('Pesquisa excluída com sucesso!')
-      loadData()
+      toast.success('Registro excluído com sucesso!')
     }
   }
 }
@@ -178,16 +150,25 @@ onMounted(() => {
 
   columns.value = [
     { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Quarteirão', field: 'quarteirao' },
-    { headerName: 'Instalação', field: 'data_i' },
-    { headerName: 'Retirada', field: 'data_r' },
+    { headerName: 'Cadastro', field: 'cadastro' },
+    { headerName: 'Bairro', field: 'bairro' },
+    { headerName: 'Endereço', field: 'endereco' },
+    {
+      headerName: 'Inativa',
+      field: 'inativa',
+      cellRenderer: (params) => {
+        return params.value
+          ? '<span style="color: red; font-weight: bold;"><i class="fas fa-ban"></i> Sim</span>'
+          : '<span style="color: green; font-weight: bold;"><i class="fas fa-check-circle"></i> Não</span>'
+      },
+    },
     { headerName: 'Responsável', field: 'owner' },
     { headerName: 'OwnerId', field: 'owner_id', hide: true },
   ]
 
   let cUser = currentUser
   if (cUser.value) {
-    idUser.value = cUser.value
+    idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

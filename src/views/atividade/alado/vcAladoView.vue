@@ -157,7 +157,6 @@
               </div>
             </div>
           </div>
-          {{ isEditMode }}
           <footer class="card-footer">
             <footerCard
               @submit="save"
@@ -287,6 +286,10 @@ watch(
       atividades.value = []
     } else {
       atividades.value = result
+      if (at == 1) {
+        const result1 = await auxiliarService.getAtividadeCombo(9)
+        atividades.value = [...atividades.value, ...result1]
+      }
     }
   }
 )
