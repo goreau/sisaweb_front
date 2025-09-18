@@ -120,7 +120,9 @@ watch(innerValue, (val) => {
 <template>
   <Datepicker
     v-model="innerValue"
-    :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
+    :day-names="['S', 'T', 'Q', 'Q', 'S', 'S','D']"
+    :first-day-of-week="1"
+    :locale="ptBR"
     :format="dateFormat"
     :min-date="minDate"
     :max-date="maxDate"

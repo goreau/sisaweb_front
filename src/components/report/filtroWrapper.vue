@@ -261,7 +261,7 @@ watch(
       filtros.ano = 0
     }
     if (props.ativos?.atividade && props.ativos?.atividade > 0) {
-      if (val.atividade == 2) {
+      if (val.atividade == 10) {
         const result = await auxiliarService.getAtividadeCombo(2)
         if (result.error) {
           atividades.value = []
