@@ -275,6 +275,92 @@ export const reportMenu = [
   },
   {
     href: "",
+    title: "Tratamentos",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-square-virus",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+    child: [
+      {
+        href: "/mainReport/tratamento/consumoVCResumo",
+        title: "Resumo - Vigil e Controle",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/tratamento/consumoICResumo",
+        title: "Resumo - Imóveis Cadastrados",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/tratamento/tipoResumo",
+        title: "Resumo por Tipo",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/tratamento/quartResumo",
+        title: "Trat por Quarteirão",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/tratamento/mensalVC",
+        title: "Mensal - Vigilância e Controle",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+      {
+        href: "/mainReport/tratamento/mensalIC",
+        title: "Mensal - Imóveis Cadastrados",
+        icon: {
+          element: "font-awesome-icon",
+          attributes: {
+            icon: "fa-solid fa-plus",
+            size: "lg",
+            transform: "shrink-8",
+          },
+        },
+      },
+    ]
+  },
+  {
+    href: "",
     title: "Dinâmicos",
     icon: {
       element: "font-awesome-icon",

@@ -25,6 +25,23 @@
         </div>
       </div>
     </div>
+    <div class="columns" v-if="props.ativos?.tipo_rel">
+      <div class="column is-6 is-offset-3">
+        <div class="content">
+          <fieldset class="fieldset">
+            <legend>Tipo de Tratamento</legend>
+            <div class="field">
+              <RadioGeneric
+                v-model="filtros.tipo_rel"
+                :options="tipos_rel"
+                name="tipo_rel"
+                :inline="true"
+              />
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
     <div class="columns" v-if="props.ativos?.ref_ativ > 0">
       <div class="column is-6 is-offset-3">
         <div class="content">
@@ -131,6 +148,9 @@
               @selGen="filtros.id_variavel = $event"
             />
           </div>
+          <span class="is-error" v-if="is_error.variavel">
+              'Obrigatório informar um valor'
+          </span>
         </div>
       </div>
     </div>
@@ -170,8 +190,14 @@ const ref_ativs = ref([])
 const execucoes = ref([])
 const variaveis = ref([])
 const areas_nav = ref([])
+const tipos_rel = ref([])
 
 const STORAGE_KEY = 'consulta-reportsw'
+
+
+const is_error = reactive({
+  variavel: false
+})
 
 const filtros = reactive({
   id_gve: 0,
@@ -184,12 +210,20 @@ const filtros = reactive({
   dt_final: '',
   ano: '2025',
   id_area_nav: 0,
+  tipo_rel: 0
 })
 
 function processar() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtros))
   if (filtros.id_variavel > 0) {
     const opt = variaveis.value.find((o) => o.id === Number(filtros.id_variavel))
+    filtros.fantVar = opt.nome
+  } else if (props.ativos.variaveis){
+    is_error.variavel = true
+    return false
+  }
+  if (filtros.tipo_rel > 0) {
+    const opt = tipos_rel.value.find((o) => o.id === Number(filtros.tipo_rel))
     filtros.fantVar = opt.nome
   }
   emit('submit', filtros)
@@ -201,6 +235,13 @@ async function loadCombos() {
     { id: 2, nome: 'Município' },
     { id: 3, nome: 'ACS' },
   ]
+
+  tipos_rel.value = [
+        {id: 1, nome: 'Focal'},
+        {id: 2, nome: 'Perifocal'},
+        {id: 3, nome: 'Nebulização'},
+        {id: 4, nome: 'BRI'}
+    ]
 
   const result = await auxiliarService.getMunicipiosCombo(JSON.stringify({}))
   if (result.error) {
@@ -220,7 +261,7 @@ watch(
       filtros.ano = 0
     }
     if (props.ativos?.atividade && props.ativos?.atividade > 0) {
-      if (val.atividade == 10) {
+      if (val.atividade == 2) {
         const result = await auxiliarService.getAtividadeCombo(2)
         if (result.error) {
           atividades.value = []
