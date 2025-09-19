@@ -23,6 +23,28 @@ export default [
     meta: { onlyUser: true }
   },
   {
+    path: '/listMobEdl',
+    name: 'listMobEdl',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/ListMobEdlView.vue'),
+  },
+  {
+    path: '/mobEdl/:id',
+    name: 'mobEdl',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/MobEdlView.vue'),
+    meta: { onlyUser: true }
+  },
+  {
+    path: '/listMobAlado',
+    name: 'listMobAlado',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/ListMobAladoView.vue'),
+  },
+  {
+    path: '/mobAlado/:id',
+    name: 'mobAlado',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/MobAladoView.vue'),
+    meta: { onlyUser: true }
+  },
+  {
     path: '/mobRecipiente',
     name: 'mobRecipiente',
     component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/MobRecipienteView.vue'),

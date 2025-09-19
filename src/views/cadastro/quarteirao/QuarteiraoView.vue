@@ -439,7 +439,7 @@ watch(
   }
 )
 
-const isEditMode = computed(() => Number(quarteirao.id_quarteirao) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

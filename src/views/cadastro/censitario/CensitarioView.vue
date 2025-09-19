@@ -146,7 +146,7 @@ watch(
   }
 )
 
-const isEditMode = computed(() => Number(censitario.id_censitario) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

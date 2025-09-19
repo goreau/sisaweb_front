@@ -485,6 +485,7 @@
                 :data="colImoveis"
                 :columns="columns"
                 :pagination="false"
+                :calcHeight="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
                 :buttons="['edit', 'delete']"
@@ -737,9 +738,8 @@ onMounted(async () => {
   }
 
   columns.value = [
-    { label: 'Ordem', field: 'ordem' },
-    { label: 'Situação', field: 'fant_sit' },
-    { label: 'Ações', field: 'acoes' },
+    { headerName: 'Ordem', field: 'ordem' },
+    { headerName: 'Situação', field: 'fant_sit' },
   ]
 
   loadCombos()

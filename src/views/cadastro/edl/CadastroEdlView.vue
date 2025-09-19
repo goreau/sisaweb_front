@@ -62,6 +62,39 @@
             <div class="columns">
               <div class="column is-4">
                 <div class="content">
+                  <fieldset class="fieldset">
+                    <legend>Tipo de Imóvel</legend>
+                    <div class="field">
+                      <RadioGeneric
+                        v-model="edl.id_tipo_imovel"
+                        :options="tipos_edl"
+                        name="id_tipo_imovel"
+                        :inline="true"
+                      />
+                    </div>
+                  </fieldset>
+                </div>
+              </div>
+              <div class="column" v-show="isCad">
+                <div class="content">
+                  <label class="label">Imóvel</label>
+                  <div class="control">
+                    <CmbGeneric
+                      :sel="edl.id_imovel"
+                      :data="imoveis"
+                      @selGen="edl.id_imovel = $event"
+                      :errclass="{ 'is-danger': v$.id_imovel.$error }"
+                    />
+                    <span class="is-error" v-if="v$.id_imovel.$error">
+                      {{ v$.id_imovel.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="columns" v-show="!isCad">
+              <div class="column is-4">
+                <div class="content">
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
@@ -176,21 +209,6 @@
               </div>
             </div>
             <div class="columns">
-              <div class="column is-4">
-                <div class="content">
-                  <fieldset class="fieldset">
-                    <legend>Tipo de Imóvel</legend>
-                    <div class="field">
-                      <RadioGeneric
-                        v-model="edl.id_tipo_imovel"
-                        :options="tipos_edl"
-                        name="id_tipo_imovel"
-                        :inline="true"
-                      />
-                    </div>
-                  </fieldset>
-                </div>
-              </div>
               <div class="column">
                 <div class="content">
                   <fieldset class="fieldset">
@@ -301,7 +319,7 @@ import { ref, onMounted, reactive, computed, watch } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
-import { requiredIf } from '@vuelidate/validators'
+import imovelService from '@/services/cadastro/imovel.service'
 
 const toast = useToast()
 const route = useRoute()
@@ -309,6 +327,7 @@ const { currentUser } = useCurrentUser()
 
 var id_prop = ref(0)
 
+var imoveis = ref([0])
 var areas = ref([])
 var censitarios = ref([])
 var quarteiraos = ref([])
@@ -348,8 +367,8 @@ const rules = {
   responsavel: { required$ },
   endereco: { required$ },
   cadastro: { required$ },
-  id_area: { required$, minValue: combo$(1) },
-  id_censitario: { required$, minValue: combo$(1) },
+  id_area: { requiredIf: requiredIf$(() => !isCad.value) },
+  id_censitario: { requiredIf: requiredIf$(() => !isCad.value) },
   id_quarteirao: { required$, minValue: combo$(1) },
   bairro: { required$ },
   id_local: { required$, minValue: combo$(1) },
@@ -357,6 +376,7 @@ const rules = {
   latitude: { coordenada$ },
   longitude: { coordenada$ },
   dt_inativa: { requiredIf: requiredIf$(edl.inativa) },
+  id_imovel: { requiredIf: requiredIf$(() => isCad.value) },
 }
 
 const v$ = useValidate(rules, edl)
@@ -385,6 +405,7 @@ async function save() {
 }
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
+const isCad = computed(() => [56, 57].includes(edl.id_tipo_imovel))
 
 async function loadCombos() {
   const result = await auxiliarService.getGenericCombo(9)
@@ -404,15 +425,63 @@ async function loadCombos() {
   }
 }
 
+async function loadImoveis() {
+  const ativ = edl.id_tipo_imovel == 57 ? 1 : 2
+  const filter = { id_municipio: edl.id_municipio, id_atividade: ativ }
+  const result = await imovelService.getCombo(JSON.stringify(filter))
+  if (result.error) {
+    console.log(result.error)
+    imoveis.value = []
+  } else {
+    imoveis.value = result
+  }
+}
+
+async function loadAreas() {
+  const result = await areaService.getCombo(JSON.stringify({ id_municipio: edl.id_municipio }))
+  if (result.error) {
+    console.log(result.error)
+    areas.value = []
+  } else {
+    areas.value = result
+  }
+}
+
 watch(
-  () => edl.id_municipio,
+  () => edl.id_imovel,
   async (val) => {
-    const result = await areaService.getCombo(JSON.stringify({ id_municipio: val }))
+    if (val == 0) return
+    const result = await imovelService.getImovel(val)
     if (result.error) {
       console.log(result.error)
-      areas.value = []
     } else {
-      areas.value = result
+      edl.endereco = result.endereco
+      edl.responsavel = result.proprietario
+      edl.id_quarteirao = result.id_quarteirao
+    }
+  }
+)
+
+watch(
+  () => edl.id_municipio,
+  async () => {
+    if (edl.id_tipo_imovel == 0) return
+    if (!isCad.value) {
+      loadAreas()
+    } else {
+      loadImoveis()
+    }
+  }
+)
+
+watch(
+  () => edl.id_tipo_imovel,
+  async () => {
+    if (edl.id_municipio == 0) return
+    if (isCad.value) {
+      loadImoveis()
+    } else {
+      loadAreas()
     }
   }
 )

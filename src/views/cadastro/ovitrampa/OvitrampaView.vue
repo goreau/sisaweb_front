@@ -392,7 +392,7 @@ watch(
   }
 )
 
-const isEditMode = computed(() => Number(ovitrampa.id_ovitrampa) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

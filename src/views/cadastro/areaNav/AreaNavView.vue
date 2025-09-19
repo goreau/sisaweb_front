@@ -163,7 +163,7 @@ function details() {
   }
 }
 
-const isEditMode = computed(() => Number(areaNav.id_area_nav) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 async function create() {
   v$.value.$touch()

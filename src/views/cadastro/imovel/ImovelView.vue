@@ -465,7 +465,7 @@ watch(
   }
 )
 
-const isEditMode = computed(() => Number(imovel.id_imovel) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {

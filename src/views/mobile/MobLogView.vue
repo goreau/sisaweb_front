@@ -161,18 +161,18 @@ async function pesquisar() {
       isLoading = true
 
       mobile.data = format(mobile.dt_cadastro, 'yyyy-MM-dd')
-      const chave = import.meta.env.VUE_SISAPI_KEY
-      console.log(chave)
+
+      // const chave = import.meta.env.VITE_SISAPI_KEY
+
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        //url: 'http://200.144.1.23/sisapi/api/recebe/logs',
-        url: 'http://10.8.150.23:4033/api/recebe/logs',
+        url: 'https://sisapi.saude.sp.gov.br/api/recebe/logs', //'http://10.8.150.23:4033/api/recebe/logs', //
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+          Authorization: `Bearer "${import.meta.env.VITE_SISAPI_KEY}"`,
         },
-        data: mobile,
+        data: JSON.stringify(mobile),
       }
 
       axios
@@ -212,6 +212,7 @@ async function loadCombos() {
     { id: 'vc_imovel', nome: 'Imóveis Cadastrados' },
     { id: 'vc_folha', nome: 'Visita a Imóveis' },
     { id: 'alado', nome: 'Captura de Alados' },
+    { id: 'edl', nome: 'Manutenção de EDL' },
   ]
 }
 

@@ -24,6 +24,30 @@ export const mobileMenu = [
     },
   },
   {
+    href: "/listMobEdl",
+    title: "Manutenção de EDLs",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-search",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+  },
+  {
+    href: "/listMobAlado",
+    title: "Captura de Alados",
+    icon: {
+      element: "font-awesome-icon",
+      attributes: {
+        icon: "fa-solid fa-search",
+        size: "lg",
+        transform: "shrink-8",
+      },
+    },
+  },
+  {
     href: "/mobExecucao",
     title: "Alterar Execução",
     icon: {
