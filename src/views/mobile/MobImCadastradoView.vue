@@ -515,7 +515,7 @@ watch(
   () => vc_imovel.id_municipio,
   async (val) => {
     if (vc_imovel.id_atividade == 0) return
-    const filter = { id_municipio: vc_imovel.id_municipio, id_atividade: val }
+    const filter = { id_municipio: val, id_atividade: vc_imovel.id_atividade }
     const result = await imovelService.getCombo(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)

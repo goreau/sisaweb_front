@@ -433,7 +433,7 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import vc_linhaService from '@/services/atividade/vc_linha.service'
+import mobFolhaService from '@/services/mobile/mobVc_folha.service'
 import auxiliarService from '@/services/general/auxiliar.service'
 import areaService from '@/services/cadastro/area.service'
 import censitarioService from '@/services/cadastro/censitario.service'
@@ -482,7 +482,7 @@ var id_prop = ref(0)
 
 var vc_linha = reactive({
   id: 0,
-  id_vc_linha: 0,
+  id_mob_vc_folha: 0,
   id_municipio: 0,
   dt_cadastro: '',
   id_atividade: 0,
@@ -555,13 +555,13 @@ async function save() {
   if (!v$.value.$invalid) {
     var resultado = null
     if (isEditMode.value) {
-      resultado = await vc_linhaService.update(vc_linha)
+      resultado = await mobFolhaService.update(vc_linha)
     } else {
-      resultado = await vc_linhaService.create(vc_linha)
+      resultado = await mobFolhaService.create(vc_linha)
     }
 
     if (resultado.status) {
-      vc_linha.id_vc_linha = resultado.master
+      vc_linha.id_mob_vc_folha = resultado.master
       toast.success(resultado.msg)
     } else {
       toast.error(resultado.error.msg)
@@ -571,7 +571,7 @@ async function save() {
   }
 }
 
-const isEditMode = computed(() => Number(vc_linha.id_vc_folha) > 0)
+const isEditMode = computed(() => Number(vc_linha.id_mob_vc_folha) > 0)
 
 watch(
   () => vc_linha.id_municipio,

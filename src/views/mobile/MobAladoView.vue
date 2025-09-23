@@ -631,6 +631,8 @@
               </div>
             </div>
           </div>
+
+          {{ isCadastro }}
           <footer class="card-footer">
             <footerCard
               @submit="save"
@@ -664,6 +666,7 @@ import {
   numeric$,
   horaValida$,
   decimal$,
+  minValueIf$,
 } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -720,7 +723,7 @@ var alado = reactive({
   am_larva: '',
   aegypti: 0,
   albopictus: 0,
-  pupa_aegypti: '',
+  pupa_aegypti: 0,
   pupa_albopictus: 0,
   am_intra: '',
   intra_aeg_macho: 0,
@@ -747,12 +750,12 @@ const rules = {
   id_municipio: { required$, minValue: combo$(1) },
   dt_cadastro: { required$ },
   id_situacao: { required$, minValue: combo$(1) },
-  id_tipo: { required$, minValue: combo$(1) },
+  ref_ativ: { required$, minValue: combo$(1) },
   id_execucao: { required$, minValue: combo$(1) },
   id_atividade: { required$, minValue: combo$(1) },
-  id_area: { requiredIf: requiredIf$(!isCadastro.value) },
-  id_censitario: { requiredIf: requiredIf$(!isCadastro.value) },
-  id_quarteirao: { required$, minValue: combo$(1) },
+  id_area: { minValueIf: minValueIf$(1, () => !isCadastro.value) },
+  id_censitario: { minValueIf: minValueIf$(1, () => !isCadastro.value) },
+  id_quarteirao: { minValueIf: minValueIf$(1, () => !isCadastro.value) },
   agente: { required$ },
   ordem: { requiredIf: requiredIf$(!isCadastro.value), numeric$ },
   casa: { maxLength: maxLength$(40) },
@@ -911,11 +914,13 @@ async function loadCombos() {
 }
 
 onMounted(async () => {
+  canSend()
   const ret = await aladoService.getMobAlado(route.params.id)
   if (ret.error) {
     toast.error(ret.msg)
   } else {
     isCadastro.value = ret.ref_ativ == 10
+    ret.hora = ret.hora.slice(0,5)
     Object.assign(alado, ret)
   }
 

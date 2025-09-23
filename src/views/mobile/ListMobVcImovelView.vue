@@ -128,14 +128,14 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
-import { useVcImovelStore } from '@/stores/vcImovelStore'
+import { useMobileStore } from '@/stores/mobileStore'
 import auxiliarService from '@/services/general/auxiliar.service'
 
 const { currentUser } = useCurrentUser()
 
 const router = useRouter()
 const toast = useToast()
-const store = useVcImovelStore()
+const store = useMobileStore()
 
 var tpUser = ref(0)
 var idUser = ref(0)
