@@ -62,8 +62,8 @@ watch(mainDiv, (el) => {
 <style lang="scss">
 @use '@fortawesome/fontawesome-free/css/all.css';
 * {
-  font-family: Helvetica;
-  font-size: large;
+  font-family: Helvetica, Arial, sans-serif;
+  font-size: 1rem; // 16px base, responsivo
   padding: 0;
   margin: 0;
   box-sizing: border-box;
@@ -75,32 +75,32 @@ $toggle-btn-color: white;
 /* Container que engloba menu + conteúdo */
 .app-container {
   display: flex;
-  padding-top: 6.2rem;
-  /* para não ficar embaixo do header fixo */
-  height: calc(100vh - 3rem);
-  /* ocupa toda altura da viewport menos o header */
+  height: calc(100vh - 6.2rem); // mesma altura que o header ocupa
+  margin-top: 6.2rem;           // em vez de padding-top
   overflow: hidden;
-  /* para evitar scrolls estranhos */
 }
 
 /* Menu lateral ocupando toda altura da app-container */
 .menu-content {
-  /*width: 250px;
-  /* largura fixa */
+  width: 250px;
+  min-width: 200px; // garante responsividade
+  max-width: 300px;
   height: 100%;
-  /* ocupa toda altura da app-container */
   overflow-y: auto;
-  /* scroll só dentro do menu, se necessário */
-  background: white;
+  background: #fff;
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+  font-size: clamp(14px, 1vw + 0.5rem, 18px);
+}
+
+body {
+  font-size: clamp(14px, 1vw + 0.5rem, 18px);
 }
 
 /* Conteúdo principal */
 .main-content {
-  flex-grow: 1;
-  /* ocupa o resto do espaço horizontal */
+  flex: 1;
+  min-width: 0;        // importante para tabelas não estourarem o flex
   overflow-y: auto;
-  /* scroll só no conteúdo */
   padding: 1.5rem;
 }
 

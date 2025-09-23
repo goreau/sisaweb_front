@@ -421,7 +421,6 @@
               </div>
             </div>
           </div>
-          {{ isEditMode }}
           <footer class="card-footer">
             <footerCard @submit="save" @cancel="null" @aux="recipientes" :cFooter="cFooter" />
           </footer>

@@ -173,8 +173,6 @@ async function loadData() {
       console.log(result.error)
     } else {
       dataTable.value = result.data
-      let teste = result.data[0]
-      console.log(teste.amostras)
       hasRows.value = true
     }
   } finally {

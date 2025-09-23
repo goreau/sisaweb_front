@@ -282,7 +282,6 @@
               </div>
             </div>
           </div>
-          {{ isEditMode }}
           <footer class="card-footer">
             <footerCard
               @submit="save"
