@@ -67,9 +67,7 @@ export default [
     path: '/vcOvitrampas',
     name: 'vcOvitrampas',
     component: () =>
-      import(
-        /* webpackChunkName: "user" */ '@/views/atividade/ovitrampa/ListVcOvitrampaView.vue'
-      ),
+      import(/* webpackChunkName: "user" */ '@/views/atividade/ovitrampa/ListVcOvitrampaView.vue'),
   },
   {
     path: '/otOvitrampa/:id',
@@ -82,9 +80,7 @@ export default [
     path: '/otOvitrampas',
     name: 'otOvitrampas',
     component: () =>
-      import(
-        /* webpackChunkName: "user" */ '@/views/atividade/ovitrampa/ListOtOvitrampaView.vue'
-      ),
+      import(/* webpackChunkName: "user" */ '@/views/atividade/ovitrampa/ListOtOvitrampaView.vue'),
   },
   {
     path: '/vcAlado',
@@ -122,17 +118,22 @@ export default [
     meta: { onlyUser: true },
   },
   {
+    path: '/previsao',
+    name: 'previsao',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/atividade/veicular/PrevisaoView.vue'),
+    meta: { onlyUser: true },
+  },
+  {
     path: '/vcBri',
     name: 'vcBri',
-    component: () =>
-      import(/* webpackChunkName: "user" */ '@/views/atividade/bri/vcBriView.vue'),
+    component: () => import(/* webpackChunkName: "user" */ '@/views/atividade/bri/vcBriView.vue'),
     meta: { onlyUser: true },
   },
   {
     path: '/imBri',
     name: 'imBri',
-    component: () =>
-      import(/* webpackChunkName: "user" */ '@/views/atividade/bri/imBriView.vue'),
+    component: () => import(/* webpackChunkName: "user" */ '@/views/atividade/bri/imBriView.vue'),
     meta: { onlyUser: true },
   },
   {
@@ -145,16 +146,12 @@ export default [
   {
     path: '/edl/:id',
     name: 'edl',
-    component: () =>
-      import(/* webpackChunkName: "user" */ '@/views/atividade/edl/EdlView.vue'),
+    component: () => import(/* webpackChunkName: "user" */ '@/views/atividade/edl/EdlView.vue'),
     meta: { onlyUser: true },
   },
   {
     path: '/edls',
     name: 'edls',
-    component: () =>
-      import(
-        /* webpackChunkName: "user" */ '@/views/atividade/edl/ListEdlView.vue'
-      ),
+    component: () => import(/* webpackChunkName: "user" */ '@/views/atividade/edl/ListEdlView.vue'),
   },
 ]

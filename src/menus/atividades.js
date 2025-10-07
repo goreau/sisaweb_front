@@ -1,264 +1,275 @@
 export const atividadesMenu = [
   {
-    href: "",
-    title: "Imóvel Cadastrado",
+    href: '',
+    title: 'Imóvel Cadastrado',
     icon: {
-      element: "font-awesome-icon",
+      element: 'font-awesome-icon',
       attributes: {
-        icon: "fa-solid fa-school-circle-check",
-        size: "lg",
-        transform: "shrink-8",
+        icon: 'fa-solid fa-school-circle-check',
+        size: 'lg',
+        transform: 'shrink-8',
       },
     },
     child: [
       {
-        href: "/imCadastrado",
-        title: "Novo",
+        href: '/imCadastrado',
+        title: 'Novo',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/imCadastrados",
-        title: "Consultar",
+        href: '/imCadastrados',
+        title: 'Consultar',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
     ],
   },
   {
-    href: "",
-    title: "Visita a Imóveis",
+    href: '',
+    title: 'Visita a Imóveis',
     icon: {
-      element: "font-awesome-icon",
+      element: 'font-awesome-icon',
       attributes: {
-        icon: "fa-solid fa-house-circle-check",
-        size: "lg",
-        transform: "shrink-8",
+        icon: 'fa-solid fa-house-circle-check',
+        size: 'lg',
+        transform: 'shrink-8',
       },
     },
     child: [
       {
-        href: "/vigLinha",
-        title: "Linha",
+        href: '/vigLinha',
+        title: 'Linha',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/vigQuadra",
-        title: "Folha",
+        href: '/vigQuadra',
+        title: 'Folha',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/vcVisitas",
-        title: "Consultar",
+        href: '/vcVisitas',
+        title: 'Consultar',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
-          },
-        },
-      },
-
-    ],
-  },
-  {
-    href: "",
-    title: "Ovitrampa",
-    icon: {
-      element: "font-awesome-icon",
-      attributes: {
-        icon: "fa-solid fa-glass-water-droplet",
-        size: "lg",
-        transform: "shrink-8",
-      },
-    },
-    child: [
-      {
-        href: "/vcOvitrampa/0",
-        title: "Novo",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
-          },
-        },
-      },
-      {
-        href: "/vcOvitrampas",
-        title: "Consultar",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
-          },
-        },
-      },
-      {
-        href: "/otOvitrampa/0",
-        title: "Outras",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
-          },
-        },
-      },
-      {
-        href: "/otOvitrampas",
-        title: "Consultar Outras",
-        icon: {
-          element: "font-awesome-icon",
-          attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
     ],
   },
   {
-    href: "",
-    title: "Captura de Alados",
+    href: '',
+    title: 'Ovitrampa',
     icon: {
-      element: "font-awesome-icon",
+      element: 'font-awesome-icon',
       attributes: {
-        icon: "fa-solid fa-mosquito",
-        size: "lg",
-        transform: "shrink-8",
+        icon: 'fa-solid fa-glass-water-droplet',
+        size: 'lg',
+        transform: 'shrink-8',
       },
     },
     child: [
       {
-        href: "/vcAlado",
-        title: "Nova",
+        href: '/vcOvitrampa/0',
+        title: 'Novo',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/vcAlados",
-        title: "Consultar",
+        href: '/vcOvitrampas',
+        title: 'Consultar',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/otOvitrampa/0',
+        title: 'Outras',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/otOvitrampas',
+        title: 'Consultar Outras',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
     ],
   },
   {
-    href: "",
-    title: "Nebulização Veicular",
+    href: '',
+    title: 'Captura de Alados',
     icon: {
-      element: "font-awesome-icon",
+      element: 'font-awesome-icon',
       attributes: {
-        icon: "fa-solid fa-smog",
-        size: "lg",
-        transform: "shrink-8",
+        icon: 'fa-solid fa-mosquito',
+        size: 'lg',
+        transform: 'shrink-8',
       },
     },
     child: [
       {
-        href: "/veicular/0",
-        title: "Nova",
+        href: '/vcAlado',
+        title: 'Nova',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/veiculars",
-        title: "Consultar",
+        href: '/vcAlados',
+        title: 'Consultar',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
     ],
   },
   {
-    href: "",
-    title: "Manutenção EDL",
+    href: '',
+    title: 'Nebulização Veicular',
     icon: {
-      element: "font-awesome-icon",
+      element: 'font-awesome-icon',
       attributes: {
-        icon: "fa-solid fa-hexagon-nodes",
-        size: "lg",
-        transform: "shrink-8",
+        icon: 'fa-solid fa-smog',
+        size: 'lg',
+        transform: 'shrink-8',
       },
     },
     child: [
       {
-        href: "/edl/0",
-        title: "Novo",
+        href: '/veicular/0',
+        title: 'Nova',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/edls",
-        title: "Consultar",
+        href: '/veiculars',
+        title: 'Consultar',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/previsao',
+        title: 'Estimativa de Consumo',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+    ],
+  },
+  {
+    href: '',
+    title: 'Manutenção EDL',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-hexagon-nodes',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: [
+      {
+        href: '/edl/0',
+        title: 'Novo',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/edls',
+        title: 'Consultar',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
