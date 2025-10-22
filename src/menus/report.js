@@ -183,6 +183,18 @@ export const reportMenu = [
           },
         },
       },
+      {
+        href: '/mainReport/adl/adlValidacao',
+        title: 'Validação de ADL',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
     ],
   },
   {

@@ -17,6 +17,7 @@ import {
 import localeText from '@/utils/agGridLocale'
 import { ClientSideRowModelModule } from 'ag-grid-community'
 import { CsvExportModule } from 'ag-grid-community'
+import tickCrossRenderer from '@/components/report/tickCrossRenderer.vue'
 
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
@@ -133,12 +134,12 @@ async function download_xlsx() {
 
   // achata as colunas (com suporte a children)
   const exportCols = flattenColumns(props.columns).filter(
-    (col) => col.field && col.field !== 'acoes'
+    (col) => col.field && col.field !== 'acoes',
   )
 
   // monta os dados já com headers "pai - filho"
   const exportData = data.map((row) =>
-    Object.fromEntries(exportCols.map((col) => [col.exportHeader, row[col.field]]))
+    Object.fromEntries(exportCols.map((col) => [col.exportHeader, row[col.field]])),
   )
 
   const worksheet = XLSX.utils.json_to_sheet(exportData)
@@ -171,7 +172,7 @@ async function download_pdf() {
 
   // achata colunas igual ao Excel
   const exportCols = flattenColumns(props.columns).filter(
-    (col) => col.field && col.field !== 'acoes'
+    (col) => col.field && col.field !== 'acoes',
   )
 
   const headers = exportCols.map((col) => col.exportHeader)
@@ -198,7 +199,7 @@ watch(
       nextTick(() => autoSizeAll())
     }
   },
-  { deep: true }
+  { deep: true },
 )
 
 onMounted(() => {
@@ -260,6 +261,7 @@ const gridHeight = computed(() => {
 
 defineExpose({
   getFilteredRows,
+  tickCrossRenderer,
   clearFilters() {
     gridApi.value?.setFilterModel(null)
   },
@@ -278,7 +280,7 @@ watch(
       props.buttons?.length ? createActionsColumn() : null,
     ].filter(Boolean)
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 /**

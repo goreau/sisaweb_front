@@ -157,11 +157,12 @@ onMounted(() => {
     {
       headerName: 'Inativa',
       field: 'inativa',
-      cellRenderer: (params) => {
+      cellRenderer: 'tickCrossRenderer',
+      /*cellRenderer: (params) => {
         return params.value
           ? '<span style="color: red; font-weight: bold;"><i class="fas fa-ban"></i> Sim</span>'
           : '<span style="color: green; font-weight: bold;"><i class="fas fa-check-circle"></i> Não</span>'
-      },
+      },*/
     },
     { headerName: 'Responsável', field: 'owner' },
     { headerName: 'OwnerId', field: 'owner_id', hide: true },

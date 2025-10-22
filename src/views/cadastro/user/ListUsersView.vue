@@ -99,10 +99,10 @@ import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
-import { useAuthStore } from '@/stores/auth'
+//import { useAuthStore } from '@/stores/auth'
 
 const { currentUser } = useCurrentUser()
-const auth = useAuthStore()
+//const auth = useAuthStore()
 
 const router = useRouter()
 const toast = useToast()

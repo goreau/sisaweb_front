@@ -239,7 +239,13 @@
               <div class="column is-3">
                 <div class="field">
                   <label class="checkbox">
-                    <input type="checkbox" value="1" v-model="imovel.tipo_area" />
+                    <input
+                      type="checkbox"
+                      value="1"
+                      v-model="imovel.tipo_area"
+                      :true-value="1"
+                      :false-value="0"
+                    />
                     Área densamente povoada
                   </label>
                 </div>
@@ -280,7 +286,13 @@
               <div class="column is-3">
                 <div class="field">
                   <label class="checkbox">
-                    <input type="checkbox" value="1" v-model="imovel.inativo" />
+                    <input
+                      type="checkbox"
+                      value="1"
+                      v-model="imovel.inativo"
+                      :true-value="1"
+                      :false-value="0"
+                    />
                     Inativo
                   </label>
                 </div>
@@ -423,7 +435,7 @@ watch(
     } else {
       tpAtiv.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -436,7 +448,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -449,7 +461,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -462,7 +474,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -506,7 +518,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

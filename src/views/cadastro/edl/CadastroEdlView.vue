@@ -457,9 +457,9 @@ watch(
     } else {
       edl.endereco = result.endereco
       edl.responsavel = result.proprietario
-      edl.id_quarteirao = result.id_quarteirao
+      //edl.id_quarteirao = result.id_quarteirao
     }
-  }
+  },
 )
 
 watch(
@@ -471,7 +471,7 @@ watch(
     } else {
       loadImoveis()
     }
-  }
+  },
 )
 
 watch(
@@ -483,7 +483,7 @@ watch(
     } else {
       loadAreas()
     }
-  }
+  },
 )
 
 watch(
@@ -496,7 +496,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -509,7 +509,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 onMounted(async () => {
@@ -535,7 +535,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

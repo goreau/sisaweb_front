@@ -131,7 +131,7 @@ watch(
   () => route.params,
   (params) => {
     carregarRelatorio(params.tipo, params.nome)
-  }
+  },
 )
 
 onMounted(async () => {

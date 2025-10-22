@@ -86,7 +86,7 @@ watch(
       }
     }
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 watch(innerValue, (val) => {
@@ -115,12 +115,12 @@ watch(innerValue, (val) => {
   }
 })
 //:locale="ptBR" :locale="getLocale()"
-</script>
-
-<template>
-  <Datepicker
+//:day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
+/**
+ * <Datepicker
     v-model="innerValue"
-    :day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
+    :locale="ptBR"
+    :format-locale="ptBR"
     :format="dateFormat"
     :min-date="minDate"
     :max-date="maxDate"
@@ -140,6 +140,32 @@ watch(innerValue, (val) => {
     class="datepicker-wrapper"
     :placeholder="placeholder"
   />
-</template>
+ *
+ *
+ *
+ *
+ *
+ *
+ *
+ * * */
+</script>
 
-//now-button-label="Hoje"
+<template>
+  <Datepicker
+    v-model="innerValue"
+    :format-locale="ptBR"
+    :format="dateFormat"
+    :min-date="minDate"
+    :max-date="maxDate"
+    :type="isMonthMode ? 'month' : 'date'"
+    :month-picker="isMonthMode"
+    input-class-name="input"
+    :class="{ 'is-danger': error }"
+    :hide-offset-dates="!isMonthMode"
+    class="datepicker-wrapper"
+    :auto-apply="true"
+    :enable-time-picker="false"
+    :action-row="{ showNow: true }"
+    :clearable="true"
+  />
+</template>
