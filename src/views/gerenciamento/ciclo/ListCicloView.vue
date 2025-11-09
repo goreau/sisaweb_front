@@ -12,7 +12,7 @@
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
+            <button class="button is-primary is-outlined" @click="newReg">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-plus-circle" />
               </span>
@@ -27,9 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-model:sel="id_municipio"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
+                        v-enter-to-next="'form-ciclo'"
                       />
                     </div>
                   </div>
@@ -40,7 +40,13 @@
                   <div class="field">
                     <label class="label">Ano</label>
                     <div class="control">
-                      <input class="input" type="text" placeholder="Ano dos Ciclos" v-model="ano" />
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="Ano dos Ciclos"
+                        v-model="ano"
+                        v-enter-to-next="'form-ciclo'"
+                      />
                     </div>
                   </div>
                 </div>
@@ -59,7 +65,7 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="idUser"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :buttons="['edit', 'delete']"
                 :data="dataTable"
                 :columns="columns"
@@ -152,6 +158,10 @@ async function onDeleteRow(item) {
       loadData()
     }
   }
+}
+
+function newReg() {
+  router.push(`/ciclo/0`)
 }
 
 onMounted(() => {

@@ -27,9 +27,9 @@
                     <label class="label">Tipo</label>
                     <div class="control">
                       <CmbGeneric
+                        v-enter-to-next="'form-prod'"
+                        v-model:sel="filter.tipo_uso"
                         :data="tipos"
-                        :sel="filter.tipo_uso"
-                        @selGen="filter.tipo_uso = $event"
                       />
                     </div>
                   </div>

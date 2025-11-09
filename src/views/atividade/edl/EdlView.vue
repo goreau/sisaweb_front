@@ -7,16 +7,16 @@
           <header class="card-header">
             <p class="card-header-title is-centered">Cadastro de Manutenção: EDL</p>
           </header>
-          <div class="card-content">
+          <div class="card-content" data-form-container>
             <div class="columns">
               <div class="column is-4">
                 <div class="content">
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-edl-id-1'"
+                      v-model:sel="edl.id_municipio"
                       :tipo="99"
-                      :sel="edl.id_municipio"
-                      @selTerr="edl.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -27,9 +27,10 @@
               </div>
               <div class="column is-2">
                 <div class="field">
-                  <label class="label">Data de Instalação</label>
+                  <label class="label">Data da Visita</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-edl-id-1'"
                       v-model="edl.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -47,6 +48,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-edl-id-1'"
                         v-model="edl.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -63,6 +65,7 @@
                   <label class="label">Ordem</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl-id-1'"
                       class="input"
                       type="text"
                       placeholder="N° de Ordem"
@@ -74,17 +77,15 @@
               <div class="column is-4">
                 <div class="content">
                   <label class="label">Cadastro</label>
-                  <div class="control">
-                    <CmbGeneric
-                      :sel="edl.id_cadastro_edl"
-                      :data="imoveis"
-                      @selGen="edl.id_cadastro_edl = $event"
-                      :errclass="{ 'is-danger': v$.id_cadastro_edl.$error }"
-                    />
-                    <span class="is-error" v-if="v$.id_cadastro_edl.$error">
-                      {{ v$.id_cadastro_edl.$errors[0].$message }}
-                    </span>
-                  </div>
+                  <CmbGeneric
+                    v-enter-to-next="'form-edl-id-1'"
+                    v-model:sel="edl.id_cadastro_edl"
+                    :data="imoveis"
+                    :errclass="{ 'is-danger': v$.id_cadastro_edl.$error }"
+                  />
+                  <span class="is-error" v-if="v$.id_cadastro_edl.$error">
+                    {{ v$.id_cadastro_edl.$errors[0].$message }}
+                  </span>
                 </div>
               </div>
               <div class="column is-6">
@@ -93,6 +94,7 @@
                     <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-edl-id-1'"
                         v-model="edl.id_situacao"
                         :options="situacoes"
                         name="id_situacao"
@@ -110,6 +112,7 @@
                     <legend>Nível Água</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-edl-id-1'"
                         v-model="edl.id_nivel"
                         :options="niveis"
                         name="id_nivel"
@@ -124,9 +127,10 @@
                   <label class="label">Larvas</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl-id-1'"
                       class="input"
                       type="text"
-                      placeholder="N° de larvasl"
+                      placeholder="N° de larvas"
                       v-model="edl.larvas"
                     />
                   </div>
@@ -137,6 +141,7 @@
                   <label class="label">Pupas</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl-id-1'"
                       class="input"
                       type="text"
                       placeholder="N° de pupas"
@@ -145,7 +150,89 @@
                   </div>
                 </div>
               </div>
+              <div class="column">
+                <div class="content">
+                  <label class="label">Ae. aegypti</label>
+                  <div class="control">
+                    <input
+                      v-enter-to-next="'form-edl-id-1'"
+                      class="input"
+                      type="text"
+                      placeholder="N° de larvas Ae aegypti"
+                      v-model="edl.aegypti"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="column">
+                <div class="content">
+                  <label class="label">Ae albopictus</label>
+                  <div class="control">
+                    <input
+                      v-enter-to-next="'form-edl-id-1'"
+                      class="input"
+                      type="text"
+                      placeholder="N° de larvas Ae albopiictus"
+                      v-model="edl.albopictus"
+                    />
+                  </div>
+                </div>
+              </div>
             </div>
+            <fieldset class="fieldset">
+              <legend>Outras Espécies</legend>
+              <div class="columns">
+                <div class="column is-3 is-offset-1">
+                  <div class="content">
+                    <label class="label">Espécie</label>
+                    <div class="control">
+                      <input
+                        v-enter-to-next="'form-edl-id-1'"
+                        class="input"
+                        type="text"
+                        placeholder="Espécie"
+                        v-model="outro.especie"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-2 is-offset-1">
+                  <div class="content">
+                    <label class="label">Quantidade</label>
+                    <div class="control">
+                      <input
+                        v-enter-to-next="'form-edl-id-1'"
+                        class="input"
+                        type="text"
+                        placeholder="N° de larvas"
+                        v-model="outro.quant"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-2 is-offset-1">
+                  <label class="label">&nbsp;</label>
+                  <button class="button is-link aux-btn is-fullwidth" @click="insert">
+                    Inserir
+                  </button>
+                </div>
+              </div>
+              <div class="columns">
+                <div class="column is-10 is-offset-1">
+                  <section v-if="outras.length > 0">
+                    <MyDataTable
+                      :loggedUser="{ id: 0, tipo: 0 }"
+                      :data="outras"
+                      :columns="columns"
+                      calc-height="true"
+                      :pagination="false"
+                      @delete="handleDelete"
+                      :buttons="['delete']"
+                    />
+                  </section>
+                </div>
+              </div>
+            </fieldset>
             <div class="columns">
               <div class="column">
                 <div class="content">
@@ -153,10 +240,11 @@
                     <legend>Ocorrências</legend>
                     <div class="field">
                       <GenericCheckBox
+                        v-enter-to-next="'form-edl-id-1'"
                         :checkAll="false"
                         :columnsCount="6"
                         :options="ocorrencias"
-                        v-model="edl.ocorrencias"
+                        v-model="chkOcorrencias"
                       />
                     </div>
                   </fieldset>
@@ -168,6 +256,7 @@
                 <div class="field">
                   <label class="label">Observação</label>
                   <textarea
+                    v-enter-to-next="'form-edl-id-1'"
                     class="textarea"
                     rows="2"
                     v-model="edl.observacao"
@@ -183,6 +272,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl-id-1'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -194,7 +284,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -213,7 +309,8 @@ import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
 import GenericCheckBox from '@/components/forms/GenericCheckBox.vue'
-import { required$, combo$, maxLength$ } from '@/components/forms/validators'
+import MyDataTable from '@/components/general/MyDataTable.vue'
+import { required$, combo$, maxLength$, requiredIf$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import edlCadastroService from '@/services/cadastro/edlCadastro.service'
@@ -234,6 +331,15 @@ var imoveis = ref([])
 
 var id_prop = ref(0)
 
+var outras = ref([])
+var chkOcorrencias = ref([])
+const columns = ref([])
+
+const outro = reactive({
+  especie: '',
+  quant: 0,
+})
+
 var edl = reactive({
   id_edl: 0,
   ordem: 1,
@@ -245,6 +351,9 @@ var edl = reactive({
   id_nivel: 0,
   larvas: 0,
   pupas: 0,
+  aegypti: 0,
+  albopictus: 0,
+  outras: {},
   observacao: '',
   ocorrencias: [],
   agente: '',
@@ -265,17 +374,49 @@ const rules = {
   id_situacao: { required$, minValue: combo$(1) },
   id_execucao: { required$, minValue: combo$(1) },
   id_cadastro_edl: { required$, minValue: combo$(1) },
-  id_nivel: { required$, minValue: combo$(1) },
+  id_nivel: { requiredIf: requiredIf$(edl.id_situacao == 1) },
   observacao: { maxLength: maxLength$(200) },
   agente: { required$ },
 }
 
 const v$ = useValidate(rules, edl)
 
+function insert() {
+  if (outro.especie && parseInt(outro.quant) > 0) {
+    const novoItem = {
+      id: Date.now(),
+      especie: outro.especie,
+      quant: parseInt(outro.quant),
+    }
+
+    outras.value.push(novoItem)
+
+    // Limpa o formulário
+    outro.especie = ''
+    outro.quant = 0
+  }
+}
+
+function handleDelete(dados) {
+  const row = dados.row
+  // O filtro
+  outras.value = outras.value.filter((f) => f.id !== row.id)
+}
+
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     var resultado = null
+    const contagensObjeto = outras.value.reduce((acc, item) => {
+      // O Knex/PostgreSQL espera { "chave": valor }
+      acc[item.especie] = item.quant
+      return acc
+    }, {})
+
+    edl.ocorrencias = JSON.stringify(chkOcorrencias.value)
+
+    edl.outras = contagensObjeto // O objeto JSON que será inserido no JSONB
+
     if (isEditMode.value) {
       resultado = await edlService.update(edl)
     } else {
@@ -304,9 +445,13 @@ function limpar() {
     id_nivel: 0,
     larvas: 0,
     pupas: 0,
+    aegypti: 0,
+    albopictus: 0,
+    outras: {},
     observacao: '',
     ocorrencias: [],
   }
+  chkOcorrencias.value = []
   Object.assign(edl, vazio)
 }
 
@@ -321,7 +466,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -355,11 +500,27 @@ async function loadCombos() {
 }
 
 onMounted(async () => {
+  columns.value = [
+    { headerName: 'Espécie', field: 'especie' },
+    { headerName: 'Quantidade', field: 'quant' },
+  ]
+
   if (isEditMode.value) {
     const ret = await edlService.getEdl(route.params.id)
     if (ret.error) {
       toast.error(ret.msg)
     } else {
+      const objetoJson = ret.outras
+      outras.value = Object.entries(objetoJson).map(([especie, quant]) => {
+        // 2. O .map() itera sobre cada array e os desestrutura em [especie, quant]
+        // 3. E os mapeia de volta para o formato de objeto desejado
+        return {
+          especie: especie,
+          // Converte o valor 'quant' para número, se necessário (boa prática)
+          quant: Number(quant),
+        }
+      })
+      chkOcorrencias.value = ret.ocorrencias
       Object.assign(edl, ret)
     }
   }
@@ -371,7 +532,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

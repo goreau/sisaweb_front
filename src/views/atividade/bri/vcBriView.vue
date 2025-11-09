@@ -15,8 +15,8 @@
                   <div class="control">
                     <CmbTerritorio
                       :tipo="99"
-                      :sel="vc_bri.id_municipio"
-                      @selTerr="vc_bri.id_municipio = $event"
+                      v-enter-to-next="'form-bri'"
+                      v-model:sel="vc_bri.id_municipio"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-bri'"
                       v-model="vc_bri.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -47,6 +48,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-bri'"
                         v-model="vc_bri.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -63,9 +65,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_bri.id_area"
+                      v-enter-to-next="'form-bri'"
+                      v-model:sel="vc_bri.id_area"
                       :data="areas"
-                      @selGen="vc_bri.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -79,9 +81,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_bri.id_censitario"
+                      v-enter-to-next="'form-bri'"
+                      v-model:sel="vc_bri.id_censitario"
                       :data="censitarios"
-                      @selGen="vc_bri.id_censitario = $event"
                       :errclass="{ 'is-danger': v$.id_censitario.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
@@ -95,9 +97,9 @@
                   <label class="label">Quarteirão</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_bri.id_quarteirao"
+                      v-enter-to-next="'form-bri'"
+                      v-model:sel="vc_bri.id_quarteirao"
                       :data="quarteiraos"
-                      @selGen="vc_bri.id_quarteirao = $event"
                       :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                     />
                     <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -114,6 +116,7 @@
                     <legend>Tipo</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-bri'"
                         v-model="vc_bri.situacao"
                         :options="tipos"
                         name="situacao"
@@ -130,6 +133,7 @@
                   <label class="label">Dupla</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-bri'"
                       class="input"
                       type="text"
                       placeholder="Executores da atividade"
@@ -143,6 +147,7 @@
                   <label class="label">Equipamento</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-bri'"
                       class="input"
                       type="text"
                       placeholder="Nº do patrimônio"
@@ -156,6 +161,7 @@
                   <label class="label">Vazão média</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-bri'"
                       class="input"
                       type="text"
                       placeholder="Vazão do equipamento"
@@ -313,7 +319,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -326,7 +332,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -339,7 +345,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 onMounted(async () => {
@@ -358,7 +364,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

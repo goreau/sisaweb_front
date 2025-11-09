@@ -21,9 +21,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="censitario.id_area"
+                      v-enter-to-next="'form-nav-det'"
+                      v-model:sel="censitario.id_area"
                       :data="areas"
-                      @selGen="censitario.id_area = $event"
                     />
                   </div>
                 </div>
@@ -33,9 +33,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="censitario.id_censitario"
+                      v-enter-to-next="'form-nav-det'"
+                      v-model:sel="censitario.id_censitario"
                       :data="censitarios"
-                      @selGen="censitario.id_censitario = $event"
                     />
                   </div>
                 </div>
@@ -71,7 +71,13 @@
             </span>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="voltar" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="voltar"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
         <Modal v-if="showModal" @confirm="handleConfirm" @cancel="handleCancel">
@@ -183,7 +189,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -191,7 +197,7 @@ watch(
   (id) => {
     const item = censitarios.value.find((a) => a.id === Number(id))
     censitario.fantCensitario = item?.nome || ''
-  }
+  },
 )
 
 onMounted(async () => {
@@ -213,14 +219,17 @@ onMounted(async () => {
   }
 })
 
-function handleDelete(cens) {
-  filhos.value = filhos.value.filter((f) => f.id_censitario !== cens)
+function handleDelete(dados) {
+  const row = dados.row
+  // O filtro
+  // outras.value = outras.value.filter((f) => f.id !== row.id)
+  filhos.value = filhos.value.filter((f) => f.id_censitario !== row.id_censitario)
 }
 
 async function handleView(item) {
   currentCens.value = item.row.id_censitario
   const result = await quarteiraoService.getCombo(
-    JSON.stringify({ id_censitario: item.row.id_censitario })
+    JSON.stringify({ id_censitario: item.row.id_censitario }),
   )
   if (result.error) {
     console.log(result.error)
@@ -238,7 +247,6 @@ async function handleView(item) {
   showModal.value = true
 }
 </script>
-
 
 <style scoped>
 .radio {

@@ -28,8 +28,8 @@
                     <div class="control">
                       <CmbTerritorio
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
+                        v-enter-to-next="'form-bri'"
+                        v-model:sel="filter.id_municipio"
                       />
                     </div>
                   </div>
@@ -41,6 +41,7 @@
                     <label class="label">Data Inicial</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-bri'"
                         v-model="filter.dt_inicial"
                         :error="false"
                         placeholder="Escolha a data"
@@ -53,6 +54,7 @@
                     <label class="label">Data Final</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-bri'"
                         v-model="filter.dt_final"
                         :error="false"
                         placeholder="Escolha a data"

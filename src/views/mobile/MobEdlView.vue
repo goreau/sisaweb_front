@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-mob-edl'"
+                      v-model:sel="edl.id_municipio"
                       :tipo="99"
-                      :sel="edl.id_municipio"
-                      @selTerr="edl.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data de Instalação</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-mob-edl'"
                       v-model="edl.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -47,6 +48,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-edl'"
                         v-model="edl.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -76,9 +78,9 @@
                   <label class="label">Cadastro</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="edl.id_cadastro_edl"
+                      v-enter-to-next="'form-mob-edl'"
+                      v-model:sel="edl.id_cadastro_edl"
                       :data="imoveis"
-                      @selGen="edl.id_cadastro_edl = $event"
                       :errclass="{ 'is-danger': v$.id_cadastro_edl.$error }"
                     />
                     <span class="is-error" v-if="v$.id_cadastro_edl.$error">
@@ -93,6 +95,7 @@
                     <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-edl'"
                         v-model="edl.id_situacao"
                         :options="situacoes"
                         name="id_situacao"
@@ -110,6 +113,7 @@
                     <legend>Nível Água</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-edl'"
                         v-model="edl.id_nivel"
                         :options="niveis"
                         name="id_nivel"
@@ -124,6 +128,7 @@
                   <label class="label">Larvas</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-edl'"
                       class="input"
                       type="text"
                       placeholder="N° de larvasl"
@@ -137,6 +142,7 @@
                   <label class="label">Pupas</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-edl'"
                       class="input"
                       type="text"
                       placeholder="N° de pupas"
@@ -153,6 +159,13 @@
                     <legend>Ocorrências</legend>
                     <div class="field">
                       <GenericCheckBox
+                        v-enter-to-next="'form-mob-edl'"
+                        :checkAll="false"
+                        :columnsCount="6"
+                        :options="ocorrencias"
+                        v-model="chkOcorrencias"
+                      />
+                      <GenericCheckBox
                         :checkAll="false"
                         :columnsCount="6"
                         :options="ocorrencias"
@@ -168,6 +181,7 @@
                 <div class="field">
                   <label class="label">Observação</label>
                   <textarea
+                    v-enter-to-next="'form-mob-edl'"
                     class="textarea"
                     rows="2"
                     v-model="edl.observacao"
@@ -183,6 +197,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-edl'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -194,7 +209,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -229,6 +250,7 @@ var execucoes = ref([])
 var situacoes = ref([])
 var niveis = ref([])
 const ocorrencias = ref([])
+var chkOcorrencias = ref([])
 
 var imoveis = ref([])
 
@@ -276,6 +298,8 @@ async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     var resultado = null
+    edl.ocorrencias = JSON.stringify(chkOcorrencias.value)
+
     if (isEditMode.value) {
       resultado = await mobEdlService.update(edl)
     } else {
@@ -321,7 +345,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -360,6 +384,7 @@ onMounted(async () => {
     if (ret.error) {
       toast.error(ret.msg)
     } else {
+      ret.id_municipio = Number(ret.id_municipio)
       Object.assign(edl, ret)
     }
   }
@@ -371,7 +396,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

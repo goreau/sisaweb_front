@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-quadra'"
                       :tipo="99"
-                      :sel="vc_linha.id_municipio"
-                      @selTerr="vc_linha.id_municipio = $event"
+                      v-model:sel="vc_linha.id_municipio"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-quadra'"
                       v-model="vc_linha.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -49,6 +50,7 @@
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-quadra'"
                         v-model="vc_linha.id_atividade"
                         :options="atividades"
                         name="id_atividade"
@@ -64,6 +66,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-quadra'"
                         v-model="vc_linha.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -79,6 +82,7 @@
                     <legend>Tpo de Trabalho</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-quadra'"
                         v-model="vc_linha.id_tipo"
                         :options="tipos"
                         name="id_tipo"
@@ -96,9 +100,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_area"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="vc_linha.id_area"
                         :data="areas"
-                        @selGen="vc_linha.id_area = $event"
                         :errclass="{ 'is-danger': v$.id_area.$error }"
                       />
                       <span class="is-error" v-if="v$.id_area.$error">
@@ -112,9 +116,9 @@
                     <label class="label">Censitário</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_censitario"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="vc_linha.id_censitario"
                         :data="censitarios"
-                        @selGen="vc_linha.id_censitario = $event"
                         :errclass="{ 'is-danger': v$.id_censitario.$error }"
                       />
                       <span class="is-error" v-if="v$.id_censitario.$error">
@@ -128,9 +132,9 @@
                     <label class="label">Quarteirão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_quarteirao"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="vc_linha.id_quarteirao"
                         :data="quarteiraos"
-                        @selGen="vc_linha.id_quarteirao = $event"
                         :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                       />
                       <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -148,9 +152,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_area_nav"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="vc_linha.id_area_nav"
                         :data="areas_nav"
-                        @selGen="vc_linha.id_area_nav = $event"
                         :errclass="{ 'is-danger': v$.id_area_nav.$error }"
                       />
                       <span class="is-error" v-if="v$.id_area_nav.$error">
@@ -165,9 +169,9 @@
                     <label class="label">Quarteirão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_quarteirao"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="vc_linha.id_quarteirao"
                         :data="quarteiraos"
-                        @selGen="vc_linha.id_quarteirao = $event"
                         :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                       />
                       <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -187,6 +191,7 @@
                     <label class="label">Trabalhados</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -200,6 +205,7 @@
                     <label class="label">Fechados</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -213,6 +219,7 @@
                     <label class="label">Desabitados</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -226,6 +233,7 @@
                     <label class="label">Temporada</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -239,6 +247,7 @@
                     <label class="label">Parcial</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -252,6 +261,7 @@
                     <label class="label">Recusa</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -270,6 +280,7 @@
                     <label class="label">Mecânico</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -283,6 +294,7 @@
                     <label class="label">Alternativo</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -296,6 +308,7 @@
                     <label class="label">Focal</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -309,6 +322,7 @@
                     <label class="label">Perifocal</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -322,6 +336,7 @@
                     <label class="label">Nebulização</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -335,6 +350,7 @@
                     <label class="label">BR Aedes</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quadra'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -353,9 +369,9 @@
                     <label class="label">Grupo</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="recipiente.id_grupo_rec"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="recipiente.id_grupo_rec"
                         :data="grupos_rec"
-                        @selGen="recipiente.id_grupo_rec = $event"
                       />
                     </div>
                   </div>
@@ -365,9 +381,9 @@
                     <label class="label">Tipo</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="recipiente.id_tipo_rec"
+                        v-enter-to-next="'form-quadra'"
+                        v-model:sel="recipiente.id_tipo_rec"
                         :data="tipos_rec"
-                        @selGen="recipiente.id_tipo_rec = $event"
                       />
                     </div>
                   </div>
@@ -380,6 +396,7 @@
                       <label class="label">Existentes</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -393,6 +410,7 @@
                       <label class="label">Com Água</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -406,6 +424,7 @@
                       <label class="label">Com Larvas</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -419,6 +438,7 @@
                       <label class="label">Amostra</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -432,6 +452,7 @@
                       <label class="label">Examinadas</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -445,6 +466,7 @@
                       <label class="label"><i>Ae aeg</i></label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -458,6 +480,7 @@
                       <label class="label"><i>Ae alb</i></label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-quadra'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -479,9 +502,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_focal"
+                            v-enter-to-next="'form-quadra'"
+                            v-model:sel="vc_linha.id_prod_focal"
                             :data="prod_focais"
-                            @selGen="vc_linha.id_prod_focal = $event"
                             :errclass="{ 'is-danger': v$.id_prod_focal.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_focal.$error">
@@ -495,6 +518,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-quadra'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -515,9 +539,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_peri"
+                            v-enter-to-next="'form-quadra'"
+                            v-model:sel="vc_linha.id_prod_peri"
                             :data="prod_peris"
-                            @selGen="vc_linha.id_prod_peri = $event"
                             :errclass="{ 'is-danger': v$.id_prod_peri.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_peri.$error">
@@ -531,6 +555,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-quadra'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -551,9 +576,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_neb"
+                            v-enter-to-next="'form-quadra'"
+                            v-model:sel="vc_linha.id_prod_neb"
                             :data="prod_nebs"
-                            @selGen="vc_linha.id_prod_neb = $event"
                             :errclass="{ 'is-danger': v$.id_prod_neb.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_neb.$error">
@@ -567,6 +592,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-quadra'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -587,9 +613,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_br"
+                            v-enter-to-next="'form-quadra'"
+                            v-model:sel="vc_linha.id_prod_br"
                             :data="prod_peris"
-                            @selGen="vc_linha.id_prod_br = $event"
                             :errclass="{ 'is-danger': v$.id_prod_br.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_br.$error">
@@ -603,6 +629,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-quadra'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -621,6 +648,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quadra'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -633,7 +661,13 @@
           </div>
           {{ navs }}
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -874,7 +908,7 @@ watch(
     } else {
       tipos_rec.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -887,7 +921,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -900,7 +934,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -913,7 +947,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -926,7 +960,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 onMounted(async () => {
@@ -937,7 +971,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

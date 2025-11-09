@@ -13,10 +13,9 @@
                 <label class="label">Município</label>
                 <div class="control">
                   <CmbTerritorio
-                    :id_prop="id_prop"
+                    v-enter-to-next="'form-equipe'"
+                    v-model:sel="equipe.id_municipio"
                     :tipo="99"
-                    :sel="equipe.id_municipio"
-                    @selTerr="equipe.id_municipio = $event"
                     :errclass="{ 'is-danger': v$.id_municipio.$error }"
                   />
                   <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +29,7 @@
                 <label class="label">Coordenador</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -45,6 +45,7 @@
                 <label class="label">Supervisor</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -60,6 +61,7 @@
                 <label class="label">ACS</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -75,6 +77,7 @@
                 <label class="label">ACV</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -90,6 +93,7 @@
                 <label class="label">Trios</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -105,6 +109,7 @@
                 <label class="label">IEC</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -120,6 +125,7 @@
                 <label class="label">Laboratório</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -135,6 +141,7 @@
                 <label class="label">Data Alteração</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-equipe'"
                     class="input"
                     type="text"
                     placeholder="Código da Área"
@@ -147,6 +154,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               @cancel="null"
               @aux="null"
@@ -264,7 +272,7 @@ watch(
       }
       hasRows.value = true
     }
-  }
+  },
 )
 
 onMounted(async () => {
@@ -274,7 +282,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

@@ -12,9 +12,9 @@
               <label class="label">Município</label>
               <div class="control">
                 <CmbTerritorio
+                  v-enter-to-next="'form-val-adl'"
+                  v-model:sel="valAdl.id_municipio"
                   :tipo="99"
-                  :sel="valAdl.id_municipio"
-                  @selTerr="valAdl.id_municipio = $event"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -27,6 +27,7 @@
                 <legend>Execução</legend>
                 <div class="field">
                   <RadioGeneric
+                    v-enter-to-next="'form-val-adl'"
                     v-model="valAdl.id_execucao"
                     :options="execucoes"
                     name="id_execucao"
@@ -43,6 +44,7 @@
                 <legend>Tipo</legend>
                 <div class="field">
                   <RadioGeneric
+                    v-enter-to-next="'form-val-adl'"
                     v-model="valAdl.id_tipo"
                     :options="tipos"
                     name="id_tipo"
@@ -56,10 +58,10 @@
               <label class="label">Referência</label>
               <div class="control">
                 <DatePicker
+                  v-enter-to-next="'form-val-adl'"
                   v-model="valAdl.dt_adl"
-                  mode="month"
                   :error="false"
-                  placeholder=""
+                  placeholder="Escolha a data"
                   :class="{ 'is-danger': v$.dt_adl.$error }"
                 />
                 <span class="is-error" v-if="v$.dt_adl.$error">
@@ -69,7 +71,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -156,7 +164,7 @@ async function save() {
   }
 }
 
-const isEditMode = computed(() => Number(valAdl.id_val_adl) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {
@@ -164,6 +172,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(valAdl, result)
     }
   } else {

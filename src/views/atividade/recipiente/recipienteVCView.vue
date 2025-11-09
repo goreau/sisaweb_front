@@ -14,9 +14,9 @@
                   <label class="label">Grupo</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="recipiente.id_grupo_rec"
+                      v-enter-to-next="'form-rec'"
+                      v-model:sel="recipiente.id_grupo_rec"
                       :data="grupos"
-                      @selGen="recipiente.id_grupo_rec = $event"
                     />
                   </div>
                 </div>
@@ -26,9 +26,9 @@
                   <label class="label">Tipo</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="recipiente.id_tipo_rec"
+                      v-enter-to-next="'form-rec'"
+                      v-model:sel="recipiente.id_tipo_rec"
                       :data="tipos"
-                      @selGen="recipiente.id_tipo_rec = $event"
                     />
                   </div>
                 </div>
@@ -40,6 +40,7 @@
                   <label class="label">Existentes</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -53,6 +54,7 @@
                   <label class="label">Com Água</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -66,6 +68,7 @@
                   <label class="label">Com Larvas</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -81,6 +84,7 @@
                   <label class="label">Amostra</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -94,6 +98,7 @@
                   <label class="label">Examinadas</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -107,6 +112,7 @@
                   <label class="label"><i>Ae aegypti</i></label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -120,6 +126,7 @@
                   <label class="label"><i>Ae albopictus</i></label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-rec'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -131,8 +138,14 @@
             </div>
             <br />
             <div class="columns">
-              <div class="column is-6 is-offset-3">
-                <button class="button is-link aux-btn is-fullwidth" @click="insert">Inserir</button>
+              <div
+                class="column is-6 is-offset-3"
+                data-focus-type="custom-submit-group"
+                v-enter-to-next="'submit-action'"
+              >
+                <button class="button is-link aux-btn is-fullwidth submit-btn" @click="insert">
+                  Inserir
+                </button>
               </div>
             </div>
             <hr />
@@ -152,7 +165,13 @@
             </span>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="voltar" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="voltar"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -247,7 +266,7 @@ watch(
     } else {
       tipos.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -255,7 +274,7 @@ watch(
   (id) => {
     const item = tipos.value.find((a) => a.id === Number(id))
     recipiente.fantTipo = item?.nome || ''
-  }
+  },
 )
 
 function onEditRow(item) {
@@ -290,5 +309,4 @@ onMounted(async () => {
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

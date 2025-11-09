@@ -23,9 +23,9 @@
                     <label class="label">GVE</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-enter-to-next="'form-nav'"
                         :tipo="9"
-                        :sel="filter.id_gve"
-                        @selTerr="filter.id_gve = $event"
+                        v-model:sel="filter.id_gve"
                       />
                     </div>
                   </div>
@@ -37,9 +37,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="filter.id_municipio"
+                        v-enter-to-next="'form-nav'"
+                        v-model:sel="filter.id_municipio"
                         :data="municipios"
-                        @selGen="filter.id_municipio = $event"
                       />
                     </div>
                   </div>
@@ -50,7 +50,12 @@
                   <div class="field">
                     <label class="label">Ano</label>
                     <div class="control">
-                      <input class="input" type="number" v-model="filter.ano" />
+                      <input
+                        class="input"
+                        type="number"
+                        v-model="filter.ano"
+                        v-enter-to-next="'form-nav'"
+                      />
                     </div>
                   </div>
                 </div>
@@ -61,9 +66,9 @@
                     <label class="label">Área de Transmissão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="filter.id_area_nav"
+                        v-enter-to-next="'form-nav'"
+                        v-model:sel="filter.id_area_nav"
                         :data="areas_nav"
-                        @selGen="filter.id_area_nav = $event"
                       />
                     </div>
                   </div>
@@ -118,7 +123,7 @@ const idUser = ref(0)
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-veicularsw'
 
 var hasRows = ref(false)
@@ -141,7 +146,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await veicularService.getPrevisao(JSON.stringify(filter))
@@ -154,7 +159,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

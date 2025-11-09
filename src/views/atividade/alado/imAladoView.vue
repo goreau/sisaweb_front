@@ -16,9 +16,9 @@
                     <label class="label">Imóvel</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="imovel.id_imovel"
+                        v-enter-to-next="'form-alado'"
+                        v-model:sel="imovel.id_imovel"
                         :data="imoveis"
-                        @selGen="imovel.id_imovel = $event"
                         :errclass="{ 'is-danger': v$.id_imovel.$error }"
                       />
                       <span class="is-error" v-if="v$.id_imovel.$error">
@@ -32,6 +32,7 @@
                     <label class="label">Ordem</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-alado'"
                         class="input"
                         type="text"
                         placeholder="N° de Ordem"
@@ -45,6 +46,7 @@
                     <label class="label">Casa</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-alado'"
                         class="input"
                         type="text"
                         placeholder="N° do Imóvel"
@@ -59,6 +61,7 @@
                       <legend>Situação</legend>
                       <div class="field">
                         <RadioGeneric
+                          v-enter-to-next="'form-alado'"
                           v-model="imovel.id_situacao"
                           :options="situacoes"
                           name="id_situacao"
@@ -82,6 +85,7 @@
                       <label class="label">Hora</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="time"
                           placeholder="Opcional"
@@ -100,6 +104,7 @@
                       <label class="label">Umidade</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -118,6 +123,7 @@
                       <label class="label">Temperatura</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -136,6 +142,7 @@
                       <label class="label">Moradores</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -167,6 +174,7 @@
                       <label class="label">Com larvas</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -185,6 +193,7 @@
                       <label class="label">Amostra</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -203,6 +212,7 @@
                       <label class="label"><i>Ae aegypti</i></label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -221,6 +231,7 @@
                       <label class="label"><i>Ae albopictus </i></label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -239,6 +250,7 @@
                       <label class="label"><i>Ae aegypti</i></label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -257,6 +269,7 @@
                       <label class="label"><i>Ae albopictus</i></label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -288,6 +301,7 @@
                       <label class="label">Amostra</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -306,6 +320,7 @@
                       <label class="label">Macho</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -324,6 +339,7 @@
                       <label class="label">Fêmea</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -342,6 +358,7 @@
                       <label class="label">Macho</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -360,6 +377,7 @@
                       <label class="label">Fêmea</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -391,6 +409,7 @@
                       <label class="label">Amostra</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -409,6 +428,7 @@
                       <label class="label">Macho</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -427,6 +447,7 @@
                       <label class="label">Fêmea</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -445,6 +466,7 @@
                       <label class="label">Macho</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -463,6 +485,7 @@
                       <label class="label">Fêmea</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-alado'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -501,6 +524,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               :customBack="true"
@@ -718,7 +742,7 @@ watch(
   (id) => {
     const item = situacoes.value.find((a) => a.id === Number(id))
     imovel.fant_sit = item?.nome || ''
-  }
+  },
 )
 
 onMounted(async () => {
@@ -745,7 +769,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

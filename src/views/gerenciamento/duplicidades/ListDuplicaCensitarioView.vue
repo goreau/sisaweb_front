@@ -21,9 +21,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-model:sel="filter.id_municipio"
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
+                        v-enter-to-next="'form-cens'"
                       />
                     </div>
                   </div>
@@ -35,9 +35,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="filter.id_area"
+                        v-enter-to-next="'form-cens'"
+                        v-model:sel="filter.id_area"
                         :data="areas"
-                        @selGen="filter.id_area = $event"
                       />
                     </div>
                   </div>
@@ -49,6 +49,7 @@
                     <label class="label">Setor Censitário</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-cens'"
                         class="input"
                         type="text"
                         placeholder="Permite parcial"
@@ -78,7 +79,11 @@
                   <div class="content">
                     <label class="label">Censitário a excluir</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regExclui = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-cens'"
+                        v-model:sel="regExclui"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -86,7 +91,11 @@
                   <div class="content">
                     <label class="label">Censitário que receberá</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regRecebe = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-cens'"
+                        v-model:sel="regRecebe"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -177,7 +186,7 @@ async function processa() {
       toast.error(resultado.msg)
     } else {
       toast.success(
-        `Transferência executada com sucesso! ${resultado.master} quarteirões transferidos.`
+        `Transferência executada com sucesso! ${resultado.master} quarteirões transferidos.`,
       )
       hasRows.value = false
     }
@@ -194,7 +203,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 onMounted(() => {

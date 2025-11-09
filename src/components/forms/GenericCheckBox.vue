@@ -1,26 +1,45 @@
 <template>
-  <div class="field mb-3" v-if="checkAll">
-    <label class="checkbox">
-      <input type="checkbox" :checked="allSelected" @change="toggleAll" />
-      Selecionar todos
-    </label>
-  </div>
-  <div class="columns is-multiline">
-    <div v-for="(col, colIndex) in columns" :key="colIndex" class="column" :class="columnClass">
-      <div v-for="(item, i) in col" :key="i" class="field">
-        <label class="checkbox">
-          <input type="checkbox" :value="item[valueKey]" v-model="modelValueLocal" />
-          {{ item[labelKey] }}
-        </label>
+  <div data-focus-type="custom-checkbox-group" ref="checkboxGroupRef">
+    <div class="field mb-3" v-if="checkAll">
+      <label class="checkbox">
+        <input type="checkbox" :checked="allSelected" @change="toggleAll" />
+        Selecionar todos
+      </label>
+    </div>
+    <div class="columns is-multiline">
+      <div v-for="(col, colIndex) in columns" :key="colIndex" class="column" :class="columnClass">
+        <div v-for="(item, i) in col" :key="i" class="field">
+          <label class="checkbox">
+            <input type="checkbox" :value="item[valueKey]" v-model="modelValueLocal" />
+            {{ item[labelKey] }}
+          </label>
+        </div>
       </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { computed, onMounted } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 
 var allSelected = false
+
+const checkboxGroupRef = ref(null)
+
+function focus() {
+  if (checkboxGroupRef.value) {
+    // Foca no primeiro checkbox do grupo (pode ser o "Selecionar todos" ou o primeiro item)
+    const target = checkboxGroupRef.value.querySelector('input[type="checkbox"]')
+
+    if (target) {
+      target.focus()
+    }
+  }
+}
+
+defineExpose({
+  focus, // 👈 Torna a função 'focus' acessível de fora
+})
 
 const props = defineProps({
   options: {

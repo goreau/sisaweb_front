@@ -12,9 +12,9 @@
               <label class="label">Município</label>
               <div class="control">
                 <CmbTerritorio
+                  v-enter-to-next="'form-ovi'"
                   :tipo="99"
-                  :sel="vc_ovitrampa.id_municipio"
-                  @selTerr="vc_ovitrampa.id_municipio = $event"
+                  v-model:sel="vc_ovitrampa.id_municipio"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -26,9 +26,9 @@
               <label class="label">Ovitrampa</label>
               <div class="control">
                 <CmbGeneric
-                  :sel="vc_ovitrampa.id_ovitrampa"
+                  v-enter-to-next="'form-ovi'"
+                  v-model:sel="vc_ovitrampa.id_ovitrampa"
                   :data="imoveis"
-                  @selGen="vc_ovitrampa.id_ovitrampa = $event"
                   :errclass="{ 'is-danger': v$.id_ovitrampa.$error }"
                 />
                 <span class="is-error" v-if="v$.id_ovitrampa.$error">
@@ -41,6 +41,7 @@
                 <legend>Execução</legend>
                 <div class="field">
                   <RadioGeneric
+                    v-enter-to-next="'form-ovi'"
                     v-model="vc_ovitrampa.id_execucao"
                     :options="execucoes"
                     name="id_execucao"
@@ -54,6 +55,7 @@
                 <label class="label">Data Instalação</label>
                 <div class="control">
                   <DatePicker
+                    v-enter-to-next="'form-ovi'"
                     v-model="vc_ovitrampa.dt_instala"
                     :error="false"
                     placeholder="Escolha a data"
@@ -70,6 +72,7 @@
                 <label class="label">Data Retirada</label>
                 <div class="control">
                   <DatePicker
+                    v-enter-to-next="'form-ovi'"
                     v-model="vc_ovitrampa.dt_retira"
                     :error="false"
                     placeholder="Escolha a data"
@@ -86,6 +89,7 @@
                 <legend>Local</legend>
                 <div class="field">
                   <RadioGeneric
+                    v-enter-to-next="'form-ovi'"
                     v-model="vc_ovitrampa.peri_intra"
                     :options="locais"
                     name="peri_intra"
@@ -98,9 +102,9 @@
               <label class="label">Observação</label>
               <div class="control">
                 <CmbGeneric
-                  :sel="vc_ovitrampa.obs"
+                  v-enter-to-next="'form-ovi'"
+                  v-model:sel="vc_ovitrampa.obs"
                   :data="obss"
-                  @selGen="vc_ovitrampa.obs = $event"
                 />
               </div>
             </div>
@@ -109,6 +113,7 @@
                 <label class="label">Ovos</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-ovi'"
                     class="input"
                     type="text"
                     placeholder="Opcional"
@@ -122,6 +127,7 @@
                 <label class="label">Agente</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-ovi'"
                     class="input"
                     type="text"
                     placeholder="Executor da visita"
@@ -133,10 +139,10 @@
 
             <footer class="card-footer">
               <footerCard
+                v-enter-to-next="'submit-action'"
                 @submit="save"
-                :ready="readyToGo"
                 @cancel="null"
-                @aux="recipientes"
+                @aux="null"
                 :cFooter="cFooter"
               />
             </footer>
@@ -243,7 +249,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(vc_ovitrampa.id_vc_ovitrampa) > 0)
@@ -290,7 +296,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

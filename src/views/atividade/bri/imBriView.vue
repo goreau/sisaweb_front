@@ -16,6 +16,7 @@
                     <label class="label">Ordem</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-bri'"
                         class="input"
                         type="text"
                         placeholder="N° de Ordem"
@@ -29,6 +30,7 @@
                     <label class="label">Casa</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-bri'"
                         class="input"
                         type="text"
                         placeholder="N° do Imóvel"
@@ -43,6 +45,7 @@
                       <legend>Situação</legend>
                       <div class="field">
                         <RadioGeneric
+                          v-enter-to-next="'form-bri'"
                           v-model="imovel.id_situacao"
                           :options="situacoes"
                           name="id_situacao"
@@ -68,6 +71,7 @@
                         <label class="label">Existentes</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-bri'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -86,6 +90,7 @@
                         <label class="label">Tratados</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-bri'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -104,6 +109,7 @@
                         <label class="label">Acabamento</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-bri'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -122,6 +128,7 @@
                         <label class="label">Recusa</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-bri'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -140,6 +147,7 @@
                         <label class="label">Outros</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-bri'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -165,6 +173,7 @@
                             <label class="label">Existentes</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -183,6 +192,7 @@
                             <label class="label">Amostra</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -208,6 +218,7 @@
                             <label class="label">Existentes</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -226,6 +237,7 @@
                             <label class="label">Tratados</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -256,6 +268,7 @@
                             <label class="label">Existentes</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -274,6 +287,7 @@
                             <label class="label">Tratados</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -299,6 +313,7 @@
                             <label class="label">Existentes</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -317,6 +332,7 @@
                             <label class="label">Tratados</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -342,6 +358,7 @@
                             <label class="label">Existentes</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -360,6 +377,7 @@
                             <label class="label">Tratados</label>
                             <div class="control">
                               <input
+                                v-enter-to-next="'form-bri'"
                                 class="input"
                                 type="text"
                                 placeholder="Opcional"
@@ -387,6 +405,7 @@
                       <label class="label">Cargas</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-bri'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -405,6 +424,7 @@
                       <label class="label">Peso Inicial</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-bri'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -423,6 +443,7 @@
                       <label class="label">Peso Final</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-bri'"
                           class="input"
                           type="text"
                           placeholder="Opcional"
@@ -457,6 +478,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               :customBack="true"
@@ -638,7 +660,7 @@ watch(
   (id) => {
     const item = situacoes.value.find((a) => a.id === Number(id))
     imovel.fant_sit = item?.nome || ''
-  }
+  },
 )
 
 onMounted(async () => {
@@ -666,7 +688,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

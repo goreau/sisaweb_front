@@ -21,6 +21,7 @@
                   <legend>Origem dos registros</legend>
                   <div class="field">
                     <RadioGeneric
+                      v-enter-to-next="'form-mob-log'"
                       v-model="mobile.tipo"
                       :options="origems"
                       name="origem"
@@ -36,9 +37,9 @@
                 <label class="label">Município</label>
                 <div class="control">
                   <CmbTerritorio
+                    v-enter-to-next="'form-mob-log'"
+                    v-model:sel="mobile.id_municipio"
                     :tipo="99"
-                    :sel="mobile.id_municipio"
-                    @selTerr="mobile.id_municipio = $event"
                     :errclass="{ 'is-danger': vp$.id_municipio.$error }"
                   />
                   <span class="is-error" v-if="vp$.id_municipio.$error">
@@ -51,6 +52,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-mob-log'"
                       v-model="mobile.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -67,6 +69,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-log'"
                       class="input"
                       type="text"
                       placeholder="Nome do agente"
@@ -222,7 +225,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

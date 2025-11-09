@@ -27,9 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-enter-to-next="'form-edl'"
+                        v-model:sel="id_municipio"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
                       />
                     </div>
                   </div>
@@ -155,14 +155,9 @@ onMounted(() => {
     { headerName: 'Bairro', field: 'bairro' },
     { headerName: 'Endereço', field: 'endereco' },
     {
-      headerName: 'Inativa',
-      field: 'inativa',
+      headerName: 'Ativa',
+      field: 'ativa',
       cellRenderer: 'tickCrossRenderer',
-      /*cellRenderer: (params) => {
-        return params.value
-          ? '<span style="color: red; font-weight: bold;"><i class="fas fa-ban"></i> Sim</span>'
-          : '<span style="color: green; font-weight: bold;"><i class="fas fa-check-circle"></i> Não</span>'
-      },*/
     },
     { headerName: 'Responsável', field: 'owner' },
     { headerName: 'OwnerId', field: 'owner_id', hide: true },

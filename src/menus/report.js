@@ -361,6 +361,56 @@ export const reportMenu = [
   },
   {
     href: '',
+    title: 'EDL',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-square-virus',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: [
+      {
+        href: '/mainReport/edl/Resumo',
+        title: 'Resumo',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/edl/Situacao',
+        title: 'Situação',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/edl/Mensal',
+        title: 'Mensal',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+    ],
+  },
+  {
+    href: '',
     title: 'Dinâmicos',
     icon: {
       element: 'font-awesome-icon',

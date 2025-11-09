@@ -28,7 +28,8 @@ export const combo$ = (min) =>
   helpers.withMessage('Escolha um valor para esse campo.', minValue(min))
 
 //export const sameAs$ = (field) => helpers.withMessage('Os campos não conferem', sameAs(field))
-export const sameAs$ = (refSenha) => helpers.withMessage('Os campos não conferem', sameAs(refSenha))
+export const sameAs$ = (refSenha) =>
+  helpers.withMessage(`Os campos não conferem ${refSenha}`, sameAs(refSenha))
 
 export const minLength$ = (min) =>
   helpers.withMessage(

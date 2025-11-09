@@ -21,9 +21,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-model:sel="filter.id_municipio"
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
+                        v-enter-to-next="'form-imovel'"
                       />
                     </div>
                   </div>
@@ -36,6 +36,7 @@
                       <legend>Atividade</legend>
                       <div class="field">
                         <RadioGeneric
+                          v-enter-to-next="'form-imovel'"
                           v-model="filter.id_atividade"
                           :options="atividades"
                           name="id_atividade"
@@ -52,6 +53,7 @@
                     <label class="label">Cadastro/Endereço</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-imovel'"
                         class="input"
                         type="text"
                         placeholder="Permite parcial"
@@ -81,7 +83,11 @@
                   <div class="content">
                     <label class="label">Imóvel a excluir</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regExclui = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-imovel'"
+                        v-model:sel="regExclui"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -89,7 +95,11 @@
                   <div class="content">
                     <label class="label">Imóvel que receberá</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regRecebe = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-imovel'"
+                        v-model:sel="regRecebe"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -182,7 +192,7 @@ async function processa() {
       toast.error(resultado.msg)
     } else {
       toast.success(
-        `Transferência executada com sucesso! ${resultado.master} registros transferidos.`
+        `Transferência executada com sucesso! ${resultado.master} registros transferidos.`,
       )
       hasRows.value = false
     }
@@ -201,7 +211,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -216,7 +226,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 async function loadCombos() {

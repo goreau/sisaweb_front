@@ -1,1 +1,10 @@
 //@use './custom-vsm.scss' as *;
+.v-select {
+  // As variáveis SCSS do vue-select são apenas aliases para as variáveis CSS.
+  // Você sobrescreve as variáveis CSS diretamente:
+  --vs-dropdown-option--active-bg: #bc9c56; // Se você usa variáveis Bulma/Sass
+  //--vs-dropdown-option--active-color: white;
+
+  // Exemplo de uma cor que você quer mudar:
+  --vs-search-input-color: #0e043a; // Cor do texto de busca
+}

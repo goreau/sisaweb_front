@@ -17,8 +17,8 @@
           <div class="card-content">
             <section v-show="!hasRows">
               <FiltroWrapper
-                :ativos="options.ativos"
-                :endpoint="options.endpoint"
+                :ativos="options?.ativos"
+                :endpoint="options?.endpoint"
                 @submit="buscar"
               />
             </section>

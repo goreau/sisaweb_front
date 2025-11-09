@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ovitrampa.id_municipio"
                       :tipo="99"
-                      :sel="ovitrampa.id_municipio"
-                      @selTerr="ovitrampa.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Cadastro</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-ovi'"
                       class="input"
                       type="text"
                       placeholder="Número do Cadastro"
@@ -49,9 +50,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ovitrampa.id_area"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ovitrampa.id_area"
                       :data="areas"
-                      @selGen="ovitrampa.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -65,9 +66,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ovitrampa.id_censitario"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ovitrampa.id_censitario"
                       :data="censitarios"
-                      @selGen="ovitrampa.id_censitario = $event"
                       :errclass="{ 'is-danger': v$.id_censitario.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
@@ -81,9 +82,9 @@
                   <label class="label">Quarteirão</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ovitrampa.id_quarteirao"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ovitrampa.id_quarteirao"
                       :data="quarteiraos"
-                      @selGen="ovitrampa.id_quarteirao = $event"
                       :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                     />
                     <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -99,6 +100,7 @@
                   <label class="label">Bairro</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-ovi'"
                       class="input"
                       type="text"
                       placeholder="Bairro de instalação"
@@ -116,6 +118,7 @@
                   <label class="label">Endereço</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-ovi'"
                       class="input"
                       type="text"
                       placeholder="Endereço do imóvel"
@@ -133,6 +136,7 @@
                   <label class="label">Morador</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-ovi'"
                       class="input"
                       type="text"
                       placeholder="Responsável pelo imóvel"
@@ -153,9 +157,9 @@
                   <label class="label">Motivo</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ovitrampa.motivo"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ovitrampa.motivo"
                       :data="motivos"
-                      @selGen="ovitrampa.motivo = $event"
                       :errclass="{ 'is-danger': v$.motivo.$error }"
                     />
                     <span class="is-error" v-if="v$.motivo.$error">
@@ -169,9 +173,9 @@
                   <label class="label">Periodicidade</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ovitrampa.periodicidade"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ovitrampa.periodicidade"
                       :data="periodicidades"
-                      @selGen="ovitrampa.periodicidade = $event"
                       :errclass="{ 'is-danger': v$.periodicidade.$error }"
                     />
                     <span class="is-error" v-if="v$.periodicidade.$error">
@@ -184,7 +188,14 @@
                 <div class="field">
                   <label class="label">&nbsp;</label>
                   <label class="checkbox">
-                    <input type="checkbox" value="1" v-model="ovitrampa.prioritario" />
+                    <input
+                      type="checkbox"
+                      value="1"
+                      v-model="ovitrampa.prioritario"
+                      v-enter-to-next="'form-ovi'"
+                      :true-value="1"
+                      :false-value="0"
+                    />
                     Prioritário
                   </label>
                 </div>
@@ -196,6 +207,7 @@
                   <label class="label">Latitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-ovi'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -214,6 +226,7 @@
                   <label class="label">Longitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-ovi'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -229,7 +242,13 @@
               </div>
             </div>
             <footer class="card-footer">
-              <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+              <footerCard
+                v-enter-to-next="'submit-action'"
+                @submit="save"
+                @cancel="null"
+                @aux="null"
+                :cFooter="cFooter"
+              />
             </footer>
           </div>
         </div>
@@ -265,6 +284,8 @@ const toast = useToast()
 const route = useRoute()
 
 const { currentUser } = useCurrentUser()
+
+var isLoading = ref(false)
 
 //var tpUser = ref(0);
 //var nvUser = ref(0);
@@ -350,7 +371,7 @@ watch(
     } else {
       motivos.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -363,7 +384,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -376,7 +397,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -389,7 +410,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -400,6 +421,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(ovitrampa, result)
     }
   } else {
@@ -439,7 +461,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

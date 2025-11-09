@@ -12,9 +12,9 @@
               <label class="label">Município</label>
               <div class="control">
                 <CmbTerritorio
+                  v-enter-to-next="'form-cens'"
+                  v-model:sel="censitario.id_municipio"
                   :tipo="99"
-                  :sel="censitario.id_municipio"
-                  @selTerr="censitario.id_municipio = $event"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -26,9 +26,9 @@
               <label class="label">Área</label>
               <div class="control">
                 <CmbGeneric
-                  :sel="censitario.id_area"
+                  v-enter-to-next="'form-cens'"
+                  v-model:sel="censitario.id_area"
                   :data="areas"
-                  @selGen="censitario.id_area = $event"
                   :errclass="{ 'is-danger': v$.id_area.$error }"
                 />
                 <span class="is-error" v-if="v$.id_area.$error">
@@ -40,6 +40,7 @@
               <label class="label">Codigo</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-cens'"
                   class="input"
                   type="text"
                   placeholder="Código da Área"
@@ -53,7 +54,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -143,7 +150,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -154,6 +161,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(censitario, result)
     }
   } else {
@@ -171,7 +179,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

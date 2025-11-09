@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-alado'"
                       :tipo="99"
-                      :sel="vc_alado.id_municipio"
-                      @selTerr="vc_alado.id_municipio = $event"
+                      v-model:sel="vc_alado.id_municipio"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-alado'"
                       v-model="vc_alado.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -47,6 +48,7 @@
                     <legend>Tipo</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-alado'"
                         v-model="vc_alado.ref_ativ"
                         :options="tipos"
                         name="ref_ativ"
@@ -64,6 +66,7 @@
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-alado'"
                         v-model="vc_alado.id_atividade"
                         :options="atividades"
                         name="id_atividade"
@@ -79,6 +82,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-alado'"
                         v-model="vc_alado.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -96,9 +100,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_alado.id_area"
+                        v-enter-to-next="'form-alado'"
+                        v-model:sel="vc_alado.id_area"
                         :data="areas"
-                        @selGen="vc_alado.id_area = $event"
                         :errclass="{ 'is-danger': v$.id_area.$error }"
                       />
                       <span class="is-error" v-if="v$.id_area.$error">
@@ -112,7 +116,8 @@
                     <label class="label">Censitário</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_alado.id_censitario"
+                        v-enter-to-next="'form-alado'"
+                        v-model:sel="vc_alado.id_censitario"
                         :data="censitarios"
                         @selGen="vc_alado.id_censitario = $event"
                         :errclass="{ 'is-danger': v$.id_censitario.$error }"
@@ -128,7 +133,8 @@
                     <label class="label">Quarteirão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_alado.id_quarteirao"
+                        v-enter-to-next="'form-alado'"
+                        v-model:sel="vc_alado.id_quarteirao"
                         :data="quarteiraos"
                         @selGen="vc_alado.id_quarteirao = $event"
                         :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
@@ -147,6 +153,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-alado'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -159,6 +166,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               @cancel="null"
@@ -291,7 +299,7 @@ watch(
         atividades.value = [...atividades.value, ...result1]
       }
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(vc_alado.id_alado) > 0)
@@ -320,7 +328,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -333,7 +341,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -346,7 +354,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 onMounted(async () => {
@@ -365,7 +373,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

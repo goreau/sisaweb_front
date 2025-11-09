@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-mob-vc'"
+                      v-model:sel="vc_linha.id_municipio"
                       :tipo="99"
-                      :sel="vc_linha.id_municipio"
-                      @selTerr="vc_linha.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-mob-vc'"
                       v-model="vc_linha.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -81,6 +82,7 @@
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-vc'"
                         v-model="vc_linha.id_atividade"
                         :options="atividades"
                         name="id_atividade"
@@ -101,6 +103,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-vc'"
                         v-model="vc_linha.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -119,6 +122,7 @@
                     <legend>Tipo de Trabalho</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-vc'"
                         v-model="vc_linha.id_tipo"
                         :options="tipos"
                         name="id_tipo"
@@ -138,9 +142,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_linha.id_area"
+                      v-enter-to-next="'form-mob-vc'"
+                      v-model:sel="vc_linha.id_area"
                       :data="areas"
-                      @selGen="vc_linha.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -154,9 +158,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_linha.id_censitario"
+                      v-enter-to-next="'form-mob-vc'"
+                      v-model:sel="vc_linha.id_censitario"
                       :data="censitarios"
-                      @selGen="vc_linha.id_censitario = $event"
                       :errclass="{ 'is-danger': v$.id_censitario.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
@@ -170,9 +174,9 @@
                   <label class="label">Quarteirão</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_linha.id_quarteirao"
+                      v-enter-to-next="'form-mob-vc'"
+                      v-model:sel="vc_linha.id_quarteirao"
                       :data="quarteiraos"
-                      @selGen="vc_linha.id_quarteirao = $event"
                       :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                     />
                     <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -190,6 +194,7 @@
                     <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-vc'"
                         v-model="vc_linha.id_situacao"
                         :options="situacoes"
                         name="id_situacao"
@@ -205,11 +210,21 @@
                     <legend>Controle</legend>
                     <div class="field">
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="vc_linha.mecanico" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="vc_linha.mecanico"
+                          v-enter-to-next="'form-mob-vc'"
+                        />
                         Mecânico
                       </label>
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="vc_linha.alternativo" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="vc_linha.alternativo"
+                          v-enter-to-next="'form-mob-vc'"
+                        />
                         Alternativo
                       </label>
                     </div>
@@ -227,7 +242,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_linha.focal" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_linha.focal"
+                            v-enter-to-next="'form-mob-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -237,9 +257,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_focal"
+                            v-enter-to-next="'form-mob-vc'"
+                            v-model:sel="vc_linha.id_prod_focal"
                             :data="prod_focais"
-                            @selGen="vc_linha.id_prod_focal = $event"
                             :errclass="{ 'is-danger': v$.id_prod_focal.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_focal.$error">
@@ -253,6 +273,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -272,7 +293,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_linha.perifocal" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_linha.perifocal"
+                            v-enter-to-next="'form-mob-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -282,9 +308,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_peri"
+                            v-enter-to-next="'form-mob-vc'"
+                            v-model:sel="vc_linha.id_prod_peri"
                             :data="prod_peris"
-                            @selGen="vc_linha.id_prod_peri = $event"
                             :errclass="{ 'is-danger': v$.id_prod_peri.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_peri.$error">
@@ -298,6 +324,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -319,7 +346,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_linha.nebulizacao" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_linha.nebulizacao"
+                            v-enter-to-next="'form-mob-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -329,9 +361,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_neb"
+                            v-enter-to-next="'form-mob-vc'"
+                            v-model:sel="vc_linha.id_prod_neb"
                             :data="prod_nebs"
-                            @selGen="vc_linha.id_prod_neb = $event"
                             :errclass="{ 'is-danger': v$.id_prod_neb.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_neb.$error">
@@ -345,6 +377,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -364,7 +397,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_linha.br_aedes" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_linha.br_aedes"
+                            v-enter-to-next="'form-mob-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -374,9 +412,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_br"
+                            v-enter-to-next="'form-mob-vc'"
+                            v-model:sel="vc_linha.id_prod_br"
                             :data="prod_peris"
-                            @selGen="vc_linha.id_prod_br = $event"
                             :errclass="{ 'is-danger': v$.id_prod_br.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_br.$error">
@@ -390,6 +428,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -408,6 +447,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-vc'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -422,7 +462,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="recipientes" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="recipientes"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -583,7 +629,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -596,7 +642,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -609,7 +655,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 async function loadCombos() {
@@ -681,24 +727,25 @@ async function loadCombos() {
 
 watch(
   () => vc_linha.id_prod_focal,
-  (val) => (defValues.prodFocal = val)
+  (val) => (defValues.prodFocal = val),
 )
 watch(
   () => vc_linha.id_prod_peri,
-  (val) => (defValues.prodPeri = val)
+  (val) => (defValues.prodPeri = val),
 )
 watch(
   () => vc_linha.id_prod_neb,
-  (val) => (defValues.prodNeb = val)
+  (val) => (defValues.prodNeb = val),
 )
 watch(
   () => vc_linha.id_prod_br,
-  (val) => (defValues.prodBr = val)
+  (val) => (defValues.prodBr = val),
 )
 
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
     console.log(store.visita)
+    store.visita.id_municipio = Number(store.visita.id_municipio)
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.visita)))
   } else {
     store.setVisita({})
@@ -715,7 +762,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

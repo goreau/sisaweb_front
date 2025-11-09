@@ -12,9 +12,9 @@
               <label class="label">Município</label>
               <div class="control">
                 <CmbTerritorio
+                  v-enter-to-next="'form-ciclo'"
+                  v-model:sel="ciclo.id_municipio"
                   :tipo="99"
-                  :sel="ciclo.id_municipio"
-                  @selTerr="ciclo.id_municipio = $event"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -26,6 +26,7 @@
               <label class="label">Ciclo</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-ciclo'"
                   class="input"
                   type="text"
                   placeholder="Código da Área"
@@ -41,10 +42,11 @@
               <label class="label">Data</label>
               <div class="control">
                 <DatePicker
+                  v-enter-to-next="'form-ciclo'"
                   v-model="ciclo.dt_termino"
                   :error="false"
                   placeholder="Escolha a data"
-                  :class="{ 'is-danger': v$.ciclo.$error }"
+                  :class="{ 'is-danger': v$.dt_termino.$error }"
                 />
                 <span class="is-error" v-if="v$.dt_termino.$error">
                   {{ v$.dt_termino.$errors[0].$message }}
@@ -53,7 +55,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -128,7 +136,7 @@ async function save() {
   }
 }
 
-const isEditMode = computed(() => Number(ciclo.id_ciclo) > 0)
+const isEditMode = computed(() => Number(route.params.id) > 0)
 
 onMounted(async () => {
   if (isEditMode.value) {
@@ -136,6 +144,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(ciclo, result)
     }
   } else {
@@ -151,7 +160,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

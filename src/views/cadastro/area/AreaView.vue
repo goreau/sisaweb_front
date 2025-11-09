@@ -12,9 +12,9 @@
               <label class="label">Município</label>
               <div class="control">
                 <CmbTerritorio
+                  v-enter-to-next="'form-area'"
+                  v-model:sel="area.id_municipio"
                   :tipo="99"
-                  :sel="area.id_municipio"
-                  @selTerr="area.id_municipio = $event"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -26,6 +26,7 @@
               <label class="label">Codigo</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-area'"
                   class="input"
                   type="text"
                   placeholder="Código da Área"
@@ -39,7 +40,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -118,6 +125,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(area, result)
     }
   } else {
@@ -133,7 +141,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

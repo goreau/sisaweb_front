@@ -143,7 +143,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="update" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="update"
+              @cancel="null"
+              @aux="details"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -236,8 +242,8 @@ function loadData() {
       strLocal.value = [4, 5, 8].includes(data.nivel)
         ? 'Município'
         : [2, 3, 7].includes(data.nivel)
-        ? 'Regional'
-        : 'Local'
+          ? 'Regional'
+          : 'Local'
     },
     (error) => {
       message.value = error.data
@@ -245,7 +251,7 @@ function loadData() {
       type.value = 'alert'
       caption.value = 'Usuário'
       setTimeout(() => (showMessage.value = false), 3000)
-    }
+    },
   )
 
   isLoading.value = false
@@ -270,7 +276,7 @@ function update() {
           type.value = 'alert'
           caption.value = 'Usuário'
           setTimeout(() => (showMessage.value = false), 3000)
-        }
+        },
       )
       .finally(() => {
         document.getElementById('login').classList.remove('is-loading')
@@ -300,11 +306,11 @@ watch(
     strLocal.value = [1, 6].includes(val)
       ? 'Local'
       : [2, 3, 7].includes(val)
-      ? 'Regional'
-      : [9].includes(val)
-      ? 'GVE'
-      : 'Município'
-  }
+        ? 'Regional'
+        : [9].includes(val)
+          ? 'GVE'
+          : 'Município'
+  },
 )
 </script>
 

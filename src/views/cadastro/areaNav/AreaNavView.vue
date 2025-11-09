@@ -12,10 +12,9 @@
               <label class="label">Município</label>
               <div class="control">
                 <CmbTerritorio
-                  :id_prop="id_prop"
+                  v-enter-to-next="'form-nav'"
+                  v-model:sel="areaNav.id_municipio"
                   :tipo="99"
-                  :sel="areaNav.id_municipio"
-                  @selTerr="areaNav.id_municipio = $event"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -27,10 +26,10 @@
               <legend>Tipo</legend>
               <div class="field">
                 <RadioGeneric
+                  v-enter-to-next="'form-nav'"
                   v-model="areaNav.tipo_area"
                   :options="tipos"
                   name="tipo_area"
-                  :modelValue="2"
                   :inline="true"
                 />
               </div>
@@ -39,6 +38,7 @@
               <label class="label">Nome</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-nav'"
                   class="input"
                   type="text"
                   placeholder="Nome da Área"
@@ -54,6 +54,7 @@
               <label class="label">Área (ha)</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-nav'"
                   class="input"
                   type="text"
                   placeholder="Apenas para NAV"
@@ -70,6 +71,7 @@
               <label class="label">Rel. Percurso/área</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-nav'"
                   class="input"
                   type="text"
                   placeholder="Apenas para NAV"
@@ -85,6 +87,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="create"
               :ready="readyToGo"
               @cancel="null"
@@ -213,7 +216,6 @@ onMounted(() => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

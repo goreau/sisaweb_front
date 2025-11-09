@@ -27,9 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-enter-to-next="'form-ovi'"
+                        v-model:sel="id_municipio"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
                       />
                     </div>
                   </div>

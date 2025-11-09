@@ -26,7 +26,11 @@
                   <div class="field">
                     <label class="label">Regional</label>
                     <div class="control">
-                      <CmbTerritorio :tipo="2" :sel="id_regional" @selTerr="id_regional = $event" />
+                      <CmbTerritorio
+                        v-enter-to-next="'form-users'"
+                        v-model:sel="id_regional"
+                        :tipo="2"
+                      />
                     </div>
                   </div>
                 </div>
@@ -36,7 +40,11 @@
                   <div class="field">
                     <label class="label">GVE</label>
                     <div class="control">
-                      <CmbTerritorio :tipo="9" :sel="id_gve" @selTerr="id_gve = $event" />
+                      <CmbTerritorio
+                        v-enter-to-next="'form-users'"
+                        v-model:sel="id_gve"
+                        :tipo="9"
+                      />
                     </div>
                   </div>
                 </div>
@@ -47,9 +55,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-enter-to-next="'form-users'"
+                        v-model:sel="id_municipio"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
                       />
                     </div>
                   </div>

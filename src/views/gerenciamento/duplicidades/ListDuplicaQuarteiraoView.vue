@@ -21,9 +21,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-model:sel="filter.id_municipio"
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
+                        v-enter-to-next="'form-quart'"
                       />
                     </div>
                   </div>
@@ -35,9 +35,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="filter.id_area"
+                        v-enter-to-next="'form-quart'"
+                        v-model:sel="filter.id_area"
                         :data="areas"
-                        @selGen="filter.id_area = $event"
                       />
                     </div>
                   </div>
@@ -49,9 +49,9 @@
                     <label class="label">Setor Censitário</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="filter.id_censitario"
+                        v-enter-to-next="'form-quart'"
+                        v-model:sel="filter.id_censitario"
                         :data="censitarios"
-                        @selGen="filter.id_censitario = $event"
                       />
                     </div>
                   </div>
@@ -63,6 +63,7 @@
                     <label class="label">Quarteirao</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-quart'"
                         class="input"
                         type="text"
                         placeholder="Permite parcial"
@@ -92,7 +93,11 @@
                   <div class="content">
                     <label class="label">Quarteirao a excluir</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regExclui = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-quart'"
+                        v-model:sel="regExclui"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -100,7 +105,11 @@
                   <div class="content">
                     <label class="label">Quarteirao que receberá</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regRecebe = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-quart'"
+                        v-model:sel="regRecebe"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -194,7 +203,7 @@ async function processa() {
       toast.error(resultado.msg)
     } else {
       toast.success(
-        `Transferência executada com sucesso! ${resultado.master} registros transferidos.`
+        `Transferência executada com sucesso! ${resultado.master} registros transferidos.`,
       )
       hasRows.value = false
     }
@@ -211,7 +220,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -224,7 +233,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 onMounted(() => {

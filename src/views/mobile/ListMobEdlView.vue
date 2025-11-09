@@ -21,9 +21,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-enter-to-next="'form-mobile'"
+                        v-model:sel="filter.id_municipio"
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
                       />
                     </div>
                   </div>
@@ -35,6 +35,7 @@
                     <label class="label">Data Inicial</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-mobile'"
                         v-model="filter.dt_inicial"
                         :error="false"
                         placeholder="Escolha a data"
@@ -47,6 +48,7 @@
                     <label class="label">Data Final</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-mobile'"
                         v-model="filter.dt_final"
                         :error="false"
                         placeholder="Escolha a data"

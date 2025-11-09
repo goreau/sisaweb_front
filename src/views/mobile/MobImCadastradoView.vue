@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-mob-im'"
+                      v-model:sel="vc_imovel.id_municipio"
                       :tipo="99"
-                      :sel="vc_imovel.id_municipio"
-                      @selTerr="vc_imovel.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-mob-im'"
                       v-model="vc_imovel.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -49,9 +50,10 @@
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-im'"
                         v-model="vc_imovel.id_atividade"
                         :options="atividades"
-                        name="id_atividade"
+                        name="id_ativiidade"
                         :inline="true"
                       />
                     </div>
@@ -64,6 +66,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-im'"
                         v-model="vc_imovel.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -79,6 +82,7 @@
                     <legend>Tipo de Trabalho</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-im'"
                         v-model="vc_imovel.id_tipo"
                         :options="tipos"
                         name="id_tipo"
@@ -95,9 +99,9 @@
                   <label class="label">Imóvel</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="vc_imovel.id_imovel"
+                      v-enter-to-next="'form-mob-im'"
+                      v-model:sel="vc_imovel.id_imovel"
                       :data="imoveis"
-                      @selGen="vc_imovel.id_imovel = $event"
                       :errclass="{ 'is-danger': v$.id_imovel.$error }"
                     />
                     <span class="is-error" v-if="v$.id_imovel.$error">
@@ -112,6 +116,7 @@
                     <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-im'"
                         v-model="vc_imovel.id_situacao"
                         :options="situacoes"
                         name="id_situacao"
@@ -127,11 +132,21 @@
                     <legend>Controle</legend>
                     <div class="field">
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="vc_imovel.mecanico" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="vc_imovel.mecanico"
+                          v-enter-to-next="'form-mob-im'"
+                        />
                         Mecânico
                       </label>
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="vc_imovel.alternativo" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="vc_imovel.alternativo"
+                          v-enter-to-next="'form-mob-im'"
+                        />
                         Alternativo
                       </label>
                     </div>
@@ -149,7 +164,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.focal" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_imovel.focal"
+                            v-enter-to-next="'form-mob-im'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -159,9 +179,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_focal"
+                            v-enter-to-next="'form-mob-im'"
+                            v-model:sel="vc_imovel.id_prod_focal"
                             :data="prod_focais"
-                            @selGen="vc_imovel.id_prod_focal = $event"
                             :errclass="{ 'is-danger': v$.id_prod_focal.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_focal.$error">
@@ -175,6 +195,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-im'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -194,7 +215,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.perifocal" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_imovel.perifocal"
+                            v-enter-to-next="'form-mob-im'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -204,9 +230,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_peri"
+                            v-enter-to-next="'form-mob-im'"
+                            v-model:sel="vc_imovel.id_prod_peri"
                             :data="prod_peris"
-                            @selGen="vc_imovel.id_prod_peri = $event"
                             :errclass="{ 'is-danger': v$.id_prod_peri.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_peri.$error">
@@ -220,6 +246,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-im'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -241,7 +268,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.nebulizacao" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_imovel.nebulizacao"
+                            v-enter-to-next="'form-mob-im'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -251,9 +283,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_neb"
+                            v-enter-to-next="'form-mob-im'"
+                            v-model:sel="vc_imovel.id_prod_neb"
                             :data="prod_nebs"
-                            @selGen="vc_imovel.id_prod_neb = $event"
                             :errclass="{ 'is-danger': v$.id_prod_neb.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_neb.$error">
@@ -267,6 +299,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-im'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -286,7 +319,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="vc_imovel.br_aedes" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="vc_imovel.br_aedes"
+                            v-enter-to-next="'form-mob-im'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -296,9 +334,9 @@
                         <label class="label">Produto</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_imovel.id_prod_br"
+                            v-enter-to-next="'form-mob-im'"
+                            v-model:sel="vc_imovel.id_prod_br"
                             :data="prod_peris"
-                            @selGen="vc_imovel.id_prod_br = $event"
                             :errclass="{ 'is-danger': v$.id_prod_br.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_br.$error">
@@ -312,6 +350,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-im'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -330,6 +369,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-im'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -347,6 +387,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               @cancel="null"
@@ -508,7 +549,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -523,7 +564,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(vc_imovel.id_mob_vc_imovel) > 0)
@@ -590,25 +631,26 @@ async function loadCombos() {
 
 watch(
   () => vc_imovel.id_prod_focal,
-  (val) => (defValues.prodFocal = val)
+  (val) => (defValues.prodFocal = val),
 )
 watch(
   () => vc_imovel.id_prod_peri,
-  (val) => (defValues.prodPeri = val)
+  (val) => (defValues.prodPeri = val),
 )
 watch(
   () => vc_imovel.id_prod_neb,
-  (val) => (defValues.prodNeb = val)
+  (val) => (defValues.prodNeb = val),
 )
 watch(
   () => vc_imovel.id_prod_br,
-  (val) => (defValues.prodBr = val)
+  (val) => (defValues.prodBr = val),
 )
 
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
     console.log(store.visita)
     readyToGo.value = true
+    store.visita.id_municipio = Number(store.visita.id_municipio)
     Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
     if (vc_imovel.id_prod_br == 0) {
       vc_imovel.id_prod_br = defValues.prodBr
@@ -628,7 +670,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

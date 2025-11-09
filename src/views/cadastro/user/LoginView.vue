@@ -41,7 +41,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="login" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="login"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -106,7 +112,15 @@ async function login() {
         toast.error(log.msg)
       }
     } else {
-      router.push({ name: 'home' })
+      const redirectTo = localStorage.getItem('redirect_to')
+
+      // 3. Limpa o armazenamento e redireciona
+      if (redirectTo) {
+        localStorage.removeItem('redirect_to')
+        router.push(redirectTo) // Redireciona para a rota salva
+      } else {
+        router.push({ name: 'home' })
+      }
     }
   } catch (err) {
     toast.error('Erro ao logar:', err)

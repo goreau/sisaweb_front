@@ -17,8 +17,8 @@
                     <div class="control">
                       <CmbTerritorio
                         :tipo="99"
-                        :sel="nav.id_municipio"
-                        @selTerr="nav.id_municipio = $event"
+                        v-enter-to-next="'form-nav'"
+                        v-model:sel="nav.id_municipio"
                         :errclass="{ 'is-danger': v$.id_municipio.$error }"
                       />
                       <span class="is-error" v-if="v$.id_municipio.$error">
@@ -32,6 +32,7 @@
                     <label class="label">Data</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-nav'"
                         v-model="nav.dt_cadastro"
                         :error="false"
                         placeholder="Escolha a data"
@@ -48,9 +49,9 @@
                     <label class="label">Área de Transmissão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="nav.id_area_nav"
+                        v-enter-to-next="'form-nav'"
+                        v-model:sel="nav.id_area_nav"
                         :data="areas"
-                        @selGen="nav.id_area_nav = $event"
                         :errclass="{ 'is-danger': v$.id_area_nav.$error }"
                       />
                       <span class="is-error" v-if="v$.id_area_nav.$error">
@@ -67,6 +68,7 @@
                       <legend>Motivo</legend>
                       <div class="field">
                         <RadioGeneric
+                          v-enter-to-next="'form-nav'"
                           v-model="nav.motivo"
                           :options="motivos"
                           name="motivo"
@@ -82,6 +84,7 @@
                       <legend>Execução</legend>
                       <div class="field">
                         <RadioGeneric
+                          v-enter-to-next="'form-nav'"
                           v-model="nav.id_execucao"
                           :options="execucoes"
                           name="id_execucao"
@@ -98,6 +101,7 @@
                     <label class="label">Ciclo</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Nº de Ordem"
@@ -111,6 +115,7 @@
                     <label class="label">Nº Máquina</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Patrimônio"
@@ -124,6 +129,7 @@
                     <label class="label">Viatura</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Prefixo ou Placa"
@@ -139,6 +145,7 @@
                     <label class="label">Motorista</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Identificação"
@@ -152,6 +159,7 @@
                     <label class="label">Operador</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Identificação"
@@ -170,9 +178,9 @@
                     <label class="label">Produto</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="nav.id_prod_neb"
+                        v-enter-to-next="'form-nav'"
+                        v-model:sel="nav.id_prod_neb"
                         :data="prod_nebs"
-                        @selGen="nav.id_prod_neb = $event"
                         :errclass="{ 'is-danger': v$.id_prod_neb.$error }"
                       />
                       <span class="is-error" v-if="v$.id_prod_neb.$error">
@@ -186,6 +194,7 @@
                     <label class="label">Mistura</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Identificação"
@@ -199,6 +208,7 @@
                     <label class="label">Consumo</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-nav'"
                         class="input"
                         type="text"
                         placeholder="Identificação"
@@ -220,6 +230,7 @@
                           <label class="label">Início</label>
                           <div class="control">
                             <input
+                              v-enter-to-next="'form-nav'"
                               class="input"
                               type="time"
                               placeholder=""
@@ -238,6 +249,7 @@
                           <label class="label">Término</label>
                           <div class="control">
                             <input
+                              v-enter-to-next="'form-nav'"
                               class="input"
                               type="time"
                               placeholder=""
@@ -256,6 +268,7 @@
                           <label class="label">Interrupção</label>
                           <div class="control">
                             <input
+                              v-enter-to-next="'form-nav'"
                               class="input"
                               type="time"
                               placeholder=""
@@ -280,6 +293,7 @@
                         <label class="label">Km Rodados</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-nav'"
                             class="input"
                             type="text"
                             placeholder="Identificação"
@@ -293,10 +307,11 @@
                         <label class="label">Km Fora</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-nav'"
                             class="input"
                             type="text"
                             placeholder="Km rodados fora da aplicação"
-                            v-model="nav.km_rodado"
+                            v-model="nav.km_fora"
                           />
                         </div>
                       </div>
@@ -313,7 +328,13 @@
                   <div class="field">
                     <label class="label">Temp Inicial</label>
                     <div class="control">
-                      <input class="input" type="text" placeholder="°C" v-model="nav.temp_inicio" />
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="°C"
+                        v-model="nav.temp_inicio"
+                        v-enter-to-next="'form-nav'"
+                      />
                     </div>
                   </div>
                 </div>
@@ -321,7 +342,13 @@
                   <div class="field">
                     <label class="label">Temp Final</label>
                     <div class="control">
-                      <input class="input" type="text" placeholder="°C" v-model="nav.temp_final" />
+                      <input
+                        class="input"
+                        type="text"
+                        placeholder="°C"
+                        v-model="nav.temp_final"
+                        v-enter-to-next="'form-nav'"
+                      />
                     </div>
                   </div>
                 </div>
@@ -329,6 +356,7 @@
                   <fieldset class="fieldset">
                     <legend>Ocorrências</legend>
                     <GenericCheckBox
+                      v-enter-to-next="'form-nav'"
                       :options="ocorrencias"
                       :columnsCount="5"
                       :checkAll="false"
@@ -340,7 +368,13 @@
             </fieldset>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="details"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -391,6 +425,8 @@ const nav = reactive({
   interrupcao: '',
   temp_inicio: 0,
   temp_final: 0,
+  km_rodado: 0,
+  km_fora: 0,
   ocorrencia: [],
 })
 
@@ -460,7 +496,7 @@ watch(
   () => nav.id_municipio,
   async (val) => {
     const result = await areaNavService.getCombo(
-      JSON.stringify({ id_municipio: val, tipo_area: 1 })
+      JSON.stringify({ id_municipio: val, tipo_area: 1 }),
     )
     if (result.error) {
       console.log(result.error)
@@ -468,7 +504,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 async function loadCombos() {
@@ -516,7 +552,8 @@ onMounted(async () => {
       result.hora_inicio = formatTimeToInput(result.hora_inicio)
       result.hora_termino = formatTimeToInput(result.hora_termino)
       result.interrupcao = formatTimeToInput(result.interrupcao)
-
+      result.id_municipio = Number(result.id_municipio)
+      result.id_area_nav = Number(result.id_area_nav)
       Object.assign(nav, result)
     }
   } else {
@@ -529,7 +566,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

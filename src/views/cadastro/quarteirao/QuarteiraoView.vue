@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-quart'"
+                      v-model:sel="quarteirao.id_municipio"
                       :tipo="99"
-                      :sel="quarteirao.id_municipio"
-                      @selTerr="quarteirao.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,9 +30,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="quarteirao.id_area"
+                      v-enter-to-next="'form-quart'"
+                      v-model:sel="quarteirao.id_area"
                       :data="areas"
-                      @selGen="quarteirao.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -46,9 +46,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="quarteirao.id_censitario"
+                      v-enter-to-next="'form-quart'"
+                      v-model:sel="quarteirao.id_censitario"
                       :data="censitarios"
-                      @selGen="quarteirao.id_censitario = $event"
                       :errclass="{ 'is-danger': v$.id_censitario.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
@@ -64,6 +64,7 @@
                   <label class="label">Número</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Número do Quarteirão"
@@ -81,6 +82,7 @@
                   <label class="label">Sub-Número</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Número do Quarteirão"
@@ -98,6 +100,7 @@
                   <label class="label">Identificador</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -115,9 +118,9 @@
                   <label class="label">Ocupação</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="quarteirao.id_ocupacao"
+                      v-enter-to-next="'form-quart'"
+                      v-model:sel="quarteirao.id_ocupacao"
                       :data="ocupacaos"
-                      @selGen="quarteirao.id_ocupacao = $event"
                       :errclass="{ 'is-danger': v$.id_ocupacao.$error }"
                     />
                     <span class="is-error" v-if="v$.id_ocupacao.$error">
@@ -135,6 +138,7 @@
                   <label class="label">Residencial Térreo</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -152,6 +156,7 @@
                   <label class="label">Residencial 1º Andar</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -169,6 +174,7 @@
                   <label class="label">Acima 1º Andar - Trab</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -186,6 +192,7 @@
                   <label class="label">Acima 1º Andar - Não Trab</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -203,6 +210,7 @@
                   <label class="label">Não residencial Térreo</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -222,6 +230,7 @@
                   <label class="label">Não residencial 1º Andar</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -239,6 +248,7 @@
                   <label class="label">Praça</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -256,6 +266,7 @@
                   <label class="label">Terreno Baldio</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -273,6 +284,7 @@
                   <label class="label">Obra</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -290,6 +302,7 @@
                   <label class="label">Imóveis Cadastrados</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-quart'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -305,7 +318,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="details"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -423,7 +442,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -436,7 +455,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -447,6 +466,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(quarteirao, result)
     }
   } else {
@@ -483,7 +503,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

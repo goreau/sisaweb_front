@@ -16,9 +16,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-model:sel="filter.id_municipio"
                         :tipo="99"
-                        :sel="filter.id_municipio"
-                        @selTerr="filter.id_municipio = $event"
+                        v-enter-to-next="'form-userIm'"
                       />
                     </div>
                   </div>
@@ -31,6 +31,7 @@
                       <legend>Execução</legend>
                       <div class="field">
                         <RadioGeneric
+                          v-enter-to-next="'form-userIm'"
                           v-model="filter.id_execucao"
                           :options="execucoes"
                           name="id_execucao"
@@ -47,6 +48,7 @@
                     <label class="label">Data Inicial</label>
                     <div class="control">
                       <MyDatePicker
+                        v-enter-to-next="'form-userIm'"
                         v-model="filter.dt_inicial"
                         :error="false"
                         placeholder="Escolha a data"
@@ -59,6 +61,7 @@
                     <label class="label">Data Final</label>
                     <div class="control">
                       <MyDatePicker
+                        v-enter-to-next="'form-userIm'"
                         v-model="filter.dt_final"
                         :error="false"
                         placeholder="Escolha a data"
@@ -86,7 +89,11 @@
                   <div class="content">
                     <label class="label">Usuário a remover</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regExclui = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-userIm'"
+                        v-model:sel="regExclui"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -94,7 +101,11 @@
                   <div class="content">
                     <label class="label">Usuário que receberá</label>
                     <div class="control">
-                      <CmbGeneric :data="dataTable" @selGen="regRecebe = $event" />
+                      <CmbGeneric
+                        v-enter-to-next="'form-userIm'"
+                        v-model:sel="regRecebe"
+                        :data="dataTable"
+                      />
                     </div>
                   </div>
                 </div>
@@ -185,7 +196,7 @@ async function processa() {
       toast.error(resultado.msg)
     } else {
       toast.success(
-        `Transferência executada com sucesso! ${resultado.master} registros transferidos.`
+        `Transferência executada com sucesso! ${resultado.master} registros transferidos.`,
       )
       hasRows.value = false
     }

@@ -14,6 +14,7 @@
                   <label class="label">Ordem</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-vc'"
                       class="input"
                       type="text"
                       placeholder="N° de Ordem"
@@ -27,6 +28,7 @@
                   <label class="label">Casa</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-vc'"
                       class="input"
                       type="text"
                       placeholder="N° do Imóvel"
@@ -43,6 +45,7 @@
                     <legend>Situação</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-vc'"
                         v-model="imovel.id_situacao"
                         :options="situacoes"
                         name="id_situacao"
@@ -58,11 +61,21 @@
                     <legend>Controle</legend>
                     <div class="field">
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="imovel.mecanico" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="imovel.mecanico"
+                          v-enter-to-next="'form-vc'"
+                        />
                         Mecânico
                       </label>
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="imovel.alternativo" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="imovel.alternativo"
+                          v-enter-to-next="'form-vc'"
+                        />
                         Alternativo
                       </label>
                     </div>
@@ -80,7 +93,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="imovel.focal" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="imovel.focal"
+                            v-enter-to-next="'form-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -90,6 +108,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -109,7 +128,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="imovel.perifocal" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="imovel.perifocal"
+                            v-enter-to-next="'form-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -119,6 +143,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -138,7 +163,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="imovel.nebulizacao" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="imovel.nebulizacao"
+                            v-enter-to-next="'form-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -149,6 +179,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -168,7 +199,12 @@
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
-                          <input type="checkbox" value="1" v-model="imovel.br_aedes" />
+                          <input
+                            type="checkbox"
+                            value="1"
+                            v-model="imovel.br_aedes"
+                            v-enter-to-next="'form-vc'"
+                          />
                           Tratado
                         </label>
                       </div>
@@ -178,6 +214,7 @@
                         <label class="label">Consumo</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-vc'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -196,6 +233,7 @@
                   <label class="label">Latitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-vc'"
                       class="input"
                       type="text"
                       placeholder="Graus decimais"
@@ -214,6 +252,7 @@
                   <label class="label">Longitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-vc'"
                       class="input"
                       type="text"
                       placeholder="Graus decimais"
@@ -253,6 +292,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               :customBack="true"
@@ -476,7 +516,7 @@ watch(
   (id) => {
     const item = situacoes.value.find((a) => a.id === Number(id))
     imovel.fant_sit = item?.nome || ''
-  }
+  },
 )
 
 onMounted(async () => {
@@ -495,7 +535,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

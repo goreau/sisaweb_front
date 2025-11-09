@@ -27,9 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-model:sel="id_municipio"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
+                        v-enter-to-next="'form-val-adl'"
                       />
                     </div>
                   </div>
@@ -41,6 +41,7 @@
                     <label class="label">Ano</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-val-adl'"
                         class="input"
                         type="text"
                         placeholder="Ano dos ValAdls"
@@ -64,7 +65,7 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="idUser"
+                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :buttons="['edit', 'delete']"
                 :data="dataTable"
                 :columns="columns"
@@ -185,7 +186,7 @@ onMounted(() => {
 
   let cUser = currentUser
   if (cUser.value) {
-    idUser.value = cUser.value
+    idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

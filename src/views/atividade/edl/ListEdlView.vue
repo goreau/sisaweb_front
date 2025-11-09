@@ -27,9 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
+                        v-enter-to-next="'form-edl'"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
+                        v-model:sel="filter.id_municipio"
                       />
                     </div>
                   </div>
@@ -41,6 +41,7 @@
                     <label class="label">Data Inicial</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-edl'"
                         v-model="filter.dt_inicial"
                         :error="false"
                         placeholder="Escolha a data"
@@ -53,6 +54,7 @@
                     <label class="label">Data Final</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-edl'"
                         v-model="filter.dt_final"
                         :error="false"
                         placeholder="Escolha a data"
@@ -98,6 +100,7 @@ import edlService from '@/services/atividade/edl.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
+import DatePicker from '@/components/forms/MyDatePicker.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
@@ -170,6 +173,7 @@ async function onDeleteRow(item) {
       toast.error(resultado.msg)
     } else {
       toast.success('Registro excluído com sucesso!')
+      loadData()
     }
   }
 }

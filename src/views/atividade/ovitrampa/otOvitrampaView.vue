@@ -14,10 +14,10 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-ovi'"
                       :tipo="99"
-                      :sel="ot_ovitrampa.id_municipio"
+                      v-model:sel="ot_ovitrampa.id_municipio"
                       @selTerr="ot_ovitrampa.id_municipio = $event"
-                      :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
                       {{ v$.id_municipio.$errors[0].$message }}
@@ -31,6 +31,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-ovi'"
                         v-model="ot_ovitrampa.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -47,9 +48,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ot_ovitrampa.id_area"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ot_ovitrampa.id_area"
                       :data="areas"
-                      @selGen="ot_ovitrampa.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -63,9 +64,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ot_ovitrampa.id_censitario"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ot_ovitrampa.id_censitario"
                       :data="censitarios"
-                      @selGen="ot_ovitrampa.id_censitario = $event"
                       :errclass="{ 'is-danger': v$.id_censitario.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
@@ -79,9 +80,9 @@
                   <label class="label">Quarteirão</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ot_ovitrampa.id_quarteirao"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ot_ovitrampa.id_quarteirao"
                       :data="quarteiraos"
-                      @selGen="ot_ovitrampa.id_quarteirao = $event"
                       :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                     />
                     <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -98,6 +99,7 @@
                     <label class="label">Data Instalação</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-ovi'"
                         v-model="ot_ovitrampa.dt_instala"
                         :error="false"
                         placeholder="Escolha a data"
@@ -116,6 +118,7 @@
                     <label class="label">Data Retirada</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-ovi'"
                         v-model="ot_ovitrampa.dt_retira"
                         :error="false"
                         placeholder="Escolha a data"
@@ -136,6 +139,7 @@
                     <legend>Local</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-ovi'"
                         v-model="ot_ovitrampa.peri_intra"
                         :options="locais"
                         name="peri_intra"
@@ -151,7 +155,12 @@
                     <legend>Local</legend>
                     <div class="field">
                       <label class="checkbox">
-                        <input type="checkbox" value="1" v-model="ot_ovitrampa.positiva" />
+                        <input
+                          type="checkbox"
+                          value="1"
+                          v-model="ot_ovitrampa.positiva"
+                          v-enter-to-next="'form-ovi'"
+                        />
                         Positiva
                       </label>
                     </div>
@@ -165,9 +174,9 @@
                   <label class="label">Observação</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="ot_ovitrampa.obs"
+                      v-enter-to-next="'form-ovi'"
+                      v-model:sel="ot_ovitrampa.obs"
                       :data="obss"
-                      @selGen="ot_ovitrampa.obs = $event"
                     />
                   </div>
                 </div>
@@ -178,6 +187,7 @@
                     <label class="label">Ovos</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-ovi'"
                         class="input"
                         type="text"
                         placeholder="Opcional"
@@ -195,6 +205,7 @@
                     <label class="label">Agente</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-ovi'"
                         class="input"
                         type="text"
                         placeholder="Executor da visita"
@@ -207,6 +218,7 @@
             </div>
             <footer class="card-footer">
               <footerCard
+                v-enter-to-next="'submit-action'"
                 @submit="save"
                 :ready="readyToGo"
                 @cancel="null"
@@ -325,7 +337,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -338,7 +350,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -351,7 +363,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(ot_ovitrampa.id_ot_ovitrampa) > 0)
@@ -398,7 +410,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

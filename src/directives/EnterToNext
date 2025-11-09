@@ -1,0 +1,47 @@
+// directives/EnterToNext.js (O Novo e Simples)
+
+import {
+  registerElement,
+  unregisterElement,
+  focusNext,
+} from '../services/general/focusManager.service.js'
+
+export const EnterToNext = {
+  mounted(el, binding, vnode) {
+    // 👈 Certifique-se que VNODE está aqui
+    const formId = binding.value || 'default-form'
+    el.dataset.nextTarget = binding.value
+
+    const target = el // Sempre injeta o EL
+
+    // DEBUG: Verifique se isso está sendo logado. Se for componente, deve ser um Proxy.
+    console.log('Target Registrado:', target)
+
+    registerElement(formId, target)
+
+    el.addEventListener('keydown', (e) => {
+      if (e.keyCode === 13) {
+        const nextTarget = el.dataset.nextTarget
+
+        if (nextTarget === 'submit-action') {
+          const submitButton = el.querySelector('.submit-btn')
+
+          if (submitButton) {
+            submitButton.click()
+            return
+          } else {
+            console.warn('Enter-to-Next: Botão submit interno não encontrado.')
+          }
+        }
+        e.preventDefault()
+        focusNext(formId, target)
+      }
+    })
+  },
+  unmounted(el, binding, vnode) {
+    const formId = binding.value || 'default-form'
+    const target = vnode.component ? vnode.component.proxy : el
+    unregisterElement(formId, target)
+    el.removeEventListener('keydown', () => {})
+  },
+}

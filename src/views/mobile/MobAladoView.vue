@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-mob-alado'"
+                      v-model:sel="alado.id_municipio"
                       :tipo="99"
-                      :sel="alado.id_municipio"
-                      @selTerr="alado.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-mob-alado'"
                       v-model="alado.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -47,6 +48,7 @@
                     <legend>Tipo</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-alado'"
                         v-model="alado.ref_ativ"
                         :options="tipos"
                         name="ref_ativ"
@@ -64,9 +66,10 @@
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-alado'"
                         v-model="alado.id_atividade"
                         :options="atividades"
-                        name="id_atividade"
+                        name="id_ativiidade"
                         :inline="true"
                       />
                     </div>
@@ -79,6 +82,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-mob-alado'"
                         v-model="alado.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -98,9 +102,9 @@
                       <label class="label">Área</label>
                       <div class="control">
                         <CmbGeneric
-                          :sel="alado.id_area"
+                          v-enter-to-next="'form-mob-alado'"
+                          v-model:sel="alado.id_area"
                           :data="areas"
-                          @selGen="alado.id_area = $event"
                           :errclass="{ 'is-danger': v$.id_area.$error }"
                         />
                         <span class="is-error" v-if="v$.id_area.$error">
@@ -114,9 +118,9 @@
                       <label class="label">Censitário</label>
                       <div class="control">
                         <CmbGeneric
-                          :sel="alado.id_censitario"
+                          v-enter-to-next="'form-mob-alado'"
+                          v-model:sel="alado.id_censitario"
                           :data="censitarios"
-                          @selGen="alado.id_censitario = $event"
                           :errclass="{ 'is-danger': v$.id_censitario.$error }"
                         />
                         <span class="is-error" v-if="v$.id_censitario.$error">
@@ -130,9 +134,9 @@
                       <label class="label">Quarteirão</label>
                       <div class="control">
                         <CmbGeneric
-                          :sel="alado.id_quarteirao"
+                          v-enter-to-next="'form-mob-alado'"
+                          v-model:sel="alado.id_quarteirao"
                           :data="quarteiraos"
-                          @selGen="alado.id_quarteirao = $event"
                           :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                         />
                         <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -153,9 +157,9 @@
                       <label class="label">Imóvel</label>
                       <div class="control">
                         <CmbGeneric
-                          :sel="alado.id_imovel"
+                          v-enter-to-next="'form-mob-alado'"
+                          v-model:sel="alado.id_imovel"
                           :data="imoveis"
-                          @selGen="alado.id_imovel = $event"
                           :errclass="{ 'is-danger': v$.id_imovel.$error }"
                         />
                         <span class="is-error" v-if="v$.id_imovel.$error">
@@ -169,6 +173,7 @@
                       <label class="label">Ordem</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-mob-alado'"
                           class="input"
                           type="text"
                           placeholder="N° de Ordem"
@@ -182,6 +187,7 @@
                       <label class="label">Casa</label>
                       <div class="control">
                         <input
+                          v-enter-to-next="'form-mob-alado'"
                           class="input"
                           type="text"
                           placeholder="N° do Imóvel"
@@ -196,6 +202,7 @@
                         <legend>Situação</legend>
                         <div class="field">
                           <RadioGeneric
+                            v-enter-to-next="'form-mob-alado'"
                             v-model="alado.id_situacao"
                             :options="situacoes"
                             name="id_situacao"
@@ -219,6 +226,7 @@
                         <label class="label">Hora</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="time"
                             placeholder="Opcional"
@@ -237,6 +245,7 @@
                         <label class="label">Umidade</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -255,6 +264,7 @@
                         <label class="label">Temperatura</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -273,6 +283,7 @@
                         <label class="label">Moradores</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -304,6 +315,7 @@
                         <label class="label">Com larvas</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -322,6 +334,7 @@
                         <label class="label">Amostra</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -340,6 +353,7 @@
                         <label class="label"><i>Ae aegypti</i></label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -358,6 +372,7 @@
                         <label class="label"><i>Ae albopictus </i></label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -376,6 +391,7 @@
                         <label class="label"><i>Ae aegypti</i></label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -394,6 +410,7 @@
                         <label class="label"><i>Ae albopictus</i></label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -425,6 +442,7 @@
                         <label class="label">Amostra</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -443,6 +461,7 @@
                         <label class="label">Macho</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -461,6 +480,7 @@
                         <label class="label">Fêmea</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -479,6 +499,7 @@
                         <label class="label">Macho</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -497,6 +518,7 @@
                         <label class="label">Fêmea</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -528,6 +550,7 @@
                         <label class="label">Amostra</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -546,6 +569,7 @@
                         <label class="label">Macho</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -564,6 +588,7 @@
                         <label class="label">Fêmea</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -582,6 +607,7 @@
                         <label class="label">Macho</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -600,6 +626,7 @@
                         <label class="label">Fêmea</label>
                         <div class="control">
                           <input
+                            v-enter-to-next="'form-mob-alado'"
                             class="input"
                             type="text"
                             placeholder="Opcional"
@@ -621,6 +648,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-mob-alado'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -635,6 +663,7 @@
           {{ isCadastro }}
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               @cancel="null"
@@ -825,7 +854,7 @@ watch(
         atividades.value = [...atividades.value, ...result1]
       }
     }
-  }
+  },
 )
 
 watch(
@@ -840,7 +869,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -855,7 +884,7 @@ watch(
     } else {
       imoveis.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -868,7 +897,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -881,7 +910,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 const isEditMode = computed(() => Number(alado.id_mob_alado) > 0)
@@ -920,7 +949,8 @@ onMounted(async () => {
     toast.error(ret.msg)
   } else {
     isCadastro.value = ret.ref_ativ == 10
-    ret.hora = ret.hora.slice(0,5)
+    ret.hora = ret.hora.slice(0, 5)
+    ret.id_municipio = Number(ret.id_municipio)
     Object.assign(alado, ret)
   }
 
@@ -962,7 +992,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

@@ -20,6 +20,7 @@
                 <label class="label">Nome</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="text"
                     placeholder="Nome"
@@ -35,6 +36,7 @@
                 <label class="label">{{ strLocal }}</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="text"
                     placeholder="Local do usuário"
@@ -68,6 +70,7 @@
                 <label class="label">Email</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="text"
                     placeholder="E-mail"
@@ -83,6 +86,7 @@
                 <label class="label">Login</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="text"
                     placeholder="Nome de usuário"
@@ -95,6 +99,7 @@
                 <label class="label">Senha Atual</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="password"
                     v-model="old_password"
@@ -110,6 +115,7 @@
                 <label class="label">Nova Senha</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="password"
                     v-model="new_password"
@@ -125,6 +131,7 @@
                 <label class="label">Confirme a Senha</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-mycad'"
                     class="input"
                     type="password"
                     v-model="senha"
@@ -139,7 +146,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="update" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="update"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -231,7 +244,7 @@ function update() {
           type.value = 'alert'
           caption.value = 'Usuário'
           setTimeout(() => (showMessage.value = false), 3000)
-        }
+        },
       )
       .finally(() => {
         document.getElementById('login').classList.remove('is-loading')
@@ -261,8 +274,8 @@ function loadData() {
       strLocal.value = [4, 5, 8].includes(data.nivel)
         ? 'Município'
         : [2, 3, 7].includes(data.nivel)
-        ? 'Regional'
-        : 'Local'
+          ? 'Regional'
+          : 'Local'
     },
     (error) => {
       message.value = error.data
@@ -270,7 +283,7 @@ function loadData() {
       type.value = 'alert'
       caption.value = 'Usuário'
       setTimeout(() => (showMessage.value = false), 3000)
-    }
+    },
   )
 
   isLoading.value = false

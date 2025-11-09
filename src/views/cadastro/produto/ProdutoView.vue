@@ -12,10 +12,11 @@
               <label class="label">Tipo de Uso</label>
               <div class="control">
                 <CmbGeneric
+                  v-enter-to-next="'form-prod'"
+                  v-model:sel="produto.tipo_uso"
                   :data="tipos"
-                  :sel="produto.tipo_uso"
-                  @selGen="produto.tipo_uso = $event"
                 />
+
                 <span class="is-error" v-if="v$.tipo_uso.$error">
                   {{ v$.tipo_uso.$errors[0].$message }}
                 </span>
@@ -25,6 +26,7 @@
               <label class="label">Codigo</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-prod'"
                   class="input"
                   type="text"
                   placeholder="Código do Produto"
@@ -40,6 +42,7 @@
               <label class="label">Nome</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-prod'"
                   class="input"
                   type="text"
                   placeholder="Nome comercial"
@@ -55,6 +58,7 @@
               <label class="label">Concentração</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-prod'"
                   class="input"
                   type="text"
                   placeholder="concentração"
@@ -70,6 +74,7 @@
               <label class="label">Carga</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-prod'"
                   class="input"
                   type="text"
                   placeholder="Valor da carga"
@@ -85,6 +90,7 @@
               <label class="label">Ordem</label>
               <div class="control">
                 <input
+                  v-enter-to-next="'form-prod'"
                   class="input"
                   type="text"
                   placeholder="ordem na lista de produtos"
@@ -98,7 +104,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="details" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="details"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -206,7 +218,6 @@ onMounted(async () => {
   }
 })
 </script>
-
 
 <style scoped>
 .radio {

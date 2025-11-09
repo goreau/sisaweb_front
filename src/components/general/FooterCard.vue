@@ -1,13 +1,15 @@
 <template>
-  <div class="column is-full">
+  <div class="column is-full" data-focus-type="custom-submit-group">
     <div class="columns is-centered">
       <div class="column is-4">
         <div class="control">
           <button
             class="button is-link submit-btn is-fullwidth"
             id="login"
+            type="button"
             @click="onSubmit"
             :disabled="!props.ready"
+            ref="submitButtonRef"
           >
             <span class="btico"><font-awesome-icon icon="fa-solid fa-check" /></span>
             {{ props.cFooter.strSubmit }}
@@ -16,7 +18,7 @@
       </div>
       <div class="column is-4" v-if="cFooter.aux">
         <div class="control">
-          <button class="button is-link aux-btn is-fullwidth" @click="onAux">
+          <button type="button" class="button is-link aux-btn is-fullwidth" @click="onAux">
             <span class="btico"><font-awesome-icon icon="fa-solid fa-list" /></span>
             {{ props.cFooter.strAux }}
           </button>
@@ -24,7 +26,7 @@
       </div>
       <div class="column is-4">
         <div class="control">
-          <button class="button is-link cancel-btn is-fullwidth" @click="onCancel">
+          <button type="button" class="button is-link cancel-btn is-fullwidth" @click="onCancel">
             <span class="btico"><font-awesome-icon icon="fa-solid fa-ban" /></span>
             {{ props.cFooter.strCancel }}
           </button>
@@ -35,9 +37,21 @@
 </template>
 
 <script setup>
+import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+const submitButtonRef = ref(null)
+
+function focus() {
+  if (submitButtonRef.value) {
+    submitButtonRef.value.focus()
+  }
+}
+
+defineExpose({
+  focus,
+})
 
 const props = defineProps({
   cFooter: {

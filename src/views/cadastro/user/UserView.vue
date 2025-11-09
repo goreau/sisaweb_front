@@ -13,6 +13,7 @@
                 <label class="label">Nome</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-user'"
                     class="input"
                     type="text"
                     placeholder="Nome"
@@ -30,43 +31,97 @@
                   <div class="columns">
                     <div class="column is-4" v-if="tpUser == 1">
                       <label class="radio">
-                        <input type="radio" name="nivel" value="1" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="1"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Administrador
                       </label>
                       <label class="radio">
-                        <input type="radio" name="nivel" value="6" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="6"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Visualizador Estado
                       </label>
                     </div>
                     <div class="column is-4" v-if="tpUser < 4">
                       <label class="radio" v-if="tpUser < 3">
-                        <input type="radio" name="nivel" value="2" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="2"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Gestor Regional
                       </label>
                       <label class="radio" v-if="tpUser < 3">
-                        <input type="radio" name="nivel" value="3" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="3"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         User Regional
                       </label>
                       <label class="radio" v-if="tpUser < 3">
-                        <input type="radio" name="nivel" value="9" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="9"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Gestor Local
                       </label>
                       <label class="radio">
-                        <input type="radio" name="nivel" value="7" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="7"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Visualizador Regional
                       </label>
                     </div>
                     <div class="column is-4">
                       <label class="radio" v-if="nvUser == 4 || tpUser < 4">
-                        <input type="radio" name="nivel" value="4" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="4"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Adm Município
                       </label>
                       <label class="radio" v-if="[3, 4].includes(nvUser) || tpUser < 4">
-                        <input type="radio" name="nivel" value="5" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="5"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         User Município
                       </label>
                       <label class="radio">
-                        <input type="radio" name="nivel" value="8" v-model="user.nivel" />
+                        <input
+                          type="radio"
+                          name="nivel"
+                          value="8"
+                          v-model="user.nivel"
+                          v-enter-to-next="'form-user'"
+                        />
                         Visualizador Município
                       </label>
                     </div>
@@ -80,9 +135,9 @@
                 <label class="label">{{ strLocal }}</label>
                 <div class="control">
                   <CmbTerritorio
+                    v-enter-to-next="'form-user'"
+                    v-model:sel="user.id_municipio"
                     :tipo="user.nivel"
-                    :sel="user.id_municipio"
-                    @selMun="user.id_municipio = $event"
                     :errclass="{ 'is-danger': v$.id_municipio.$error }"
                   />
                   <span class="is-error" v-if="v$.id_municipio.$error">
@@ -94,6 +149,7 @@
                 <label class="label">Email</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-user'"
                     class="input"
                     type="text"
                     placeholder="E-mail"
@@ -109,6 +165,7 @@
                 <label class="label">Login</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-user'"
                     class="input"
                     type="text"
                     placeholder="Nome de usuário"
@@ -124,6 +181,7 @@
                 <label class="label">Senha</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-user'"
                     class="input"
                     type="password"
                     v-model="user.senha"
@@ -138,6 +196,7 @@
                 <label class="label">Confirme a Senha</label>
                 <div class="control">
                   <input
+                    v-enter-to-next="'form-user'"
                     class="input"
                     type="password"
                     v-model="user.confirm"
@@ -152,7 +211,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -209,11 +274,13 @@ var cFooter = ref({
   aux: false,
 })
 
+const senhaReferencia = computed(() => user.senha)
+
 const rules = {
   nome: { minLength: minLength$(10) },
   senha: { minLength: minLengthIfFilled$(4) },
   email: { required$, email$ },
-  confirm: { sameAs: sameAs$(user.senha) },
+  confirm: { sameAs: sameAs$(senhaReferencia) },
   login: { minLength: minLength$(5) },
   nivel: { required$, minValue: combo$(1) },
   id_municipio: { required$, minValue: combo$(1) },
@@ -252,6 +319,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(user, result)
     }
   } else {
@@ -281,11 +349,11 @@ watch(
     strLocal.value = [1, 6].includes(val)
       ? 'Local'
       : [2, 3, 7].includes(val)
-      ? 'Regional'
-      : [9].includes(val)
-      ? 'GVE'
-      : 'Município'
-  }
+        ? 'Regional'
+        : [9].includes(val)
+          ? 'GVE'
+          : 'Município'
+  },
 )
 </script>
 

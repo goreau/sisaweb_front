@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-imovel'"
+                      v-model:sel="imovel.id_municipio"
                       :tipo="99"
-                      :sel="imovel.id_municipio"
-                      @selTerr="imovel.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Número</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Número do Cadastro"
@@ -47,6 +48,7 @@
                   <label class="label">Nome Fantasia</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Nome do Estabelecimento"
@@ -67,6 +69,7 @@
                     <legend>Tipo</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-imovel'"
                         v-model="imovel.id_atividade"
                         :options="atividades"
                         name="id_atividade"
@@ -82,6 +85,7 @@
                     <legend>Responsabilidade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-imovel'"
                         v-model="imovel.id_responsavel"
                         :options="responsaveis"
                         name="id_responsavel"
@@ -98,6 +102,7 @@
                   <label class="label">Proprietário</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Responsável pelo imóvel"
@@ -115,6 +120,7 @@
                   <label class="label">Observação</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -135,9 +141,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="imovel.id_area"
+                      v-enter-to-next="'form-imovel'"
+                      v-model:sel="imovel.id_area"
                       :data="areas"
-                      @selGen="imovel.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -151,10 +157,10 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="imovel.id_censitario"
+                      v-enter-to-next="'form-imovel'"
+                      v-model:sel="imovel.id_censitario"
                       :data="censitarios"
-                      @selGen="imovel.id_censitario = $event"
-                      :errclass="{ 'is-danger': v$.id_censitario.$error }"
+                      :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
                       {{ v$.id_censitario.$errors[0].$message }}
@@ -167,10 +173,10 @@
                   <label class="label">Quarteirão</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="imovel.id_quarteirao"
+                      v-enter-to-next="'form-imovel'"
+                      v-model:sel="imovel.id_quarteirao"
                       :data="quarteiraos"
-                      @selGen="imovel.id_quarteirao = $event"
-                      :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
+                      :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_quarteirao.$error">
                       {{ v$.id_quarteirao.$errors[0].$message }}
@@ -185,6 +191,7 @@
                   <label class="label">Endereço</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Endereço do imóvel"
@@ -202,6 +209,7 @@
                   <label class="label">Latitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -220,6 +228,7 @@
                   <label class="label">Longitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -240,6 +249,7 @@
                 <div class="field">
                   <label class="checkbox">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       type="checkbox"
                       value="1"
                       v-model="imovel.tipo_area"
@@ -255,10 +265,10 @@
                   <label class="label">Tipo de Atividade</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="imovel.id_atividade_imovel"
+                      v-enter-to-next="'form-imovel'"
+                      v-model:sel="imovel.id_atividade_imovel"
                       :data="tpAtiv"
-                      @selGen="imovel.id_atividade_imovel = $event"
-                      :errclass="{ 'is-danger': v$.id_atividade_imovel.$error }"
+                      :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_atividade_imovel.$error">
                       {{ v$.id_atividade_imovel.$errors[0].$message }}
@@ -271,6 +281,7 @@
                   <label class="label">Pontuação</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -287,6 +298,7 @@
                 <div class="field">
                   <label class="checkbox">
                     <input
+                      v-enter-to-next="'form-imovel'"
                       type="checkbox"
                       value="1"
                       v-model="imovel.inativo"
@@ -300,7 +312,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -353,6 +371,8 @@ var responsaveis = ref([])
 var tpAtiv = ref([])
 
 var id_prop = ref(0)
+
+var isLoading = ref(false)
 
 var imovel = reactive({
   id_imovel: 0,
@@ -485,6 +505,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      result.id_municipio = Number(result.id_municipio)
       Object.assign(imovel, result)
     }
   } else {

@@ -26,7 +26,11 @@
                   <div class="field">
                     <label class="label">Sistema</label>
                     <div class="control">
-                      <CmbGeneric :data="sistemas" v-model="filter.sistema"></CmbGeneric>
+                      <CmbGeneric
+                        v-enter-to-next="'form-forum'"
+                        :data="sistemas"
+                        v-model:sel="filter.sistema"
+                      ></CmbGeneric>
                     </div>
                   </div>
                 </div>
@@ -37,6 +41,7 @@
                     <label class="label">Autor</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-forum'"
                         class="input"
                         type="text"
                         placeholder="Autor do post"
@@ -50,6 +55,7 @@
                     <label class="label">Titulo</label>
                     <div class="control">
                       <input
+                        v-enter-to-next="'form-forum'"
                         class="input"
                         type="text"
                         placeholder="Título do post"
@@ -269,5 +275,4 @@ onMounted(() => {
 })
 </script>
 
-<style scoped>
-</style>
+<style scoped></style>

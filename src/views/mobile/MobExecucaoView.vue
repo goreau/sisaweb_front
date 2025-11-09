@@ -14,9 +14,9 @@
                 <label class="label">Município</label>
                 <div class="control">
                   <CmbTerritorio
+                    v-enter-to-next="'form-mob-exec'"
+                    v-model:sel="mobile.id_municipio"
                     :tipo="99"
-                    :sel="mobile.id_municipio"
-                    @selTerr="mobile.id_municipio = $event"
                     :errclass="{ 'is-danger': vp$.id_municipio.$error }"
                   />
                   <span class="is-error" v-if="vp$.id_municipio.$error">
@@ -30,6 +30,7 @@
                     <label class="label">Data Início</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-mob-exec'"
                         v-model="mobile.dt_inicio"
                         :error="false"
                         placeholder="Escolha a data"
@@ -46,6 +47,7 @@
                     <label class="label">Data Término</label>
                     <div class="control">
                       <DatePicker
+                        v-enter-to-next="'form-mob-exec'"
                         v-model="mobile.dt_final"
                         :error="false"
                         placeholder="Escolha a data"
@@ -63,6 +65,7 @@
                   <legend>Origem dos registros</legend>
                   <div class="field">
                     <RadioGeneric
+                      v-enter-to-next="'form-mob-exec'"
                       v-model="mobile.origem"
                       :options="origems"
                       name="origem"
@@ -88,8 +91,9 @@
                 <label class="label">Agente</label>
                 <div class="control">
                   <CmbGeneric
+                    v-enter-to-next="'form-mob-exec'"
+                    v-model:sel="mobile.agente"
                     :data="agentes"
-                    @selGen="mobile.agente = $event"
                     :errclass="{ 'is-danger': vt$.agente.$error }"
                   />
                   <span class="is-error" v-if="vt$.agente.$error">
@@ -102,6 +106,7 @@
                   <legend>Execução a aplicar</legend>
                   <div class="field">
                     <RadioGeneric
+                      v-enter-to-next="'form-mob-exec'"
                       v-model="mobile.id_execucao"
                       :options="execucoes"
                       name="execucao"
@@ -235,7 +240,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

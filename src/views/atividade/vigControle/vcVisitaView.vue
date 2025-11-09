@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-vc'"
                       :tipo="99"
-                      :sel="vc_linha.id_municipio"
-                      @selTerr="vc_linha.id_municipio = $event"
+                      v-model:sel="vc_linha.id_municipio"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-vc'"
                       v-model="vc_linha.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -49,6 +50,7 @@
                     <legend>Atividade</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-vc'"
                         v-model="vc_linha.id_atividade"
                         :options="atividades"
                         name="id_atividade"
@@ -69,6 +71,7 @@
                     <legend>Execução</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-vc'"
                         v-model="vc_linha.id_execucao"
                         :options="execucoes"
                         name="id_execucao"
@@ -87,6 +90,7 @@
                     <legend>Tipo de Trabalho</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-vc'"
                         v-model="vc_linha.id_tipo"
                         :options="tipos"
                         name="id_tipo"
@@ -107,9 +111,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_area"
+                        v-enter-to-next="'form-vc'"
+                        v-model:sel="vc_linha.id_area"
                         :data="areas"
-                        @selGen="vc_linha.id_area = $event"
                         :errclass="{ 'is-danger': v$.id_area.$error }"
                       />
                       <span class="is-error" v-if="v$.id_area.$error">
@@ -123,9 +127,9 @@
                     <label class="label">Censitário</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_censitario"
+                        v-enter-to-next="'form-vc'"
+                        v-model:sel="vc_linha.id_censitario"
                         :data="censitarios"
-                        @selGen="vc_linha.id_censitario = $event"
                         :errclass="{ 'is-danger': v$.id_censitario.$error }"
                       />
                       <span class="is-error" v-if="v$.id_censitario.$error">
@@ -139,9 +143,9 @@
                     <label class="label">Quarteirão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_quarteirao"
+                        v-enter-to-next="'form-vc'"
+                        v-model:sel="vc_linha.id_quarteirao"
                         :data="quarteiraos"
-                        @selGen="vc_linha.id_quarteirao = $event"
                         :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                       />
                       <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -159,9 +163,9 @@
                     <label class="label">Área</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_area_nav"
+                        v-enter-to-next="'form-vc'"
+                        v-model:sel="vc_linha.id_area_nav"
                         :data="areas_nav"
-                        @selGen="vc_linha.id_area_nav = $event"
                         :errclass="{ 'is-danger': v$.id_area_nav.$error }"
                       />
                       <span class="is-error" v-if="v$.id_area_nav.$error">
@@ -176,9 +180,9 @@
                     <label class="label">Quarteirão</label>
                     <div class="control">
                       <CmbGeneric
-                        :sel="vc_linha.id_quarteirao"
+                        v-enter-to-next="'form-vc'"
+                        v-model:sel="vc_linha.id_quarteirao"
                         :data="quarteiraos"
-                        @selGen="vc_linha.id_quarteirao = $event"
                         :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                       />
                       <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -200,9 +204,9 @@
                         <label class="label">Focal</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_focal"
+                            v-enter-to-next="'form-vc'"
+                            v-model:sel="vc_linha.id_prod_focal"
                             :data="prod_focais"
-                            @selGen="vc_linha.id_prod_focal = $event"
                             :errclass="{ 'is-danger': v$.id_prod_focal.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_focal.$error">
@@ -216,9 +220,9 @@
                         <label class="label">Perifocal</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_peri"
+                            v-enter-to-next="'form-vc'"
+                            v-model:sel="vc_linha.id_prod_peri"
                             :data="prod_peris"
-                            @selGen="vc_linha.id_prod_peri = $event"
                             :errclass="{ 'is-danger': v$.id_prod_peri.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_peri.$error">
@@ -232,9 +236,9 @@
                         <label class="label">Nebulizacao</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_neb"
+                            v-enter-to-next="'form-vc'"
+                            v-model:sel="vc_linha.id_prod_neb"
                             :data="prod_nebs"
-                            @selGen="vc_linha.id_prod_neb = $event"
                             :errclass="{ 'is-danger': v$.id_prod_neb.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_neb.$error">
@@ -248,9 +252,9 @@
                         <label class="label">BR Aedes</label>
                         <div class="control">
                           <CmbGeneric
-                            :sel="vc_linha.id_prod_br"
+                            v-enter-to-next="'form-vc'"
+                            v-model:sel="vc_linha.id_prod_br"
                             :data="prod_peris"
-                            @selGen="vc_linha.id_prod_br = $event"
                             :errclass="{ 'is-danger': v$.id_prod_br.$error }"
                           />
                           <span class="is-error" v-if="v$.id_prod_br.$error">
@@ -269,6 +273,7 @@
                   <label class="label">Agente</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-vc'"
                       class="input"
                       type="text"
                       placeholder="Executor da visita"
@@ -284,6 +289,7 @@
           </div>
           <footer class="card-footer">
             <footerCard
+              v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
               @cancel="null"
@@ -466,7 +472,7 @@ watch(
     } else {
       areas.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -479,7 +485,7 @@ watch(
     } else {
       censitarios.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -492,7 +498,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -505,7 +511,7 @@ watch(
     } else {
       quarteiraos.value = result
     }
-  }
+  },
 )
 
 async function loadCombos() {
@@ -563,23 +569,24 @@ async function loadCombos() {
 
 watch(
   () => vc_linha.id_prod_focal,
-  (val) => (defValues.prodFocal = val)
+  (val) => (defValues.prodFocal = val),
 )
 watch(
   () => vc_linha.id_prod_peri,
-  (val) => (defValues.prodPeri = val)
+  (val) => (defValues.prodPeri = val),
 )
 watch(
   () => vc_linha.id_prod_neb,
-  (val) => (defValues.prodNeb = val)
+  (val) => (defValues.prodNeb = val),
 )
 watch(
   () => vc_linha.id_prod_br,
-  (val) => (defValues.prodBr = val)
+  (val) => (defValues.prodBr = val),
 )
 
 onMounted(async () => {
   if (route.query.returnFrom === 'imovel' || route.query.from === 'edit') {
+    store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
   } else {
     store.setFolha({})
@@ -596,7 +603,6 @@ onMounted(async () => {
   loadCombos()
 })
 </script>
-
 
 <style scoped>
 .radio {

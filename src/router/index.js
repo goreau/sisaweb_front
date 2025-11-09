@@ -1,15 +1,14 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import HomeView from '@/views/general/HomeView.vue'
-import { useAuthStore } from '@/stores/auth';
-import authRoutes from './authRoutes';
-import { storeToRefs } from 'pinia';
-import cadastroRoutes from './cadastroRoutes';
-import gerenciamentoRoutes from './gerenciamentoRoutes';
-import atividadeRoutes from './atividadeRoutes';
-import mobileRoutes from './mobileRoutes';
-import reportRoutes from './reportRoutes';
-import forumRoutes from './forumRoutes';
-
+import { useAuthStore } from '@/stores/auth'
+import authRoutes from './authRoutes'
+import { storeToRefs } from 'pinia'
+import cadastroRoutes from './cadastroRoutes'
+import gerenciamentoRoutes from './gerenciamentoRoutes'
+import atividadeRoutes from './atividadeRoutes'
+import mobileRoutes from './mobileRoutes'
+import reportRoutes from './reportRoutes'
+import forumRoutes from './forumRoutes'
 
 const routes = [
   ...authRoutes,
@@ -43,14 +42,12 @@ const routes = [
     name: 'ajuda',
     component: () => import('../views/general/AjudaView.vue'),
   },
-
-];
+]
 
 const router = createRouter({
   history: createWebHashHistory(import.meta.env.BASE_URL),
   routes,
 })
-
 
 router.beforeEach((to, from, next) => {
   const auth = useAuthStore()
@@ -68,7 +65,11 @@ router.beforeEach((to, from, next) => {
     return next('/acesso-negado')
   }
 
+  const toGo = to.fullPath
 
+  if (toGo !== '/login') {
+    localStorage.setItem('redirect_to', toGo)
+  }
 
   next()
 })

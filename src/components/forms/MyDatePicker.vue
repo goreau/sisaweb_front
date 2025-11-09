@@ -1,11 +1,11 @@
 <script setup>
-defineOptions({})
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ptBR } from 'date-fns/locale'
 import { format } from 'date-fns'
-import { computed, ref, watch } from 'vue'
+import { computed, onMounted, ref, watch, getCurrentInstance } from 'vue'
 
+defineOptions({})
 const props = defineProps({
   modelValue: [String, Date, Object, null],
   minDate: Date,
@@ -25,6 +25,32 @@ const props = defineProps({
 })
 
 const emit = defineEmits(['update:modelValue'])
+
+const datepickerRef = ref(null)
+
+function focus() {
+  if (datepickerRef.value && typeof datepickerRef.value.focus === 'function') {
+    // 🌟 1. CHAMA O MÉTODO FOCUS DO COMPONENTE VUEPIC 🌟
+    // O componente Vuepic tem um método .focus() que deve ser usado
+    datepickerRef.value.focus()
+
+    // DEBUG: Adicione este log dentro do IF para ver se é atingido
+    // console.log("Método focus interno executado!");
+  } else {
+    // 2. FALLBACK: Tenta forçar o foco no input interno via DOM
+    const inputEl = datepickerRef.value?.$el?.querySelector('.dp__input')
+    if (inputEl) {
+      inputEl.focus()
+    } else {
+      console.error('Não foi possível focar o input do Datepicker.')
+    }
+  }
+}
+
+// 2. Exponha a função de foco
+defineExpose({
+  focus, // Torna a função 'focus' acessível de fora
+})
 
 const isMonthMode = computed(() => props.mode === 'month')
 
@@ -114,44 +140,31 @@ watch(innerValue, (val) => {
     }
   }
 })
-//:locale="ptBR" :locale="getLocale()"
-//:day-names="['D', 'S', 'T', 'Q', 'Q', 'S', 'S']"
-/**
- * <Datepicker
-    v-model="innerValue"
-    :locale="ptBR"
-    :format-locale="ptBR"
-    :format="dateFormat"
-    :min-date="minDate"
-    :max-date="maxDate"
-    :type="isMonthMode ? 'month' : 'date'"
-    :month-picker="isMonthMode"
-    :auto-apply="true"
-    :teleport="false"
-    :enable-time-picker="false"
-    :show-cancel="true"
-    :clearable="true"
-    input-class-name="input"
-    :class="{ 'is-danger': error }"
-    select-text="Confirmar"
-    cancel-text="Cancelar"
-    clear-text="Limpar"
-    :hide-offset-dates="!isMonthMode"
-    class="datepicker-wrapper"
-    :placeholder="placeholder"
-  />
- *
- *
- *
- *
- *
- *
- *
- * * */
+
+onMounted(() => {
+  const instance = getCurrentInstance()
+  const rootEl = instance.vnode.el // O elemento DOM raiz do seu componente.
+
+  if (rootEl) {
+    // 🌟 INJETA O ATRIBUTO DE MARCAÇÃO DIRETO NO DOM 🌟
+    rootEl.setAttribute('data-focus-type', 'custom-datepicker')
+
+    // Opcional: Para debugar se ele pegou o elemento certo
+    // console.log("Atributo injetado no elemento raiz:", rootEl);
+  }
+})
+</script>
+
+<script>
+// 1. Desativa a herança de atributos na raiz
+export default {
+  inheritAttrs: false,
+}
 </script>
 
 <template>
   <Datepicker
+    ref="datepickerRef"
     v-model="innerValue"
     :format-locale="ptBR"
     :format="dateFormat"

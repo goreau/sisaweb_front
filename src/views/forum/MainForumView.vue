@@ -32,7 +32,10 @@
                         <div class="field">
                           <label class="label">Sistema</label>
                           <div class="control">
-                            <CmbGeneric :data="sistemas" @change="filterSistema"></CmbGeneric>
+                            <CmbGeneric
+                              :data="sistemas"
+                              v-model:sel="sistemaSelecionado"
+                            ></CmbGeneric>
                           </div>
                         </div>
                       </div>
@@ -204,6 +207,12 @@ const router = useRouter()
 const toast = useToast()
 const { currentUser } = useCurrentUser()
 
+const sistemaSelecionado = ref(null)
+
+watch(sistemaSelecionado, (novoValor, valorAntigo) => {
+  filterSistema(novoValor)
+})
+
 // Lista completa (hoje você carrega tudo, amanhã pode mudar para paginado)
 const posts = ref([])
 const filter = ref('')
@@ -310,7 +319,7 @@ function fecharNew() {
 
 function filterMine() {
   filteredPosts.value = posts.value.filter((p) =>
-    p.autor.toLowerCase().includes(currentUser.value.login)
+    p.autor.toLowerCase().includes(currentUser.value.login),
   )
   visiblePosts.value = []
   currentIndex.value = 0
@@ -324,24 +333,24 @@ function gerenciar() {
 function applyFilter(term) {
   // ex: filtro por autor
   filteredPosts.value = posts.value.filter(
-    (p) => p.titulo.toLowerCase().includes(term) || p.autor.toLowerCase().includes(term)
+    (p) => p.titulo.toLowerCase().includes(term) || p.autor.toLowerCase().includes(term),
   )
   visiblePosts.value = []
   currentIndex.value = 0
   fetchMore()
 }
 
-function filterSistema(ev) {
-  const selectedValue = Number(ev.target.value)
-  if (selectedValue === 0) {
+function filterSistema(selectedValue) {
+  if (selectedValue === 0 || selectedValue === null) {
     filteredPosts.value = [...posts.value]
     if (filter.value != '') {
       applyFilter(filter)
     }
+  } else {
+    filteredPosts.value = posts.value.filter((p) => p.id_sistema === selectedValue)
+    visiblePosts.value = []
+    currentIndex.value = 0
   }
-  filteredPosts.value = posts.value.filter((p) => p.id_sistema === selectedValue)
-  visiblePosts.value = []
-  currentIndex.value = 0
   fetchMore()
 }
 
@@ -356,7 +365,7 @@ watch(
   () => filter.value,
   (val) => {
     applyFilter(val)
-  }
+  },
 )
 
 async function loadData() {

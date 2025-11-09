@@ -8,6 +8,7 @@
             <legend>Tipo</legend>
             <div class="field">
               <RadioGeneric
+                v-enter-to-next="'form-report'"
                 v-model="filtros.tipo_rel"
                 :options="tipos_rel"
                 name="tipo_rel"
@@ -23,7 +24,7 @@
         <div class="content">
           <label class="label">GVE</label>
           <div class="control">
-            <CmbTerritorio :tipo="9" :sel="filtros.id_gve" @selTerr="filtros.id_gve = $event" />
+            <CmbTerritorio v-enter-to-next="'form-report'" v-model:sel="filtros.id_gve" :tipo="9" />
           </div>
         </div>
       </div>
@@ -34,9 +35,9 @@
           <label class="label">Município</label>
           <div class="control">
             <CmbGeneric
-              :sel="filtros.id_municipio"
+              v-enter-to-next="'form-report'"
+              v-model:sel="filtros.id_municipio"
               :data="municipios"
-              @selGen="filtros.id_municipio = $event"
             />
           </div>
         </div>
@@ -49,6 +50,7 @@
             <legend>Tipo de Trabalho</legend>
             <div class="field">
               <RadioGeneric
+                v-enter-to-next="'form-report'"
                 v-model="filtros.ref_ativ"
                 :options="ref_ativs"
                 name="ref_ativ"
@@ -66,6 +68,7 @@
             <legend>Atividade</legend>
             <div class="field">
               <RadioGeneric
+                v-enter-to-next="'form-report'"
                 v-model="filtros.id_atividade"
                 :options="atividades"
                 name="id_atividade"
@@ -83,6 +86,7 @@
             <legend>Execucao</legend>
             <div class="field">
               <RadioGeneric
+                v-enter-to-next="'form-report'"
                 v-model="filtros.id_execucao"
                 :options="execucoes"
                 name="id_execucao"
@@ -98,7 +102,12 @@
         <div class="field">
           <label class="label">Data Inicial</label>
           <div class="control">
-            <DatePicker v-model="filtros.dt_inicial" :error="false" placeholder="Escolha a data" />
+            <DatePicker
+              v-enter-to-next="'form-report'"
+              v-model="filtros.dt_inicial"
+              :error="false"
+              placeholder="Escolha a data"
+            />
           </div>
         </div>
       </div>
@@ -106,7 +115,12 @@
         <div class="field">
           <label class="label">Data Final</label>
           <div class="control">
-            <DatePicker v-model="filtros.dt_final" :error="false" placeholder="Escolha a data" />
+            <DatePicker
+              v-enter-to-next="'form-report'"
+              v-model="filtros.dt_final"
+              :error="false"
+              placeholder="Escolha a data"
+            />
           </div>
         </div>
       </div>
@@ -117,7 +131,12 @@
           <div class="field">
             <label class="label">Ano</label>
             <div class="control">
-              <input class="input" type="number" v-model="filtros.ano" />
+              <input
+                v-enter-to-next="'form-report'"
+                class="input"
+                type="number"
+                v-model="filtros.ano"
+              />
             </div>
           </div>
         </div>
@@ -129,9 +148,9 @@
           <label class="label">Área de Transmissão</label>
           <div class="control">
             <CmbGeneric
-              :sel="filtros.id_area_nav"
+              v-enter-to-next="'form-report'"
+              v-model:sel="filtros.id_area_nav"
               :data="areas_nav"
-              @selGen="filtros.id_area_nav = $event"
             />
           </div>
         </div>
@@ -143,9 +162,9 @@
           <label class="label">Variável</label>
           <div class="control">
             <CmbGeneric
-              :sel="filtros.id_variavel"
+              v-enter-to-next="'form-report'"
+              v-model:sel="filtros.id_variavel"
               :data="variaveis"
-              @selGen="filtros.id_variavel = $event"
             />
           </div>
         </div>
@@ -188,6 +207,7 @@ const execucoes = ref([])
 const variaveis = ref([])
 const areas_nav = ref([])
 const tipos_rel = ref([])
+const filtrosAtivos = reactive({})
 
 const STORAGE_KEY = 'consulta-reportsw'
 
@@ -205,7 +225,59 @@ const filtros = reactive({
   tipo_rel: 0,
 })
 
+/**const filtrosAtivos = computed(() => {
+  return Object.keys(filtros.value).reduce((acc, key) => {
+    if (props.ativos.value[key] && filtros.value[key] !== '' && filtros.value[key] != null) {
+      acc[key] = filtros.value[key]
+    }
+    return acc
+  }, {})
+filtrosAtivos.value = Object.keys(filtros).reduce((acc, key) => {
+    if (props.ativos[key] && filtros[key] !== null && filtros[key] !== '') {
+      acc[key] = filtros[key]
+    }
+    return acc
+  }, {})
+
+})*/
+
+function limparFiltros() {
+  Object.keys(filtrosAtivos).forEach((k) => delete filtrosAtivos[k])
+  if (props.ativos['ano'] && filtros.ano !== '' && filtros.ano != null) {
+    filtrosAtivos.ano = filtros.ano
+  }
+  if (props.ativos['municipio'] && filtros.id_municipio !== '' && filtros.id_municipio != null) {
+    filtrosAtivos.id_municipio = filtros.id_municipio
+  }
+  if (props.ativos['atividade'] && filtros.id_atividade !== '' && filtros.id_atividade != null) {
+    filtrosAtivos.id_atividade = filtros.id_atividade
+  }
+  if (props.ativos['gve'] && filtros.id_gve !== '' && filtros.id_gve != null) {
+    filtrosAtivos.id_gve = filtros.id_gve
+  }
+  if (props.ativos['execucao'] && filtros.id_execucao !== '' && filtros.id_execucao != null) {
+    filtrosAtivos.id_execucao = filtros.id_execucao
+  }
+  if (props.ativos['variaveis'] && filtros.id_variavel !== '' && filtros.id_variavel != null) {
+    filtrosAtivos.id_variavel = filtros.id_variavel
+  }
+  if (props.ativos['inicio'] && filtros.dt_inicial !== '' && filtros.dt_inicial != null) {
+    filtrosAtivos.dt_inicial = filtros.dt_inicial
+  }
+  if (props.ativos['final'] && filtros.dt_final !== '' && filtros.dt_final != null) {
+    filtrosAtivos.dt_final = filtros.dt_final
+  }
+  if (props.ativos['area_nav'] && filtros.id_area_nav !== '' && filtros.id_area_nav != null) {
+    filtrosAtivos.id_area_nav = filtros.id_area_nav
+  }
+  filtrosAtivos.tipo_rel = filtros.tipo_rel
+}
+
 function processar() {
+  limparFiltros()
+  console.log(filtros)
+  console.log(props.ativos)
+  console.log(filtrosAtivos)
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtros))
   if (filtros.id_variavel > 0) {
     const opt = variaveis.value.find((o) => o.id === Number(filtros.id_variavel))
@@ -215,7 +287,7 @@ function processar() {
     const opt = tipos_rel.value.find((o) => o.id === Number(filtros.tipo_rel))
     filtros.fantVar = opt.nome
   }
-  emit('submit', filtros)
+  emit('submit', filtrosAtivos)
 }
 
 async function loadCombos() {
@@ -301,7 +373,7 @@ watch(
     if (!props.ativos?.id_execucao && props.ativos?.id_execucao == 0) {
       filtros.id_execucao = 0
     }
-  }
+  },
 )
 
 watch(
@@ -315,7 +387,7 @@ watch(
     } else {
       areas_nav.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -329,7 +401,7 @@ watch(
     } else {
       areas_nav.value = result
     }
-  }
+  },
 )
 
 watch(
@@ -342,7 +414,7 @@ watch(
     } else {
       municipios.value = result
     }
-  }
+  },
 )
 
 onMounted(async () => {

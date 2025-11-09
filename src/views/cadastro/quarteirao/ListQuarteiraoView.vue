@@ -27,10 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
-                        :id_prop="id_prop"
+                        v-enter-to-next="'form-quart'"
+                        v-model:sel="id_municipio"
                         :tipo="99"
-                        :sel="id_municipio"
-                        @selTerr="id_municipio = $event"
                       />
                     </div>
                   </div>

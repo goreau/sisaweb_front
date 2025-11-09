@@ -14,9 +14,9 @@
                   <label class="label">Município</label>
                   <div class="control">
                     <CmbTerritorio
+                      v-enter-to-next="'form-edl'"
+                      v-model:sel="edl.id_municipio"
                       :tipo="99"
-                      :sel="edl.id_municipio"
-                      @selTerr="edl.id_municipio = $event"
                       :errclass="{ 'is-danger': v$.id_municipio.$error }"
                     />
                     <span class="is-error" v-if="v$.id_municipio.$error">
@@ -30,6 +30,7 @@
                   <label class="label">Data de Instalação</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-edl'"
                       v-model="edl.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
@@ -46,6 +47,7 @@
                   <label class="label">Cadastro</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="Código da EDL"
@@ -66,6 +68,7 @@
                     <legend>Tipo de Imóvel</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-edl'"
                         v-model="edl.id_tipo_imovel"
                         :options="tipos_edl"
                         name="id_tipo_imovel"
@@ -80,9 +83,9 @@
                   <label class="label">Imóvel</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="edl.id_imovel"
+                      v-enter-to-next="'form-edl'"
+                      v-model:sel="edl.id_imovel"
                       :data="imoveis"
-                      @selGen="edl.id_imovel = $event"
                       :errclass="{ 'is-danger': v$.id_imovel.$error }"
                     />
                     <span class="is-error" v-if="v$.id_imovel.$error">
@@ -98,9 +101,9 @@
                   <label class="label">Área</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="edl.id_area"
+                      v-enter-to-next="'form-edl'"
+                      v-model:sel="edl.id_area"
                       :data="areas"
-                      @selGen="edl.id_area = $event"
                       :errclass="{ 'is-danger': v$.id_area.$error }"
                     />
                     <span class="is-error" v-if="v$.id_area.$error">
@@ -114,9 +117,9 @@
                   <label class="label">Censitário</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="edl.id_censitario"
+                      v-enter-to-next="'form-edl'"
+                      v-model:sel="edl.id_censitario"
                       :data="censitarios"
-                      @selGen="edl.id_censitario = $event"
                       :errclass="{ 'is-danger': v$.id_censitario.$error }"
                     />
                     <span class="is-error" v-if="v$.id_censitario.$error">
@@ -130,9 +133,9 @@
                   <label class="label">Quarteirão</label>
                   <div class="control">
                     <CmbGeneric
-                      :sel="edl.id_quarteirao"
+                      v-enter-to-next="'form-edl'"
+                      v-model:sel="edl.id_quarteirao"
                       :data="quarteiraos"
-                      @selGen="edl.id_quarteirao = $event"
                       :errclass="{ 'is-danger': v$.id_quarteirao.$error }"
                     />
                     <span class="is-error" v-if="v$.id_quarteirao.$error">
@@ -148,6 +151,7 @@
                   <label class="label">Bairro</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="Nome do bairro"
@@ -165,6 +169,7 @@
                   <label class="label">Endereço</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="Endereço do imóvel"
@@ -182,6 +187,7 @@
                   <label class="label">Responsável</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="Responsável pelo imóvel"
@@ -199,6 +205,7 @@
                   <label class="label">Telefone</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="opcional"
@@ -215,6 +222,7 @@
                     <legend>Local de instalação</legend>
                     <div class="field">
                       <RadioGeneric
+                        v-enter-to-next="'form-edl'"
                         v-model="edl.id_local"
                         :options="locals"
                         name="id_local"
@@ -231,6 +239,7 @@
                   <label class="label">Latitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -249,6 +258,7 @@
                   <label class="label">Longitude</label>
                   <div class="control">
                     <input
+                      v-enter-to-next="'form-edl'"
                       class="input"
                       type="text"
                       placeholder="Opcional"
@@ -269,7 +279,12 @@
                 <div class="field">
                   <label class="label">&nbsp;</label>
                   <label class="checkbox">
-                    <input type="checkbox" value="1" v-model="edl.inativa" />
+                    <input
+                      type="checkbox"
+                      value="1"
+                      v-model="edl.inativa"
+                      v-enter-to-next="'form-edl'"
+                    />
                     Inativa
                   </label>
                 </div>
@@ -279,6 +294,7 @@
                   <label class="label">Data de Inativação</label>
                   <div class="control">
                     <DatePicker
+                      v-enter-to-next="'form-edl'"
                       v-model="edl.dt_inativa"
                       :error="false"
                       placeholder="Escolha a data"
@@ -293,7 +309,13 @@
             </div>
           </div>
           <footer class="card-footer">
-            <footerCard @submit="save" @cancel="null" @aux="null" :cFooter="cFooter" />
+            <footerCard
+              v-enter-to-next="'submit-action'"
+              @submit="save"
+              @cancel="null"
+              @aux="null"
+              :cFooter="cFooter"
+            />
           </footer>
         </div>
       </div>
@@ -426,7 +448,7 @@ async function loadCombos() {
 }
 
 async function loadImoveis() {
-  const ativ = edl.id_tipo_imovel == 57 ? 1 : 2
+  const ativ = edl.id_tipo_imovel == 56 ? 1 : 2
   const filter = { id_municipio: edl.id_municipio, id_atividade: ativ }
   const result = await imovelService.getCombo(JSON.stringify(filter))
   if (result.error) {
@@ -455,9 +477,14 @@ watch(
     if (result.error) {
       console.log(result.error)
     } else {
-      edl.endereco = result.endereco
-      edl.responsavel = result.proprietario
-      //edl.id_quarteirao = result.id_quarteirao
+      if (result.endereco !== '') {
+        edl.endereco = result.endereco
+      }
+      if (result.proprietario !== '') {
+        edl.responsavel = result.proprietario
+      }
+
+      edl.id_quarteirao = result.id_quarteirao
     }
   },
 )
@@ -518,6 +545,7 @@ onMounted(async () => {
     if (result.error) {
       toast.error(result.msg)
     } else {
+      console.log(result)
       Object.assign(edl, result)
     }
   } else {
