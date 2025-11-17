@@ -12,7 +12,7 @@
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
+            <button class="button is-primary is-outlined" @click="newReg">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-plus-circle" />
               </span>
@@ -105,6 +105,10 @@ function newFilter() {
   hasRows.value = false
 }
 
+function newReg() {
+  router.push('edlCadastro/0')
+}
+
 async function loadData() {
   try {
     isLoading = true
@@ -138,6 +142,7 @@ async function onDeleteRow(item) {
       toast.error(resultado.msg)
     } else {
       toast.success('Registro excluído com sucesso!')
+      loadData()
     }
   }
 }
@@ -152,8 +157,17 @@ onMounted(() => {
     { headerName: 'Município', field: 'municipio' },
     { headerName: 'Cadastro', field: 'cadastro' },
     { headerName: 'Tipo', field: 'tipo' },
+    { headerName: 'Área', field: 'area', hide: true },
+    { headerName: 'Censitário', field: 'censitario', hide: true },
+    { headerName: 'Quarteirão', field: 'numero_quarteirao' },
     { headerName: 'Bairro', field: 'bairro' },
     { headerName: 'Endereço', field: 'endereco' },
+    { headerName: 'Responsável', field: 'responsavel', hide: true },
+    { headerName: 'Telefone', field: 'telefone', hide: true },
+    { headerName: 'Data Cadastro', field: 'data', hide: true },
+    { headerName: 'Local', field: 'local', hide: true },
+    { headerName: 'Latitude', field: 'latitude', hide: true },
+    { headerName: 'Longitude', field: 'longitude', hide: true },
     {
       headerName: 'Ativa',
       field: 'ativa',

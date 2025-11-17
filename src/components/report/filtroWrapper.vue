@@ -173,8 +173,16 @@
     <hr />
     <div class="columns">
       <div class="column is-8 is-offset-2">
-        <div class="buttons is-centered mt-4">
-          <button class="button is-primary is-outlined is-fullwidth" @click="processar">
+        <div
+          class="buttons is-centered mt-4"
+          data-focus-type="custom-submit-group"
+          v-enter-to-next="'submit-action'"
+        >
+          <button
+            class="button is-primary is-outlined is-fullwidth"
+            @click="processar"
+            v-enter-to-next="'submit-action'"
+          >
             Processar
           </button>
         </div>
@@ -261,10 +269,10 @@ function limparFiltros() {
   if (props.ativos['variaveis'] && filtros.id_variavel !== '' && filtros.id_variavel != null) {
     filtrosAtivos.id_variavel = filtros.id_variavel
   }
-  if (props.ativos['inicio'] && filtros.dt_inicial !== '' && filtros.dt_inicial != null) {
+  if (props.ativos['datas'] && filtros.dt_inicial !== '' && filtros.dt_inicial != null) {
     filtrosAtivos.dt_inicial = filtros.dt_inicial
   }
-  if (props.ativos['final'] && filtros.dt_final !== '' && filtros.dt_final != null) {
+  if (props.ativos['datas'] && filtros.dt_final !== '' && filtros.dt_final != null) {
     filtrosAtivos.dt_final = filtros.dt_final
   }
   if (props.ativos['area_nav'] && filtros.id_area_nav !== '' && filtros.id_area_nav != null) {

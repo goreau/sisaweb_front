@@ -210,7 +210,11 @@
                     </div>
                   </div>
                 </div>
-                <div class="column is-2 is-offset-1">
+                <div
+                  class="column is-2 is-offset-1"
+                  data-focus-type="custom-submit-group"
+                  v-enter-to-next="'submit-action'"
+                >
                   <label class="label">&nbsp;</label>
                   <button class="button is-link aux-btn is-fullwidth" @click="insert">
                     Inserir

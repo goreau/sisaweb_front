@@ -470,7 +470,11 @@
             </section>
             <hr />
             <div class="columns">
-              <div class="column is-6 is-offset-3">
+              <div
+                class="column is-6 is-offset-3"
+                data-focus-type="custom-submit-group"
+                v-enter-to-next="'submit-action'"
+              >
                 <button class="button is-link aux-btn is-fullwidth" @click="insert">Salvar</button>
               </div>
             </div>

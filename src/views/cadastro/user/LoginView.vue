@@ -12,6 +12,7 @@
                 <label class="label">Login</label>
                 <div class="control has-icons-left has-icons-right">
                   <input
+                    v-enter-to-next="'form-login'"
                     class="input is-danger"
                     type="text"
                     placeholder="Nome de usuário"
@@ -26,6 +27,7 @@
                 <label class="label">Senha</label>
                 <div class="control has-icons-left">
                   <input
+                    v-enter-to-next="'form-login'"
                     class="input"
                     type="password"
                     v-model="user.password"

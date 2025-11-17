@@ -6,6 +6,35 @@ import {
   focusNext,
 } from '../services/general/focusManager.service.js'
 
+function createKeydownHandler(el, binding) {
+  // Retorna a função que será executada no evento 'keydown'
+  return function (e) {
+    if (e.key === 'Enter') {
+      e.preventDefault() // Garante que nenhum evento nativo ocorra
+
+      const nextTarget = el.dataset.nextTarget // Valor armazenado no mounted
+
+      if (nextTarget === 'submit-action') {
+        const submitButton = el.querySelector('.submit-btn')
+
+        // Se o próprio elemento for o botão (para evitar querySelector em si mesmo)
+        if (!submitButton && el.matches('.submit-btn')) {
+          el.click()
+          return
+        }
+
+        if (submitButton) {
+          submitButton.click() // ✅ Aciona o evento de clique uma vez
+          return
+        }
+      }
+
+      // Se não for submit, avança o foco
+      focusNext(el, nextTarget)
+    }
+  }
+}
+
 export const EnterToNext = {
   mounted(el, binding, vnode) {
     // 👈 Certifique-se que VNODE está aqui
@@ -37,11 +66,20 @@ export const EnterToNext = {
         focusNext(formId, target)
       }
     })
+
+    const handler = createKeydownHandler(el, binding)
+    el.__keydownHandler = handler
+
+    // Adiciona o listener
+    el.addEventListener('keydown', handler)
   },
   unmounted(el, binding, vnode) {
     const formId = binding.value || 'default-form'
     const target = vnode.component ? vnode.component.proxy : el
     unregisterElement(formId, target)
-    el.removeEventListener('keydown', () => {})
+    //  el.removeEventListener('keydown', () => {})
+    if (el.__keydownHandler) {
+      el.removeEventListener('keydown', el.__keydownHandler) // ✅ Corrigido
+    }
   },
 }

@@ -110,6 +110,18 @@ export const reportMenu = [
         },
       },
       {
+        href: '/mainReport/controle/ctListaIC',
+        title: 'Listagem de Imóveis Cadastrados',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
         href: '/mainReport/controle/ctCobertura',
         title: 'Ciclos de Visita',
         icon: {

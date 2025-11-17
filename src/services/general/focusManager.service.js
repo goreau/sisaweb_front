@@ -7,7 +7,7 @@ const focusMap = reactive({})
 var idForm = ''
 
 export function registerElement(formId, el) {
-  if (formId === 'submit-action') {
+  if (formId === 'submit-action' && idForm !== '') {
     focusMap[idForm].push(el)
   } else {
     idForm = formId
@@ -28,6 +28,12 @@ export function unregisterElement(formId, el) {
   }
 }
 
+function isVisible(el) {
+  // Retorna false se display: none, visibility: hidden, ou se não tem dimensões
+  // O teste mais robusto para v-show (display: none) é:
+  return !!(el.offsetWidth || el.offsetHeight || el.getClientRects().length)
+}
+
 export function focusNext(formId, currentEl) {
   const elements = focusMap[formId]
   if (!elements) return false
@@ -41,8 +47,24 @@ export function focusNext(formId, currentEl) {
   // 2. Encontra o índice atual
   const currentIndex = elements.indexOf(currentEl)
 
-  if (currentIndex !== -1 && currentIndex + 1 < elements.length) {
-    const nextEl = elements[currentIndex + 1]
+  let nextEl = null
+  let nextIndex = currentIndex + 1
+
+  while (nextIndex < elements.length) {
+    let potentialNextEl = elements[nextIndex]
+
+    // 🎯 VERIFICAÇÃO DE VISIBILIDADE EM TEMPO REAL
+    if (isVisible(potentialNextEl)) {
+      nextEl = potentialNextEl
+      break // Encontramos o alvo visível, saímos do loop
+    }
+
+    nextIndex++ // Pula para o próximo índice
+  }
+
+  if (nextEl) {
+    //if (currentIndex !== -1 && currentIndex + 1 < elements.length) {
+    //  const nextEl = elements[currentIndex + 1]
 
     if (
       nextEl.hasAttribute('data-focus-type') &&

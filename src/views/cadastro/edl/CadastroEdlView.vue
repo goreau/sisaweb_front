@@ -210,7 +210,11 @@
                       type="text"
                       placeholder="opcional"
                       v-model="edl.telefone"
+                      :class="{ 'is-danger': v$.telefone.$error }"
                     />
+                    <span class="is-error" v-if="v$.telefone.$error">
+                      {{ v$.telefone.$errors[0].$message }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -336,15 +340,22 @@ import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
-import { required$, combo$, coordenada$, requiredIf$ } from '@/components/forms/validators'
+import {
+  required$,
+  combo$,
+  coordenada$,
+  requiredIf$,
+  maxLength$,
+} from '@/components/forms/validators'
 import { ref, onMounted, reactive, computed, watch } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useToast } from 'vue-toastification'
 import imovelService from '@/services/cadastro/imovel.service'
 
 const toast = useToast()
 const route = useRoute()
+const router = useRouter()
 const { currentUser } = useCurrentUser()
 
 var id_prop = ref(0)
@@ -365,6 +376,7 @@ const edl = reactive({
   telefone: '',
   cadastro: '',
   id_quarteirao: 0,
+  id_imovel: 0,
   bairro: '',
   id_local: 0,
   id_tipo_imovel: 0,
@@ -386,13 +398,14 @@ var cFooter = ref({
 const rules = {
   id_municipio: { required$, minValue: combo$(1) },
   dt_cadastro: { required$ },
-  responsavel: { required$ },
-  endereco: { required$ },
-  cadastro: { required$ },
+  responsavel: { required$, maxLength: maxLength$(100) },
+  endereco: { required$, maxLength: maxLength$(100) },
+  cadastro: { required$, maxLength: maxLength$(20) },
   id_area: { requiredIf: requiredIf$(() => !isCad.value) },
   id_censitario: { requiredIf: requiredIf$(() => !isCad.value) },
   id_quarteirao: { required$, minValue: combo$(1) },
-  bairro: { required$ },
+  bairro: { required$, maxLength: maxLength$(50) },
+  telefone: { maxLength: maxLength$(30) },
   id_local: { required$, minValue: combo$(1) },
   id_tipo_imovel: { required$, minValue: combo$(1) },
   latitude: { coordenada$ },
@@ -420,10 +433,38 @@ async function save() {
       toast.error(resultado.msg)
     } else {
       toast.success(msg)
+      if (isEditMode.value) {
+        router.go(-1)
+      } else {
+        limpar()
+      }
     }
   } else {
     toast.warning('Corrija os erros para enviar as informações')
   }
+}
+
+function limpar() {
+  let vazio = {
+    id_cadastro_edl: 0,
+    dt_cadastro: '',
+    responsavel: '',
+    endereco: '',
+    telefone: '',
+    cadastro: '',
+    id_quarteirao: 0,
+    id_imovel: 0,
+    bairro: '',
+    id_local: 0,
+    id_tipo_imovel: 0,
+    latitude: '0',
+    longitude: '0',
+    inativa: false,
+    dt_inativa: '',
+  }
+
+  Object.assign(edl, vazio)
+  v$.value.$reset()
 }
 
 const isEditMode = computed(() => Number(route.params.id) > 0)
@@ -472,7 +513,7 @@ async function loadAreas() {
 watch(
   () => edl.id_imovel,
   async (val) => {
-    if (val == 0) return
+    if (val == 0 || val == null) return
     const result = await imovelService.getImovel(val)
     if (result.error) {
       console.log(result.error)
@@ -546,7 +587,11 @@ onMounted(async () => {
       toast.error(result.msg)
     } else {
       console.log(result)
-      Object.assign(edl, result)
+      edl.id_area = result.id_area
+      edl.id_censitario = result.id_censitario
+      setTimeout(() => {
+        Object.assign(edl, result)
+      }, 100)
     }
   } else {
     Object.assign(edl, {

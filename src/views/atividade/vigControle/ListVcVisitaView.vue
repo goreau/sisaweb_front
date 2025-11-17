@@ -209,6 +209,7 @@ onMounted(() => {
 
   columns.value = [
     { headerName: 'Município', field: 'municipio' },
+    { headerName: 'Quarteirão', field: 'quarteirao' },
     { headerName: 'Tipo', field: 'atividade' },
     { headerName: 'Data', field: 'data' },
     { headerName: 'Responsável', field: 'owner' },
