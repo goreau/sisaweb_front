@@ -156,6 +156,18 @@ onMounted(() => {
     { headerName: 'Endereço', field: 'endereco' },
     { headerName: 'Responsável', field: 'owner' },
     { headerName: 'OwnerId', field: 'owner_id', hide: true },
+    { headerName: 'Proprietário', field: 'proprietario', hide: true },
+    { headerName: 'Ocupação', field: 'ocupacao', hide: true },
+    { headerName: 'Tipo Área', field: 'local', hide: true },
+    { headerName: 'Área', field: 'area', hide: true },
+    { headerName: 'Censitário', field: 'censitario', hide: true },
+    { headerName: 'Quarteirão', field: 'numero_quarteirao', hide: true },
+    { headerName: 'Cadastro', field: 'data', hide: true },
+    { headerName: 'Alteração', field: 'altera', hide: true },
+    { headerName: 'Pontuação', field: 'pontuacao', hide: true },
+    { headerName: 'Responsabilidade', field: 'responsável', hide: true },
+    { headerName: 'Latitude', field: 'latitude', hide: true },
+    { headerName: 'Longitude', field: 'longitude', hide: true },
   ]
 
   let cUser = currentUser

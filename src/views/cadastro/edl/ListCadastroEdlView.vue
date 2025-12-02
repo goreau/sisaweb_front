@@ -162,7 +162,7 @@ onMounted(() => {
     { headerName: 'Quarteirão', field: 'numero_quarteirao' },
     { headerName: 'Bairro', field: 'bairro' },
     { headerName: 'Endereço', field: 'endereco' },
-    { headerName: 'Responsável', field: 'responsavel', hide: true },
+    { headerName: 'Resp. Imóvel', field: 'responsavel', hide: true },
     { headerName: 'Telefone', field: 'telefone', hide: true },
     { headerName: 'Data Cadastro', field: 'data', hide: true },
     { headerName: 'Local', field: 'local', hide: true },
