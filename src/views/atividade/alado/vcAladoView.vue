@@ -229,7 +229,7 @@ var vc_alado = reactive({
   imoveis: [],
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

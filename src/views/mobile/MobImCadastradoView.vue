@@ -476,7 +476,7 @@ var vc_imovel = reactive({
   recipientes: [],
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

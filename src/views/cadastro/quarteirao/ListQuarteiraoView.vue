@@ -85,7 +85,7 @@ const router = useRouter()
 const toast = useToast()
 
 var tpUser = ref(0)
-var isLoading = false
+var isLoading = ref(false)
 
 var confirmDialog = ref(null)
 
@@ -106,7 +106,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await quarteiraoService.getQuarteiraos(JSON.stringify(filter))
@@ -117,7 +117,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

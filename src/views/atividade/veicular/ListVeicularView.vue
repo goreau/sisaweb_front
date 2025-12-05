@@ -116,7 +116,7 @@ const idUser = ref(0)
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-veicularsw'
 
 var hasRows = ref(false)
@@ -136,7 +136,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await veicularService.getVeiculars(JSON.stringify(filter))
@@ -147,7 +147,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

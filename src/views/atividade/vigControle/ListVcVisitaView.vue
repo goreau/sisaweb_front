@@ -84,7 +84,8 @@
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
-                :buttons="['edit', 'delete']"
+                @boletim="printSheet"
+                :buttons="['edit', 'delete', 'boletim']"
                 :has-exports="true"
               />
             </section>
@@ -116,6 +117,8 @@ import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import { useVcVisitaStore } from '@/stores/vcVisitaStore'
+import { boletim } from '@/services/general/geraBoletim.service'
+import utilitariosService from '@/services/utilitarios.service'
 
 const { currentUser } = useCurrentUser()
 
@@ -128,7 +131,7 @@ var tpUser = ref(0)
 const dataTableRef = ref(null)
 
 var confirmDialog = ref(null)
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-vcvisitasw'
 
 var hasRows = ref(false)
@@ -151,7 +154,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await vc_linhaService.getVcLinhas(JSON.stringify(filter))
@@ -162,7 +165,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 
@@ -190,6 +193,15 @@ async function onDeleteRow(item) {
       toast.success('Imóvel excluído com sucesso!')
       loadData()
     }
+  }
+}
+
+async function printSheet(item) {
+  const ret = await utilitariosService.boletimFolha(item.row.id)
+  if (ret.error) {
+    toast.error(ret.msg)
+  } else {
+    boletim(ret.data)
   }
 }
 

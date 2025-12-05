@@ -142,7 +142,7 @@ var mobile = reactive({
   agente: '',
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 const rulesPesq = {
   id_municipio: { required$, minValue: combo$(1) },
@@ -161,7 +161,7 @@ async function pesquisar() {
   try {
     vp$.value.$touch()
     if (!vp$.value.$invalid) {
-      isLoading = true
+      isLoading.value = true
 
       mobile.data = format(mobile.dt_cadastro, 'yyyy-MM-dd')
 
@@ -206,7 +206,7 @@ async function pesquisar() {
       toast.warning('Corrija os erros para enviar as informações')
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

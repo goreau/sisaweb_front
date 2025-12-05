@@ -85,7 +85,7 @@ const router = useRouter()
 const store = useAreaNavStore()
 const toast = useToast()
 
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-areanavsw'
 
 var tpUser = ref(0)
@@ -109,7 +109,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await areaNavService.getAreaNavs(JSON.stringify(filter))
@@ -120,7 +120,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

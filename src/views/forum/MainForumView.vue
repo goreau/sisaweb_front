@@ -265,6 +265,7 @@ async function salvaTopico() {
   const result = await forumService.createTopico(formData)
   if (result.status) {
     toast.success(result.msg)
+    loadData()
   } else {
     toast.error(result.error.msg)
   }

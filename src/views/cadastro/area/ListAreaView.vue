@@ -84,7 +84,7 @@ const STORAGE_KEY = 'consulta-areasw'
 const router = useRouter()
 const toast = useToast()
 
-var isLoading = false
+var isLoading = ref(false)
 
 var tpUser = ref(0)
 
@@ -127,7 +127,7 @@ async function onDeleteRow(item) {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await areaService.getAreas(JSON.stringify(filter))
@@ -138,7 +138,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

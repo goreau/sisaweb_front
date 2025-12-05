@@ -9,6 +9,7 @@ import atividadeRoutes from './atividadeRoutes'
 import mobileRoutes from './mobileRoutes'
 import reportRoutes from './reportRoutes'
 import forumRoutes from './forumRoutes'
+import utilitariosRoutes from './utilitariosRoutes'
 
 const routes = [
   ...authRoutes,
@@ -18,6 +19,7 @@ const routes = [
   ...mobileRoutes,
   ...reportRoutes,
   ...forumRoutes,
+  ...utilitariosRoutes,
   {
     path: '/acesso-negado',
     name: 'AcessoNegado',

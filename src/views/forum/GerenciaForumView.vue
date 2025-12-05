@@ -159,7 +159,7 @@ var confirmDialog = ref(null)
 const { currentUser } = useCurrentUser()
 
 const dataTable = ref([])
-var isLoading = false
+var isLoading = ref(false)
 var hasRows = ref(false)
 const idUser = ref(0)
 
@@ -252,7 +252,7 @@ async function onDeleteRow(item) {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
 
     const result = await forumService.getLista(JSON.stringify(filter))
     if (result.error) {
@@ -262,7 +262,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

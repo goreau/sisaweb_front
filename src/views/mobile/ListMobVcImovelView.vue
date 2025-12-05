@@ -95,7 +95,8 @@
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
-                :buttons="['edit', 'delete']"
+                @boletim="printSheet"
+                :buttons="['edit', 'delete', 'boletim']"
                 :has-exports="true"
                 :loggedUser="{ id: idUser, tipo: tpUser }"
               />
@@ -133,6 +134,8 @@ import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import { useMobileStore } from '@/stores/mobileStore'
 import auxiliarService from '@/services/general/auxiliar.service'
+import { boletim } from '@/services/general/geraBoletim.service'
+import utilitariosService from '@/services/utilitarios.service'
 
 const { currentUser } = useCurrentUser()
 
@@ -144,7 +147,7 @@ var tpUser = ref(0)
 var idUser = ref(0)
 
 var confirmDialog = ref(null)
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-mobvcimovelsw'
 
 var hasRows = ref(false)
@@ -168,7 +171,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await mobVcImovelService.getMobVcImovels(JSON.stringify(filter))
@@ -179,7 +182,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 
@@ -195,7 +198,7 @@ async function onEditRow(item) {
 
 async function onDeleteRow(item) {
   try {
-    isLoading = true
+    isLoading.value = true
     const ok = await confirmDialog.value.show({
       title: 'Excluir',
       message: 'Deseja mesmo excluir essa Visita?',
@@ -211,13 +214,22 @@ async function onDeleteRow(item) {
       }
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
+  }
+}
+
+async function printSheet(item) {
+  const ret = await utilitariosService.boletimMobImovel(item.row.id)
+  if (ret.error) {
+    toast.error(ret.msg)
+  } else {
+    boletim(ret.data)
   }
 }
 
 async function sincroniza() {
   try {
-    isLoading = true
+    isLoading.value = true
     if (tabelaRef.value) {
       const linhas = tabelaRef.value.getFilteredRows()
 
@@ -231,7 +243,7 @@ async function sincroniza() {
       }
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

@@ -252,7 +252,7 @@ const { currentUser } = useCurrentUser()
 var tpUser = ref(0)
 var nvUser = ref(0)
 
-var isLoading = false
+var isLoading = ref(false)
 
 var strLocal = ref('Município')
 

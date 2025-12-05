@@ -282,7 +282,7 @@ var ot_ovitrampa = reactive({
   agente: '',
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

@@ -558,7 +558,7 @@ var vc_linha = reactive({
   recipientes: [],
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

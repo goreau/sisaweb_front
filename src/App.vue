@@ -30,7 +30,7 @@ watch(
     showMenu.value =
       newPath !== '/' && newPath !== '/login' && newPath !== '/forgot' && newPath !== '/reset'
   },
-  { immediate: true }
+  { immediate: true },
 )
 
 watch(mainDiv, (el) => {
@@ -76,7 +76,7 @@ $toggle-btn-color: white;
 .app-container {
   display: flex;
   height: calc(100vh - 6.2rem); // mesma altura que o header ocupa
-  margin-top: 6.2rem;           // em vez de padding-top
+  margin-top: 6.2rem; // em vez de padding-top
   overflow: hidden;
 }
 
@@ -99,7 +99,7 @@ body {
 /* Conteúdo principal */
 .main-content {
   flex: 1;
-  min-width: 0;        // importante para tabelas não estourarem o flex
+  min-width: 0; // importante para tabelas não estourarem o flex
   overflow-y: auto;
   padding: 1.5rem;
 }
@@ -137,7 +137,9 @@ body {
 .fieldset {
   background-color: #fff;
   border-radius: 6px;
-  box-shadow: 0 0.3em 0.3em -0.125em rgba(10, 10, 10, 0.1), 0 0 0 1px rgba(10, 10, 10, 0.02);
+  box-shadow:
+    0 0.3em 0.3em -0.125em rgba(10, 10, 10, 0.1),
+    0 0 0 1px rgba(10, 10, 10, 0.02);
   color: #4a4a4a;
   display: block;
   padding: 1.25rem;
@@ -155,5 +157,9 @@ body {
   padding: 0 5px;
   width: max-content;
   border: 0 none;
+}
+
+.btico {
+  padding: 0.7rem;
 }
 </style>

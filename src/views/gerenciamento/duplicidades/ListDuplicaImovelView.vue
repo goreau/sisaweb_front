@@ -141,7 +141,7 @@ const toast = useToast()
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
-var isLoading = false
+var isLoading = ref(false)
 
 var hasRows = ref(false)
 var dataTable = ref([])
@@ -165,7 +165,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem('censSW', JSON.stringify(filter))
 
     const result = await imovelService.getDuplica(JSON.stringify(filter))
@@ -176,7 +176,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

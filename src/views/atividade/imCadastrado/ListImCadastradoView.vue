@@ -83,7 +83,8 @@
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
-                :buttons="['edit', 'delete']"
+                @boletim="printSheet"
+                :buttons="['edit', 'delete', 'boletim']"
                 :has-exports="true"
               />
             </section>
@@ -115,6 +116,8 @@ import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import { useVcImovelStore } from '@/stores/vcImovelStore'
+import utilitariosService from '@/services/utilitarios.service'
+import { boletim } from '@/services/general/geraBoletim.service'
 
 const { currentUser } = useCurrentUser()
 
@@ -124,7 +127,7 @@ const store = useVcImovelStore()
 
 const idUser = ref(0)
 var tpUser = ref(0)
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-imcadastradosw'
 
 var confirmDialog = ref(null)
@@ -149,7 +152,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await vc_imovelService.getVcImovels(JSON.stringify(filter))
@@ -160,7 +163,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 
@@ -188,6 +191,15 @@ async function onDeleteRow(item) {
       toast.success('Imóvel excluído com sucesso!')
       loadData()
     }
+  }
+}
+
+async function printSheet(item) {
+  const ret = await utilitariosService.boletimImovel(item.row.id)
+  if (ret.error) {
+    toast.error(ret.msg)
+  } else {
+    boletim(ret.data)
   }
 }
 

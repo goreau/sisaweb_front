@@ -376,7 +376,7 @@ var vc_linha = reactive({
   imoveis: [],
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

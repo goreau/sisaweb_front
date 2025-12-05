@@ -67,6 +67,7 @@ const emit = defineEmits([
   'impersonate',
   'recipiente',
   'chart',
+  'boletim',
 ])
 
 const gridApi = ref(null)
@@ -109,6 +110,8 @@ function shouldDisableButton(row, name) {
   if (!props.loggedUser) return
   if (name == 'reset' || name == 'impersonate') {
     return props.loggedUser.tipo > 1
+  } else if (name == 'boletim') {
+    return false
   } else {
     return props.loggedUser.id !== 0 && row.owner_id != props.loggedUser.id
   }
@@ -236,6 +239,7 @@ function createActionsColumn() {
 
       addButton('fas fa-edit', 'Editar', 'edit')
       addButton('fas fa-trash', 'Excluir', 'delete', 'is-danger')
+      addButton('fas fa-file-pdf', 'Boletim', 'boletim')
       addButton('fas fa-location-dot', 'Quarteirão', 'quarteirao', 'is-info')
       if (props.loggedUser.tipo == 1) {
         addButton('fas fa-power-off', 'Reset', 'reset', 'is-warning')

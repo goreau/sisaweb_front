@@ -237,7 +237,7 @@ var vc_bri = reactive({
   imoveis: [],
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

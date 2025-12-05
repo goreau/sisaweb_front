@@ -100,7 +100,7 @@ const filter = reactive({
 
 const columns = ref([])
 
-var isLoading = false
+var isLoading = ref(false)
 
 function newFilter() {
   hasRows.value = false
@@ -108,7 +108,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await censitarioService.getCensitarios(JSON.stringify(filter))
@@ -119,7 +119,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

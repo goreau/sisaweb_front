@@ -165,7 +165,7 @@ var mobile = reactive({
   agente: 0,
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 const rulesPesq = {
   id_municipio: { required$, minValue: combo$(1) },
@@ -186,7 +186,7 @@ async function pesquisar() {
   try {
     vp$.value.$touch()
     if (!vp$.value.$invalid) {
-      isLoading = true
+      isLoading.value = true
       const resultado = await mobileService.getAgentes(JSON.stringify(mobile))
       if (resultado.status) {
         agentes.value = resultado.data
@@ -198,7 +198,7 @@ async function pesquisar() {
       toast.warning('Corrija os erros para enviar as informações')
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 
@@ -206,7 +206,7 @@ async function processa() {
   try {
     vt$.value.$touch()
     if (!vt$.value.$invalid) {
-      isLoading = true
+      isLoading.value = true
       const resultado = await mobileService.trocaExecucao(mobile)
       if (resultado.status) {
         toast.success(resultado.msg)
@@ -217,7 +217,7 @@ async function processa() {
       toast.warning('Corrija os erros para enviar as informações')
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

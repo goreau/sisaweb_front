@@ -759,7 +759,7 @@ var recipiente = reactive({
   albopictus: 0,
 })
 
-var isLoading = false
+var isLoading = ref(false)
 
 var cFooter = ref({
   strSubmit: 'Salvar',

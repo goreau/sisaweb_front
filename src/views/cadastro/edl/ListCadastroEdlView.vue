@@ -85,7 +85,7 @@ const toast = useToast()
 
 var tpUser = ref(0)
 
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-edlCadsw'
 
 var confirmDialog = ref(null)
@@ -111,7 +111,7 @@ function newReg() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await edlCadastroService.getEdlCadastros(JSON.stringify(filter))
@@ -122,7 +122,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 

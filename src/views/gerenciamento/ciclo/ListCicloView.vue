@@ -101,7 +101,7 @@ const toast = useToast()
 var tpUser = ref(0)
 
 var confirmDialog = ref(null)
-var isLoading = false
+var isLoading = ref(false)
 const STORAGE_KEY = 'consulta-ciclosw'
 
 var id_municipio = ref(0)
@@ -124,7 +124,7 @@ function newFilter() {
 
 async function loadData() {
   try {
-    isLoading = true
+    isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
     const result = await cicloService.getCiclos(JSON.stringify(filter))
@@ -135,7 +135,7 @@ async function loadData() {
       hasRows.value = true
     }
   } finally {
-    isLoading = false
+    isLoading.value = false
   }
 }
 
