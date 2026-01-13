@@ -41,7 +41,7 @@ const vSelectRef = ref(null)
 const modelValueProxy = computed({
   get: () => {
     // Ao ler, retorna o valor atual da prop 'sel'
-    return props.sel
+    return Number(props.sel)
   },
   set: (newValue) => {
     console.log('Mudou o valor do controle')

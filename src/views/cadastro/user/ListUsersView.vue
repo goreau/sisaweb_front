@@ -148,7 +148,8 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -208,14 +209,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-  columns.value = [
-    { headerName: 'Nome', field: 'nome' },
-    { headerName: 'Login', field: 'login' },
-    { headerName: 'Local', field: 'local' },
-    { headerName: 'Nivel', field: 'role' },
-    { headerName: 'Responsável', field: 'owner' },
-    { headerName: 'OwnerId', field: 'owner_id', hide: true },
-  ]
 
   let cUser = currentUser
   if (cUser.value) {

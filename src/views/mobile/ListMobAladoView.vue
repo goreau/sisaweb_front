@@ -175,9 +175,10 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result.data
-      let teste = result.data[0]
-      console.log(teste.amostras)
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
+      //let teste = result.data[0]
+      //console.log(teste.amostras)
       hasRows.value = true
     }
   } finally {
@@ -232,13 +233,6 @@ async function sincroniza() {
 }
 
 async function loadCombos() {
-  /*const result = await auxiliarService.getAtividadeCombo(1)
-  if (result.error) {
-    console.log(result.error)
-    atividades.value = []
-  } else {
-    atividades.value = result
-  }*/
   atividades.value = [
     { id: 10, nome: 'Imóveis Cadastrados' },
     { id: 9, nome: 'Outras Atividades' },
@@ -250,29 +244,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-
-  columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Atividade', field: 'atividade' },
-    { headerName: 'Local', field: 'local' },
-    { headerName: 'Data', field: 'data' },
-    { headerName: 'Agente', field: 'agente' },
-    {
-      headerName: 'Amostras',
-      field: 'amostras',
-      valueFormatter: (params) => {
-        const value = params.value
-        if (!value || value.length === 0 || (value.length === 1 && value[0] === '-')) {
-          return '-'
-        }
-        if (Array.isArray(value)) {
-          return value.join(', ')
-        } else {
-          return value
-        }
-      },
-    },
-  ]
 
   loadCombos()
 

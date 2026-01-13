@@ -140,10 +140,26 @@ async function download_xlsx() {
     (col) => col.field && col.field !== 'acoes',
   )
 
-  // monta os dados já com headers "pai - filho"
   const exportData = data.map((row) =>
-    Object.fromEntries(exportCols.map((col) => [col.exportHeader, row[col.field]])),
+    Object.fromEntries(
+      exportCols.map((col) => {
+        let value = row[col.field]
+
+        // Se o valor for uma string que contém apenas números (ou decimal), converte
+        // Verifica se não é nulo/vazio e se é um número válido
+        if (typeof value === 'string' && value.trim() !== '' && !isNaN(value)) {
+          value = Number(value)
+        }
+
+        return [col.exportHeader, value]
+      }),
+    ),
   )
+
+  // monta os dados já com headers "pai - filho"
+  /* const exportData = data.map((row) =>
+    Object.fromEntries(exportCols.map((col) => [col.exportHeader, row[col.field]])),
+  )*/
 
   const worksheet = XLSX.utils.json_to_sheet(exportData)
   const workbook = XLSX.utils.book_new()
@@ -218,8 +234,11 @@ onMounted(() => {
 
 // Coluna de ações customizada
 function createActionsColumn() {
+  var definedWidth = 0
   if (props.buttons.length == 0) {
     return {}
+  } else {
+    definedWidth = props.buttons.length * 80
   }
   return {
     headerName: 'Ações',
@@ -239,7 +258,7 @@ function createActionsColumn() {
 
       addButton('fas fa-edit', 'Editar', 'edit')
       addButton('fas fa-trash', 'Excluir', 'delete', 'is-danger')
-      addButton('fas fa-file-pdf', 'Boletim', 'boletim')
+      addButton('fas fa-file-pdf', 'Boletim', 'boletim', 'is-primary')
       addButton('fas fa-location-dot', 'Quarteirão', 'quarteirao', 'is-info')
       if (props.loggedUser.tipo == 1) {
         addButton('fas fa-power-off', 'Reset', 'reset', 'is-warning')
@@ -249,7 +268,8 @@ function createActionsColumn() {
 
       return container
     },
-    width: 200,
+    minWidth: definedWidth,
+    suppressSizeToFit: true,
     pinned: 'right',
   }
 }

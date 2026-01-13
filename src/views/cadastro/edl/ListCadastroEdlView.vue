@@ -118,7 +118,8 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -152,30 +153,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-
-  columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Cadastro', field: 'cadastro' },
-    { headerName: 'Tipo', field: 'tipo' },
-    { headerName: 'Área', field: 'area', hide: true },
-    { headerName: 'Censitário', field: 'censitario', hide: true },
-    { headerName: 'Quarteirão', field: 'numero_quarteirao' },
-    { headerName: 'Bairro', field: 'bairro' },
-    { headerName: 'Endereço', field: 'endereco' },
-    { headerName: 'Resp. Imóvel', field: 'responsavel', hide: true },
-    { headerName: 'Telefone', field: 'telefone', hide: true },
-    { headerName: 'Data Cadastro', field: 'data', hide: true },
-    { headerName: 'Local', field: 'local', hide: true },
-    { headerName: 'Latitude', field: 'latitude', hide: true },
-    { headerName: 'Longitude', field: 'longitude', hide: true },
-    {
-      headerName: 'Ativa',
-      field: 'ativa',
-      cellRenderer: 'tickCrossRenderer',
-    },
-    { headerName: 'Responsável', field: 'owner' },
-    { headerName: 'OwnerId', field: 'owner_id', hide: true },
-  ]
 
   let cUser = currentUser
   if (cUser.value) {

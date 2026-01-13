@@ -89,14 +89,6 @@
                 :has-exports="true"
               />
             </section>
-            <div style="display: none">
-              <span class="icon is-small is-left" ref="myspan">
-                <font-awesome-icon icon="fa-solid fa-edit" />
-              </span>
-              <span class="icon is-small is-left" ref="myspan2">
-                <font-awesome-icon icon="fa-solid fa-trash" />
-              </span>
-            </div>
           </div>
         </div>
       </div>
@@ -143,9 +135,6 @@ const filter = reactive({
   dt_final: '',
 })
 
-var myspan = ref(null)
-var myspan2 = ref(null)
-
 const columns = ref([])
 
 function newFilter() {
@@ -161,7 +150,8 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result.data
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -219,14 +209,14 @@ onMounted(() => {
     Object.assign(filter, JSON.parse(saved))
   }
 
-  columns.value = [
+  /* columns.value = [
     { headerName: 'Município', field: 'municipio' },
     { headerName: 'Quarteirão', field: 'quarteirao' },
     { headerName: 'Tipo', field: 'atividade' },
     { headerName: 'Data', field: 'data' },
     { headerName: 'Responsável', field: 'owner' },
     { headerName: 'OwnerId', field: 'owner_id', hide: true },
-  ]
+  ]*/
 
   let cUser = currentUser
   if (cUser.value) {

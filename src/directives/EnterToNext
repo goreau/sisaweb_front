@@ -44,7 +44,7 @@ export const EnterToNext = {
     const target = el // Sempre injeta o EL
 
     // DEBUG: Verifique se isso está sendo logado. Se for componente, deve ser um Proxy.
-    console.log('Target Registrado:', target)
+    //console.log('Target Registrado:', target)
 
     registerElement(formId, target)
 

@@ -43,6 +43,20 @@
         </div>
       </div>
     </div>
+    <div class="columns" v-if="props.ativos?.bairro">
+      <div class="column is-6 is-offset-3">
+        <div class="content">
+          <label class="label">Bairro</label>
+          <div class="control">
+            <CmbGeneric
+              v-enter-to-next="'form-report'"
+              v-model:sel="filtros.id_bairro"
+              :data="bairros"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="columns" v-if="props.ativos?.ref_ativ > 0">
       <div class="column is-6 is-offset-3">
         <div class="content">
@@ -201,6 +215,7 @@ import { useCurrentUser } from '@/composables/currentUser'
 import auxiliarService from '@/services/general/auxiliar.service'
 import area_navService from '@/services/cadastro/areaNav.service'
 import reportService from '@/services/report.service'
+import bairroService from '@/services/cadastro/bairro.service'
 
 const emit = defineEmits(['submit'])
 
@@ -214,6 +229,7 @@ const ref_ativs = ref([])
 const execucoes = ref([])
 const variaveis = ref([])
 const areas_nav = ref([])
+const bairros = ref([])
 const tipos_rel = ref([])
 const filtrosAtivos = reactive({})
 
@@ -230,6 +246,7 @@ const filtros = reactive({
   dt_final: '',
   ano: '2025',
   id_area_nav: 0,
+  id_bairro: 0,
   tipo_rel: 0,
 })
 
@@ -270,22 +287,32 @@ function limparFiltros() {
     filtrosAtivos.id_variavel = filtros.id_variavel
   }
   if (props.ativos['datas'] && filtros.dt_inicial !== '' && filtros.dt_inicial != null) {
-    filtrosAtivos.dt_inicial = filtros.dt_inicial
+    let dataIni = new Date(filtros.dt_inicial)
+
+    dataIni.setHours(0, 0, 0, 0)
+    filtrosAtivos.dt_inicial = dataIni
   }
   if (props.ativos['datas'] && filtros.dt_final !== '' && filtros.dt_final != null) {
-    filtrosAtivos.dt_final = filtros.dt_final
+    let dataFim = new Date(filtros.dt_final)
+
+    dataFim.setHours(23, 59, 59, 999)
+
+    filtrosAtivos.dt_final = dataFim
   }
   if (props.ativos['area_nav'] && filtros.id_area_nav !== '' && filtros.id_area_nav != null) {
     filtrosAtivos.id_area_nav = filtros.id_area_nav
+  }
+  if (props.ativos['bairro'] && filtros.id_bairro !== '' && filtros.id_bairro != null) {
+    filtrosAtivos.id_bairro = filtros.id_bairro
   }
   filtrosAtivos.tipo_rel = filtros.tipo_rel
 }
 
 function processar() {
   limparFiltros()
-  console.log(filtros)
-  console.log(props.ativos)
-  console.log(filtrosAtivos)
+  //console.log(filtros)
+  //console.log(props.ativos)
+  //console.log(filtrosAtivos)
   localStorage.setItem(STORAGE_KEY, JSON.stringify(filtros))
   if (filtros.id_variavel > 0) {
     const opt = variaveis.value.find((o) => o.id === Number(filtros.id_variavel))
@@ -330,26 +357,26 @@ watch(
       filtros.ano = 0
     }
     if (props.ativos?.atividade && props.ativos?.atividade > 0) {
+      const itemExtra = { id: 0, nome: 'Todas' } // Altere conforme sua necessidade
+
       if (val.atividade == 2) {
-        const result = await auxiliarService.getAtividadeCombo(2)
-        if (result.error) {
-          atividades.value = []
-        } else {
-          atividades.value = result
-        }
-        const result1 = await auxiliarService.getAtividadeCombo(3)
-        if (result1.error) {
-          atividades.value = []
-        } else {
-          atividades.value = [...atividades.value, ...result1]
-        }
+        const [res2, res3] = await Promise.all([
+          auxiliarService.getAtividadeCombo(2),
+          auxiliarService.getAtividadeCombo(3),
+        ])
+
+        const lista2 = res2.error ? [] : res2
+        const lista3 = res3.error ? [] : res3
+
+        atividades.value = [...lista2, ...lista3]
       } else if (val.atividade == 1) {
-        const result1 = await auxiliarService.getAtividadeCombo(val.atividade)
-        if (result1.error) {
-          atividades.value = []
-        } else {
-          atividades.value = result1
-        }
+        const result = await auxiliarService.getAtividadeCombo(1)
+        atividades.value = result.error ? [] : result
+      }
+
+      // 2. Insere o item extra no início (unshift) ou fim (push) da lista final
+      if (atividades.value.length > 0 || val.atividade) {
+        atividades.value.unshift(itemExtra)
       }
     } else {
       filtros.id_atividade = 0
@@ -387,6 +414,13 @@ watch(
 watch(
   () => filtros.id_municipio,
   async () => {
+    const result1 = await bairroService.getCombo(JSON.stringify(filtros))
+    if (result1.error) {
+      console.log(result1.error)
+      bairros.value = []
+    } else {
+      bairros.value = result1
+    }
     if (props.endpoint != 'nav_previsao') return
     const result = await area_navService.getCombo(JSON.stringify(filtros))
     if (result.error) {

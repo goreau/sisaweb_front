@@ -114,7 +114,8 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -147,28 +148,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-
-  columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Tipo', field: 'tipo' },
-    { headerName: 'Cadastro', field: 'cadastro' },
-    { headerName: 'Nome Fantasia', field: 'fantasia' },
-    { headerName: 'Endereço', field: 'endereco' },
-    { headerName: 'Responsável', field: 'owner' },
-    { headerName: 'OwnerId', field: 'owner_id', hide: true },
-    { headerName: 'Proprietário', field: 'proprietario', hide: true },
-    { headerName: 'Ocupação', field: 'ocupacao', hide: true },
-    { headerName: 'Tipo Área', field: 'local', hide: true },
-    { headerName: 'Área', field: 'area', hide: true },
-    { headerName: 'Censitário', field: 'censitario', hide: true },
-    { headerName: 'Quarteirão', field: 'numero_quarteirao', hide: true },
-    { headerName: 'Cadastro', field: 'data', hide: true },
-    { headerName: 'Alteração', field: 'altera', hide: true },
-    { headerName: 'Pontuação', field: 'pontuacao', hide: true },
-    { headerName: 'Responsabilidade', field: 'responsável', hide: true },
-    { headerName: 'Latitude', field: 'latitude', hide: true },
-    { headerName: 'Longitude', field: 'longitude', hide: true },
-  ]
 
   let cUser = currentUser
   if (cUser.value) {

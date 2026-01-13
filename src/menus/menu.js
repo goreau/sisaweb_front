@@ -84,7 +84,7 @@ export const menuData = [
     icon: {
       element: 'font-awesome-icon',
       attributes: {
-        icon: 'fa-solid fa-gears',
+        icon: 'fa-solid fa-screwdriver-wrench',
         size: 'lg',
         transform: 'shrink-8',
       },

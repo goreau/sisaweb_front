@@ -5,7 +5,7 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Ovitrampas</p>
+            <p class="card-header-title is-centered">Bairros</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
@@ -27,7 +27,7 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
-                        v-enter-to-next="'form-ovi'"
+                        v-enter-to-next="'form-nav'"
                         v-model:sel="id_municipio"
                         :tipo="99"
                       />
@@ -68,7 +68,7 @@
 </template>
 
 <script setup>
-import ovitrampaService from '@/services/cadastro/ovitrampa.service'
+import bairroService from '@/services/cadastro/bairro.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
@@ -76,17 +76,19 @@ import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
+import { useBairroStore } from '@/stores/bairroStore'
 import { useToast } from 'vue-toastification'
 
 const { currentUser } = useCurrentUser()
 
 const router = useRouter()
+const store = useBairroStore()
 const toast = useToast()
 
-var tpUser = ref(0)
-
 var isLoading = ref(false)
-const STORAGE_KEY = 'consulta-ovitrampasw'
+const STORAGE_KEY = 'consulta-bairrosw'
+
+var tpUser = ref(0)
 
 var confirmDialog = ref(null)
 
@@ -110,7 +112,7 @@ async function loadData() {
     isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await ovitrampaService.getOvitrampas(JSON.stringify(filter))
+    const result = await bairroService.getBairros(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
@@ -124,21 +126,26 @@ async function loadData() {
 }
 
 async function onEditRow(item) {
-  router.push(`/ovitrampa/${item.row.id}`)
+  const ret = await bairroService.getBairro(item.row.id)
+
+  store.setObjeto({ ...ret.data })
+
+  router.push({ name: 'bairro', query: { from: 'edit' } })
 }
 
 async function onDeleteRow(item) {
   const ok = await confirmDialog.value.show({
     title: 'Excluir',
-    message: 'Deseja mesmo excluir esse Censitário?',
+    message: 'Deseja mesmo excluir esse bairro?',
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await ovitrampaService.delete(item.row.id)
+    const resultado = await bairroService.delete(item.row.id)
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
-      toast.success('Registro excluído com sucesso!')
+      toast.success('Bairro excluído com sucesso!')
+      loadData()
     }
   }
 }
@@ -150,6 +157,7 @@ onMounted(() => {
   }
 
   let cUser = currentUser
+  console.log(cUser)
   if (cUser.value) {
     idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo

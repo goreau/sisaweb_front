@@ -5,7 +5,7 @@
         <Loader :active="isLoading" />
         <div class="card">
           <header class="card-header">
-            <p class="card-header-title is-centered">Área de Transmissão</p>
+            <p class="card-header-title is-centered">Bairro</p>
           </header>
           <div class="card-content">
             <div class="content">
@@ -13,7 +13,7 @@
               <div class="control">
                 <CmbTerritorio
                   v-enter-to-next="'form-nav'"
-                  v-model:sel="areaNav.id_municipio"
+                  v-model:sel="bairro.id_municipio"
                   :tipo="99"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
@@ -22,18 +22,6 @@
                 </span>
               </div>
             </div>
-            <fieldset class="fieldset">
-              <legend>Tipo</legend>
-              <div class="field">
-                <RadioGeneric
-                  v-enter-to-next="'form-nav'"
-                  v-model="areaNav.tipo_area"
-                  :options="tipos"
-                  name="tipo_area"
-                  :inline="true"
-                />
-              </div>
-            </fieldset>
             <div class="field">
               <label class="label">Nome</label>
               <div class="control">
@@ -41,46 +29,12 @@
                   v-enter-to-next="'form-nav'"
                   class="input"
                   type="text"
-                  placeholder="Nome da Área"
-                  v-model="areaNav.descricao"
-                  :class="{ 'is-danger': v$.descricao.$error }"
+                  placeholder="Nome do Bairro"
+                  v-model="bairro.nome"
+                  :class="{ 'is-danger': v$.nome.$error }"
                 />
-                <span class="is-error" v-if="v$.descricao.$error">
-                  {{ v$.descricao.$errors[0].$message }}
-                </span>
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Área (ha)</label>
-              <div class="control">
-                <input
-                  v-enter-to-next="'form-nav'"
-                  class="input"
-                  type="text"
-                  placeholder="Apenas para NAV"
-                  v-model="areaNav.area"
-                  v-decimal
-                  :class="{ 'is-danger': v$.area.$error }"
-                />
-                <span class="is-error" v-if="v$.area.$error">
-                  {{ v$.area.$errors[0].$message }}
-                </span>
-              </div>
-            </div>
-            <div class="field">
-              <label class="label">Rel. Percurso/área</label>
-              <div class="control">
-                <input
-                  v-enter-to-next="'form-nav'"
-                  class="input"
-                  type="text"
-                  placeholder="Apenas para NAV"
-                  v-model="areaNav.percurso"
-                  v-decimal
-                  :class="{ 'is-danger': v$.percurso.$error }"
-                />
-                <span class="is-error" v-if="v$.percurso.$error">
-                  {{ v$.percurso.$errors[0].$message }}
+                <span class="is-error" v-if="v$.nome.$error">
+                  {{ v$.nome.$errors[0].$message }}
                 </span>
               </div>
             </div>
@@ -104,11 +58,10 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import areaNavService from '@/services/cadastro/areaNav.service'
+import bairroService from '@/services/cadastro/bairro.service'
 import useValidate from '@vuelidate/core'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
-import RadioGeneric from '@/components/forms/RadioGeneric.vue'
-import { useAreaNavStore } from '@/stores/areaNavStore'
+import { useBairroStore } from '@/stores/bairroStore'
 import { useRouter, useRoute } from 'vue-router'
 import { minLengthIfFilled$, required$, combo$ } from '@/components/forms/validators'
 import { ref, onMounted, reactive, computed } from 'vue'
@@ -118,24 +71,16 @@ import { useToast } from 'vue-toastification'
 const toast = useToast()
 
 const { currentUser } = useCurrentUser()
-const store = useAreaNavStore()
+const store = useBairroStore()
 const router = useRouter()
 const route = useRoute()
 
-const tipos = [
-  { id: 1, nome: 'NAV' },
-  { id: 2, nome: 'CC-NP' },
-]
-
 var id_prop = ref(0)
 
-const areaNav = reactive({
-  id_area_nav: 0,
+const bairro = reactive({
+  id_bairro: 0,
   id_municipio: 0,
-  area: '',
-  descricao: '',
-  percurso: '',
-  tipo_area: 2,
+  nome: '',
   filhos: [],
 })
 
@@ -149,24 +94,21 @@ var cFooter = ref({
 })
 
 const rules = {
-  descricao: { required$ },
+  nome: { required$ },
   id_municipio: { required$, minValue: combo$(1) },
-  area: { minLengthIfFilled: minLengthIfFilled$(2) },
-  percurso: { minLengthIfFilled: minLengthIfFilled$(2) },
-  tipo_area: { required$, minValue: combo$(1) },
 }
 
-const v$ = useValidate(rules, areaNav)
+const v$ = useValidate(rules, bairro)
 
 function details() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    store.setObjeto({ ...areaNav })
-    router.push({ name: 'areaNavChild', query: { from: 'pai' } })
+    store.setObjeto({ ...bairro })
+    router.push({ name: 'bairroChild', query: { from: 'pai' } })
   }
 }
 
-const isEditMode = computed(() => Number(areaNav.id_area_nav) > 0)
+const isEditMode = computed(() => Number(bairro.id_bairro) > 0)
 
 async function create() {
   v$.value.$touch()
@@ -174,16 +116,16 @@ async function create() {
     var resultado = null
     var msg = ''
     if (isEditMode.value) {
-      resultado = await areaNavService.update(areaNav)
-      msg = 'Área alterada com sucesso!'
+      resultado = await bairroService.update(bairro)
+      msg = 'Bairro alterado com sucesso!'
     } else {
-      resultado = await areaNavService.create(areaNav)
-      msg = 'Área inserida com sucesso!'
+      resultado = await bairroService.create(bairro)
+      msg = 'Bairro inserido com sucesso!'
     }
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
-      areaNav.id_area_nav = resultado.master
+      bairro.id_bairro = resultado.master
       toast.success(msg)
     }
   } else {
@@ -198,14 +140,11 @@ const readyToGo = computed(() => {
 onMounted(() => {
   if (route.query.returnFrom === 'filho' || route.query.from === 'edit') {
     console.log(store.objetoPrincipal)
-    Object.assign(areaNav, JSON.parse(JSON.stringify(store.objetoPrincipal)))
+    Object.assign(bairro, JSON.parse(JSON.stringify(store.objetoPrincipal)))
   } else {
-    Object.assign(areaNav, {
+    Object.assign(bairro, {
       id_municipio: 0,
-      area: '',
-      descricao: '',
-      percurso: '',
-      tipo_area: 2,
+      nome: '',
       filhos: [],
     })
     store.setObjeto({}) // limpa o store

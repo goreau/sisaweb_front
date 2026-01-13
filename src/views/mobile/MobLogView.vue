@@ -40,11 +40,7 @@
                     v-enter-to-next="'form-mob-log'"
                     v-model:sel="mobile.id_municipio"
                     :tipo="99"
-                    :errclass="{ 'is-danger': vp$.id_municipio.$error }"
                   />
-                  <span class="is-error" v-if="vp$.id_municipio.$error">
-                    {{ vp$.id_municipio.$errors[0].$message }}
-                  </span>
                 </div>
               </div>
               <div class="content">
@@ -56,11 +52,7 @@
                       v-model="mobile.dt_cadastro"
                       :error="false"
                       placeholder="Escolha a data"
-                      :class="{ 'is-danger': vp$.dt_cadastro.$error }"
                     />
-                    <span class="is-error" v-if="vp$.dt_cadastro.$error">
-                      {{ vp$.dt_cadastro.$errors[0].$message }}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -75,9 +67,6 @@
                       placeholder="Nome do agente"
                       v-model="mobile.agente"
                     />
-                    <span class="is-error" v-if="vp$.agente.$error">
-                      {{ vp$.agente.$errors[0].$message }}
-                    </span>
                   </div>
                 </div>
               </div>
@@ -145,10 +134,7 @@ var mobile = reactive({
 var isLoading = ref(false)
 
 const rulesPesq = {
-  id_municipio: { required$, minValue: combo$(1) },
-  dt_cadastro: { required$ },
   tipo: { required$ },
-  agente: { required$ },
 }
 
 const vp$ = useValidate(rulesPesq, mobile)
@@ -165,15 +151,15 @@ async function pesquisar() {
 
       mobile.data = format(mobile.dt_cadastro, 'yyyy-MM-dd')
 
-      // const chave = import.meta.env.VITE_SISAPI_KEY
+      const link = `${import.meta.env.VITE_SISAPI_URL}api/recebe/logs/`
 
       let config = {
         method: 'post',
         maxBodyLength: Infinity,
-        url: 'https://sisapi.saude.sp.gov.br/api/recebe/logs', //'http://10.8.150.23:4033/api/recebe/logs', //
+        url: link, ///'https://sisapi.saude.sp.gov.br/api/recebe/logs', //'http://10.8.150.23:4033/api/recebe/logs', //
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer "${import.meta.env.VITE_SISAPI_KEY}"`,
+          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
         },
         data: JSON.stringify(mobile),
       }

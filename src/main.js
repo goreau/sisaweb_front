@@ -69,6 +69,11 @@ import {
   faRotateBack,
   faCircleQuestion,
   faComments,
+  faShuffle,
+  faScrewdriverWrench,
+  faPeopleArrows,
+  faTrashCan,
+  faToolbox,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { EnterToNext } from './directives/EnterToNext'
@@ -125,6 +130,11 @@ library.add(
   faRotateBack,
   faCircleQuestion,
   faComments,
+  faShuffle,
+  faScrewdriverWrench,
+  faPeopleArrows,
+  faTrashCan,
+  faToolbox,
 )
 
 const options = {

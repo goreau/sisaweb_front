@@ -115,7 +115,8 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -148,14 +149,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-
-  columns.value = [
-    { headername: 'Município', field: 'municipio' },
-    { headername: 'Área', field: 'area' },
-    { headername: 'Código', field: 'codigo' },
-    { headername: 'Responsável', field: 'owner' },
-    { headername: 'OwnerId', field: 'owner_id', hide: true },
-  ]
 
   let cUser = currentUser
   if (cUser.value) {

@@ -101,7 +101,7 @@ const emit = defineEmits(['options'])
 async function processar(filtros) {
   const opt = {
     tabela: tabela.value,
-    linha: linha.value[0],
+    linha: linha.value,
     coluna: coluna.value[0],
     incremento: incremento.value[0],
     filtros: filtros,
@@ -123,8 +123,10 @@ const checkMove = (evt) => {
 watch(
   () => props.data,
   () => {
-    schema.value = props.data
-  }
+    if (props.data?.length) {
+      schema.value = props.data
+    }
+  },
 )
 
 watch(tabela, (val) => {
@@ -135,10 +137,6 @@ watch(tabela, (val) => {
   linha.value = []
   coluna.value = []
   incremento.value = []
-})
-
-onMounted(async () => {
-  schema.value = props.data
 })
 </script>
 

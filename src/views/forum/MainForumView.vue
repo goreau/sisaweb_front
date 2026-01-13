@@ -266,6 +266,7 @@ async function salvaTopico() {
   if (result.status) {
     toast.success(result.msg)
     loadData()
+    fecharModal()
   } else {
     toast.error(result.error.msg)
   }
@@ -280,6 +281,8 @@ async function salvaReplica() {
   const result = await forumService.createReplica(formData)
   if (result.status) {
     toast.success(result.msg)
+    loadData()
+    fecharModal()
   } else {
     toast.error(result.error.msg)
   }

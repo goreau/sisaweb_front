@@ -5,7 +5,7 @@ export const utilitariosMenu = [
     icon: {
       element: 'font-awesome-icon',
       attributes: {
-        icon: 'fa-solid fa-comments',
+        icon: 'fa-solid fa-shuffle',
         size: 'lg',
         transform: 'shrink-8',
       },

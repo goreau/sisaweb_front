@@ -1,9 +1,9 @@
 import axios from '@/services/api.js'
 
-class MobVcFolhaService {
-  async sync(data) {
+class BairroService {
+  async create(data) {
     try {
-      const res = await axios.post('/api/mobile/syncVcFolha', data)
+      const res = await axios.post('/api/cadastro/bairro', data)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -14,9 +14,9 @@ class MobVcFolhaService {
     }
   }
 
-  async getMobVcFolha(id) {
+  async getBairro(id) {
     try {
-      const res = await axios.get(`/api/mobile/mobVcFolha/${id}`)
+      const res = await axios.get(`/api/cadastro/bairro/${id}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -29,7 +29,7 @@ class MobVcFolhaService {
 
   async update(data) {
     try {
-      const res = await axios.put('/api/mobile/mobVcFolha', data)
+      const res = await axios.put('/api/cadastro/bairro', data)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -42,7 +42,7 @@ class MobVcFolhaService {
 
   async delete(id) {
     try {
-      const res = await axios.delete(`/api/mobile/mobVcFolha/${id}`)
+      const res = await axios.delete(`/api/cadastro/bairro/${id}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -53,9 +53,9 @@ class MobVcFolhaService {
     }
   }
 
-  async getMobVcFolhas(filter) {
+  async getBairros(filter) {
     try {
-      const res = await axios.get(`/api/mobile/mobVcFolhas/${filter}`)
+      const res = await axios.get(`/api/cadastro/bairros/${filter}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -66,9 +66,22 @@ class MobVcFolhaService {
     }
   }
 
-  async putProduto(data) {
+  async getCombo(filter) {
     try {
-      const res = await axios.put('/api/mobile/prodVcFolha', data)
+      const res = await axios.get(`/api/cadastro/comboBairro/${filter}`)
+      return res.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
+
+  async getComboQuart(id) {
+    try {
+      const res = await axios.get(`/api/cadastro/comboQuartBairro/${id}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -80,4 +93,4 @@ class MobVcFolhaService {
   }
 }
 
-export default new MobVcFolhaService()
+export default new BairroService()

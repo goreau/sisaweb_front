@@ -178,7 +178,8 @@ async function loadData() {
     if (result.error) {
       console.log(result.error)
     } else {
-      dataTable.value = result.data
+      dataTable.value = result.data.rows
+      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -262,29 +263,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-
-  columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Atividade', field: 'atividade' },
-    { headerName: 'Imóvel', field: 'imovel' },
-    { headerName: 'Data', field: 'data' },
-    { headerName: 'Agente', field: 'agente' },
-    {
-      headerName: 'Amostras',
-      field: 'amostras',
-      valueFormatter: (params) => {
-        const value = params.value
-        if (!value || value.length === 0 || (value.length === 1 && value[0] === '-')) {
-          return '-'
-        }
-        if (Array.isArray(value)) {
-          return value.join(', ')
-        } else {
-          return value
-        }
-      },
-    },
-  ]
 
   loadCombos()
 
