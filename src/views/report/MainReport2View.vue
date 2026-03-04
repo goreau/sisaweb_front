@@ -86,7 +86,7 @@ async function buscar(filtros) {
     if (result.error) {
       toast.error(result.msg)
     } else {
-      var res = result.data
+      var res = result.data.data
       if ('filtros' in res) {
         fantFiltro.value = res.filtros
       }

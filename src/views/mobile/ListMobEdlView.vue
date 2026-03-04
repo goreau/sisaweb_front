@@ -5,7 +5,7 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Mobile: Visita a Imóveis</p>
+            <p class="card-header-title is-centered">Mobile: Manutenção de EDL</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />

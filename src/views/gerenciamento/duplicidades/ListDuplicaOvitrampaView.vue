@@ -5,36 +5,33 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Ovitrampas</p>
+            <p class="card-header-title is-centered">Exclusão de Pesquisas de Ovitrampas</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
-              <span class="icon">
-                <font-awesome-icon icon="fa-solid fa-plus-circle" />
-              </span>
-              <span>Novo</span>
-            </button>
           </header>
           <div class="card-content">
             <section v-show="!hasRows">
-              <div class="columns" v-if="tpUser < 4">
+              <div class="columns">
                 <div class="column is-5 is-offset-3">
-                  <div class="field">
-                    <label class="label">Município</label>
+                  <div class="content">
+                    <label class="label">Ano</label>
                     <div class="control">
-                      <CmbTerritorio
-                        v-enter-to-next="'form-ovi'"
-                        v-model:sel="id_municipio"
-                        :tipo="99"
+                      <input
+                        v-enter-to-next="'form-user'"
+                        class="input"
+                        type="text"
+                        placeholder="Ano das visitas"
+                        v-model="ano"
                       />
                     </div>
                   </div>
                 </div>
               </div>
+
               <div class="columns">
                 <div class="field column is-3 is-offset-4">
                   <label class="label">&nbsp;</label>
@@ -49,14 +46,12 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="{ id: idUser, tipo: tpUser }"
+                :logged-user="idUser"
                 :data="dataTable"
                 :columns="columns"
-                :pagination="true"
-                @edit="onEditRow"
-                @delete="onDeleteRow"
-                :buttons="['edit', 'delete']"
-                :has-exports="true"
+                :pagination="false"
+                @delete="processa"
+                :buttons="['delete']"
               />
             </section>
           </div>
@@ -68,36 +63,29 @@
 </template>
 
 <script setup>
-import ovitrampaService from '@/services/cadastro/ovitrampa.service'
+import avulsosService from '@/services/gerenciamento/avulsos.service.js'
 import MyDataTable from '@/components/general/MyDataTable.vue'
-import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
-import { ref, onMounted, reactive } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, reactive, watch } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 
 const { currentUser } = useCurrentUser()
 
-const router = useRouter()
 const toast = useToast()
 
 var tpUser = ref(0)
-
-var isLoading = ref(false)
-const STORAGE_KEY = 'consulta-ovitrampasw'
-
-var confirmDialog = ref(null)
-
-var id_municipio = ref(0)
-var hasRows = ref(false)
-var dataTable = ref([])
 const idUser = ref(0)
 
-const filter = reactive({
-  id_municipio,
-})
+var confirmDialog = ref(null)
+var isLoading = ref(false)
+
+var hasRows = ref(false)
+var dataTable = ref([])
+var areas = ref([])
+
+const ano = ref([])
 
 const columns = ref([])
 
@@ -108,14 +96,12 @@ function newFilter() {
 async function loadData() {
   try {
     isLoading.value = true
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await ovitrampaService.getOvitrampas(JSON.stringify(filter))
+    const result = await avulsosService.getDuplicaOvi(ano.value)
     if (result.error) {
       console.log(result.error)
     } else {
       dataTable.value = result.data.rows
-      columns.value = result.data.cols
       hasRows.value = true
     }
   } finally {
@@ -123,35 +109,37 @@ async function loadData() {
   }
 }
 
-async function onEditRow(item) {
-  router.push(`/ovitrampa/${item.row.id}`)
-}
-
-async function onDeleteRow(item) {
+async function processa(item) {
   const ok = await confirmDialog.value.show({
-    title: 'Excluir',
-    message: 'Deseja mesmo excluir essa Ovitrampa?',
+    title: 'Transferência',
+    message: `Remover automaticamente os registros duplicados desse município! Confirma?`,
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await ovitrampaService.delete(item.row.id)
+    const resultado = await avulsosService.trocaOvi({
+      id_municipio: item.row.id_municipio,
+      ano: ano.value,
+    })
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
-      toast.success('Registro excluído com sucesso!')
+      toast.success(`Remoção de duplicatas efetivada!!`)
+      loadData()
     }
   }
 }
 
 onMounted(() => {
-  const saved = localStorage.getItem(STORAGE_KEY)
-  if (saved) {
-    Object.assign(filter, JSON.parse(saved))
-  }
+  columns.value = [
+    { headerName: 'Municipio', field: 'municipio' },
+    { headerName: 'Quantidade de Duplicidades', field: 'quantidade' },
+    { headerName: 'ID', field: 'id_municipio', hide: true },
+    { headerName: 'Proprietário', field: 'owner_id', hide: true },
+  ]
 
   let cUser = currentUser
   if (cUser.value) {
-    idUser.value = cUser.value.id
+    idUser.value = cUser.value
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

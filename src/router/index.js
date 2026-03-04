@@ -10,6 +10,7 @@ import mobileRoutes from './mobileRoutes'
 import reportRoutes from './reportRoutes'
 import forumRoutes from './forumRoutes'
 import utilitariosRoutes from './utilitariosRoutes'
+import downloadRoutes from './downloadRoutes'
 
 const routes = [
   ...authRoutes,
@@ -20,6 +21,7 @@ const routes = [
   ...reportRoutes,
   ...forumRoutes,
   ...utilitariosRoutes,
+  ...downloadRoutes,
   {
     path: '/acesso-negado',
     name: 'AcessoNegado',

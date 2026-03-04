@@ -3,7 +3,7 @@
     <div class="modal-content">
       <slot></slot>
 
-      <div class="modal-actions">
+      <div class="modal-actions" v-if="hasAction">
         <button class="button is-success" @click="confirm">Confirmar</button>
         <button class="button is-danger" @click="cancel">Cancelar</button>
       </div>
@@ -12,14 +12,21 @@
 </template>
 
 <script setup>
-const emit = defineEmits(['confirm', 'cancel']);
+const emit = defineEmits(['confirm', 'cancel'])
+
+const props = defineProps({
+  hasAction: {
+    type: Boolean,
+    default: true,
+  },
+})
 
 function confirm() {
-  emit('confirm');
+  emit('confirm')
 }
 
 function cancel() {
-  emit('cancel');
+  emit('cancel')
 }
 </script>
 

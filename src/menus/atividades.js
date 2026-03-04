@@ -275,42 +275,42 @@ export const atividadesMenu = [
       },
     ],
   },
-  /*{
-    href: "",
-    title: "BRI",
+  {
+    href: '',
+    title: 'Atividades Pontuais',
     icon: {
-      element: "font-awesome-icon",
+      element: 'font-awesome-icon',
       attributes: {
-        icon: "fa-solid fa-spray-can",
-        size: "lg",
-        transform: "shrink-8",
+        icon: 'fa-solid fa-spray-can',
+        size: 'lg',
+        transform: 'shrink-8',
       },
     },
     child: [
       {
-        href: "/vcBri",
-        title: "Nova",
+        href: '/pontual/0',
+        title: 'Nova',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-plus",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
       {
-        href: "/vcBris",
-        title: "Consultar",
+        href: '/pontuais',
+        title: 'Consultar',
         icon: {
-          element: "font-awesome-icon",
+          element: 'font-awesome-icon',
           attributes: {
-            icon: "fa-solid fa-search",
-            size: "lg",
-            transform: "shrink-8",
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
           },
         },
       },
     ],
-  },*/
+  },
 ]

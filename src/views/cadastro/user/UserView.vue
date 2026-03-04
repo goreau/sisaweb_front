@@ -301,8 +301,8 @@ async function save() {
       msg = 'Usuário inserido com sucesso!'
     }
 
-    if (resultado.error) {
-      toast.error(resultado.msg)
+    if (resultado.msg.error) {
+      toast.error(resultado.msg.msg)
     } else {
       toast.success(msg)
     }

@@ -195,9 +195,9 @@ async function onReset(item) {
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resp = authService.restart(item.row)
+    const resp = await authService.restart(item.row)
     if (resp.error) {
-      toast.error(resp.error)
+      toast.error(resp.msg)
     } else {
       toast.success('Usuário reiniciado com sucesso!')
     }

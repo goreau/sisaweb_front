@@ -5,14 +5,14 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Ovitrampas</p>
+            <p class="card-header-title is-centered">Chaves Cadastradas</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
+            <button class="button is-primary is-outlined" @click="newReg">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-plus-circle" />
               </span>
@@ -27,9 +27,9 @@
                     <label class="label">Município</label>
                     <div class="control">
                       <CmbTerritorio
-                        v-enter-to-next="'form-ovi'"
                         v-model:sel="id_municipio"
                         :tipo="99"
+                        v-enter-to-next="'form-ciclo'"
                       />
                     </div>
                   </div>
@@ -50,13 +50,12 @@
             <section v-if="hasRows">
               <MyDataTable
                 :loggedUser="{ id: idUser, tipo: tpUser }"
+                :buttons="['edit', 'delete']"
                 :data="dataTable"
                 :columns="columns"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
-                :buttons="['edit', 'delete']"
-                :has-exports="true"
               />
             </section>
           </div>
@@ -68,7 +67,6 @@
 </template>
 
 <script setup>
-import ovitrampaService from '@/services/cadastro/ovitrampa.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
@@ -77,6 +75,7 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
+import contaOvosService from '@/services/gerenciamento/contaOvos.service'
 
 const { currentUser } = useCurrentUser()
 
@@ -85,12 +84,12 @@ const toast = useToast()
 
 var tpUser = ref(0)
 
-var isLoading = ref(false)
-const STORAGE_KEY = 'consulta-ovitrampasw'
-
 var confirmDialog = ref(null)
+var isLoading = ref(false)
+const STORAGE_KEY = 'consulta-contaovossw'
 
 var id_municipio = ref(0)
+
 var hasRows = ref(false)
 var dataTable = ref([])
 const idUser = ref(0)
@@ -110,7 +109,7 @@ async function loadData() {
     isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await ovitrampaService.getOvitrampas(JSON.stringify(filter))
+    const result = await contaOvosService.getContaOvosList(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
@@ -124,23 +123,28 @@ async function loadData() {
 }
 
 async function onEditRow(item) {
-  router.push(`/ovitrampa/${item.row.id}`)
+  router.push(`/contaOvos/${item.row.id}`)
 }
 
 async function onDeleteRow(item) {
   const ok = await confirmDialog.value.show({
     title: 'Excluir',
-    message: 'Deseja mesmo excluir essa Ovitrampa?',
+    message: 'Deseja mesmo excluir esse município?',
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await ovitrampaService.delete(item.row.id)
+    const resultado = await contaOvosService.delete(item.row.id)
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
-      toast.success('Registro excluído com sucesso!')
+      toast.success('Município excluído com sucesso!')
+      loadData()
     }
   }
+}
+
+function newReg() {
+  router.push(`/contaOvos/0`)
 }
 
 onMounted(() => {

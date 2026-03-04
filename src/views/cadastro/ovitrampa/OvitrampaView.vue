@@ -152,7 +152,7 @@
             </div>
             <hr />
             <div class="columns">
-              <div class="column is-4">
+              <div class="column is-3">
                 <div class="content">
                   <label class="label">Motivo</label>
                   <div class="control">
@@ -168,7 +168,7 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-4">
+              <div class="column is-3">
                 <div class="content">
                   <label class="label">Periodicidade</label>
                   <div class="control">
@@ -184,7 +184,7 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-3 is-offset-1">
+              <div class="column is-2 is-offset-1">
                 <div class="field">
                   <label class="label">&nbsp;</label>
                   <label class="checkbox">
@@ -197,6 +197,22 @@
                       :false-value="0"
                     />
                     Prioritário
+                  </label>
+                </div>
+              </div>
+              <div class="column is-2 is-offset-1">
+                <div class="field">
+                  <label class="label">&nbsp;</label>
+                  <label class="checkbox">
+                    <input
+                      v-enter-to-next="'form-imovel'"
+                      type="checkbox"
+                      value="1"
+                      v-model="ovitrampa.inativo"
+                      :true-value="1"
+                      :false-value="0"
+                    />
+                    Inativo
                   </label>
                 </div>
               </div>
@@ -311,6 +327,7 @@ var ovitrampa = reactive({
   periodicidade: 0,
   prioritario: 0,
   motivo: 0,
+  inativo: 0,
 })
 
 var cFooter = ref({

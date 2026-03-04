@@ -125,22 +125,17 @@ export default [
     meta: { onlyUser: true },
   },
   {
-    path: '/vcBri',
-    name: 'vcBri',
-    component: () => import(/* webpackChunkName: "user" */ '@/views/atividade/bri/vcBriView.vue'),
-    meta: { onlyUser: true },
-  },
-  {
-    path: '/imBri',
-    name: 'imBri',
-    component: () => import(/* webpackChunkName: "user" */ '@/views/atividade/bri/imBriView.vue'),
-    meta: { onlyUser: true },
-  },
-  {
-    path: '/vcBris',
-    name: 'vcBris',
+    path: '/pontual/:id',
+    name: 'pontual',
     component: () =>
-      import(/* webpackChunkName: "user" */ '@/views/atividade/bri/ListVcBriView.vue'),
+      import(/* webpackChunkName: "user" */ '@/views/atividade/pontual/pontualView.vue'),
+    meta: { onlyUser: true },
+  },
+  {
+    path: '/pontuais',
+    name: 'pontuais',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/atividade/pontual/listPontualView.vue'),
     meta: { onlyUser: true },
   },
   {

@@ -330,6 +330,8 @@ async function loadCombos() {
     { id: 1, nome: 'Estado' },
     { id: 2, nome: 'Município' },
     { id: 3, nome: 'ACS' },
+    { id: 0, nome: 'Todas' },
+    { id: 9, nome: 'Todas Municipais' },
   ]
 
   tipos_rel.value = [

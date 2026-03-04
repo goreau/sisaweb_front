@@ -1,9 +1,9 @@
 import axios from '@/services/api.js'
 
-class OvitrampaService {
+class VcOvitrampaService {
   async create(data) {
     try {
-      const res = await axios.post('/api/cadastro/ovitrampa', data)
+      const res = await axios.post('/api/atividades/pontual', data)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -14,9 +14,9 @@ class OvitrampaService {
     }
   }
 
-  async getOvitrampa(id) {
+  async getPontual(id) {
     try {
-      const res = await axios.get(`/api/cadastro/ovitrampa/${id}`)
+      const res = await axios.get(`/api/atividades/pontual/${id}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -29,7 +29,7 @@ class OvitrampaService {
 
   async update(data) {
     try {
-      const res = await axios.put('/api/cadastro/ovitrampa', data)
+      const res = await axios.put('/api/atividades/pontual', data)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -42,7 +42,7 @@ class OvitrampaService {
 
   async delete(id) {
     try {
-      const res = await axios.delete(`/api/cadastro/ovitrampa/${id}`)
+      const res = await axios.delete(`/api/atividades/pontual/${id}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -53,9 +53,9 @@ class OvitrampaService {
     }
   }
 
-  async getOvitrampas(filter) {
+  async getPontuals(filter) {
     try {
-      const res = await axios.get(`/api/cadastro/ovitrampas/${filter}`)
+      const res = await axios.get(`/api/atividades/pontuals/${filter}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -68,33 +68,7 @@ class OvitrampaService {
 
   async getCombo(filter) {
     try {
-      const res = await axios.get(`/api/cadastro/comboOvitrampa/${filter}`)
-      return res.data
-    } catch (error) {
-      if (error.response && error.response.data) {
-        return error.response.data
-      } else {
-        return { error: true, msg: 'Erro de comunicação com o servidor.' }
-      }
-    }
-  }
-
-  async getDuplica(filter) {
-    try {
-      const res = await axios.get(`/api/cadastro/duplicaOvitrampa/${filter}`)
-      return res.data
-    } catch (error) {
-      if (error.response && error.response.data) {
-        return error.response.data
-      } else {
-        return { error: true, msg: 'Erro de comunicação com o servidor.' }
-      }
-    }
-  }
-
-  async troca(data) {
-    try {
-      const res = await axios.post('/api/cadastro/trocaOvitrampa', data)
+      const res = await axios.get(`/api/atividades/comboPontual/${filter}`)
       return res.data
     } catch (error) {
       if (error.response && error.response.data) {
@@ -106,4 +80,4 @@ class OvitrampaService {
   }
 }
 
-export default new OvitrampaService()
+export default new VcOvitrampaService()

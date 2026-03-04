@@ -24,6 +24,7 @@ import {
   faFileExcel,
   faFileCsv,
   faFileLines,
+  faFileText,
   faHouse,
   faUser,
   faUsers,
@@ -74,6 +75,9 @@ import {
   faPeopleArrows,
   faTrashCan,
   faToolbox,
+  faBraille,
+  faDownload,
+  faX,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { EnterToNext } from './directives/EnterToNext'
@@ -85,6 +89,7 @@ library.add(
   faFileExcel,
   faFileCsv,
   faFileLines,
+  faFileText,
   faHouse,
   faUser,
   faUsers,
@@ -135,6 +140,9 @@ library.add(
   faPeopleArrows,
   faTrashCan,
   faToolbox,
+  faBraille,
+  faDownload,
+  faX,
 )
 
 const options = {

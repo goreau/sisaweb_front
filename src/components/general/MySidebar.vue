@@ -27,8 +27,9 @@ watch(
   () => route.path,
   (newPath) => {
     showMenu.value = !['/', '/login', '/forgot', '/reset'].includes(newPath)
+    console.log(newPath)
   },
-  { immediate: true }
+  { immediate: true },
 )
 </script>
 

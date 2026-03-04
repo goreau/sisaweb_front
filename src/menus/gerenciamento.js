@@ -1,3 +1,15 @@
+/*import { useCurrentUser } from '@/composables/currentUser'
+
+const { currentUser } = useCurrentUser()
+var notAdm = false
+
+let cUser = currentUser
+if (cUser.value) {
+  notAdm = cUser.value.tipo > 1
+}*/
+
+var notAdm = false
+
 export const gerenciamentoMenu = [
   {
     href: '',
@@ -124,6 +136,42 @@ export const gerenciamentoMenu = [
         },
       },
       {
+        href: '/duplicaCadOvi',
+        title: 'Ovitrampa (Cadastro)',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/duplicaCadastroOvi',
+        title: 'Ovitrampa (Cadastro - Lista)',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/duplicaOvitrampa',
+        title: 'Ovitrampa (Pesquisa)',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
         href: '/duplicauser',
         title: 'Usuário Ativo',
         icon: {
@@ -180,6 +228,69 @@ export const gerenciamentoMenu = [
           element: 'font-awesome-icon',
           attributes: {
             icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/trocaUserCadParc',
+        title: 'Cadastros - Parcial',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+    ],
+  },
+  {
+    href: '',
+    title: 'Conta Ovos',
+    disabled: notAdm,
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-braille',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: [
+      {
+        href: '/contaOvos/0',
+        title: 'Novo',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/contaOvoss',
+        title: 'Consultar',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-search',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/contaOvosLogs',
+        title: 'Logs de Envio',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-file-text',
             size: 'lg',
             transform: 'shrink-8',
           },

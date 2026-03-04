@@ -4,7 +4,7 @@
       <p>{{ title }}</p>
     </div>
     <div class="corpo">
-      <p>{{ message }}</p>
+      <p v-html="message"></p>
     </div>
     <div class="btns">
       <button class="button conf-btn" @click="confirm">{{ okButton }}</button>
@@ -14,20 +14,20 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
+import { ref } from 'vue'
 import PopupModal from './PopupModal.vue'
 
-const popup = ref(null);
+const popup = ref(null)
 // Parameters that change depending on the type of dialogue
-var title = ref(undefined);
-var message = ref(undefined); // Main text content
-var okButton = ref(undefined); // Text for confirm button; leave it empty because we don't know what we're using it for
-var cancelButton = ref('Cancelar'); // text for cancel button
+var title = ref(undefined)
+var message = ref(undefined) // Main text content
+var okButton = ref(undefined) // Text for confirm button; leave it empty because we don't know what we're using it for
+var cancelButton = ref('Cancelar') // text for cancel button
 
 // Private variables
 //var resolvePromise = ref(undefined);
 //var rejectPromise = ref(undefined);
-let resolvePromise;
+let resolvePromise
 
 function show(opts = {}) {
   title.value = opts.title
@@ -41,14 +41,14 @@ function show(opts = {}) {
   popup.value.open()
   // Return promise so the caller can get results
   return new Promise((resolve) => {
-    resolvePromise = resolve;
+    resolvePromise = resolve
   })
 }
 
 defineExpose({
   show,
   confirm,
-  cancel
+  cancel,
 })
 
 function confirm() {
@@ -65,21 +65,21 @@ function cancel() {
 <style scoped>
 .titule {
   margin-top: 0;
-  padding: .5rem .3rem;
+  padding: 0.5rem 0.3rem;
   border-bottom: 1px solid rgb(50, 50, 104);
 }
 
 .titule p {
   font-size: large;
   font-weight: bold;
-  padding: .5rem;
+  padding: 0.5rem;
 }
 
 .btns {
   display: flex;
   flex-direction: row;
   justify-content: space-between;
-  padding: 1rem 15% .2rem 15%;
+  padding: 1rem 15% 0.2rem 15%;
 }
 
 .corpo {

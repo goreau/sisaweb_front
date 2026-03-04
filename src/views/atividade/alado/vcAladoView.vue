@@ -93,7 +93,7 @@
                 </div>
               </div>
             </div>
-            <section v-if="vc_alado.ref_ativ == 4">
+            <section v-if="vc_alado.ref_ativ == 9">
               <div class="columns">
                 <div class="column is-4">
                   <div class="content">

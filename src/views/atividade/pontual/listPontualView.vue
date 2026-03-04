@@ -5,7 +5,7 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Ovitrampas</p>
+            <p class="card-header-title is-centered">Visitas Pontuais</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
@@ -28,8 +28,36 @@
                     <div class="control">
                       <CmbTerritorio
                         v-enter-to-next="'form-ovi'"
-                        v-model:sel="id_municipio"
                         :tipo="99"
+                        v-model:sel="filter.id_municipio"
+                      />
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="columns">
+                <div class="column is-3 is-offset-3">
+                  <div class="field">
+                    <label class="label">Data Inicial</label>
+                    <div class="control">
+                      <DatePicker
+                        v-enter-to-next="'form-ovi'"
+                        v-model="filter.dt_inicial"
+                        :error="false"
+                        placeholder="Escolha a data"
+                      />
+                    </div>
+                  </div>
+                </div>
+                <div class="column is-3">
+                  <div class="field">
+                    <label class="label">Data Final</label>
+                    <div class="control">
+                      <DatePicker
+                        v-enter-to-next="'form-ovi'"
+                        v-model="filter.dt_final"
+                        :error="false"
+                        placeholder="Escolha a data"
                       />
                     </div>
                   </div>
@@ -49,9 +77,9 @@
             </section>
             <section v-if="hasRows">
               <MyDataTable
-                :loggedUser="{ id: idUser, tipo: tpUser }"
                 :data="dataTable"
                 :columns="columns"
+                :logged-user="idUser"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
@@ -59,6 +87,14 @@
                 :has-exports="true"
               />
             </section>
+            <div style="display: none">
+              <span class="icon is-small is-left" ref="myspan">
+                <font-awesome-icon icon="fa-solid fa-edit" />
+              </span>
+              <span class="icon is-small is-left" ref="myspan2">
+                <font-awesome-icon icon="fa-solid fa-trash" />
+              </span>
+            </div>
           </div>
         </div>
       </div>
@@ -68,36 +104,40 @@
 </template>
 
 <script setup>
-import ovitrampaService from '@/services/cadastro/ovitrampa.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
+import DatePicker from '@/components/forms/MyDatePicker.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
+import pontualService from '@/services/atividade/pontual.service'
 
 const { currentUser } = useCurrentUser()
 
 const router = useRouter()
 const toast = useToast()
 
+const idUser = ref(0)
 var tpUser = ref(0)
-
 var isLoading = ref(false)
-const STORAGE_KEY = 'consulta-ovitrampasw'
+const STORAGE_KEY = 'consulta-vcovitrampasw'
 
 var confirmDialog = ref(null)
 
-var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
-const idUser = ref(0)
 
 const filter = reactive({
-  id_municipio,
+  id_municipio: 0,
+  dt_inicial: '',
+  dt_final: '',
 })
+
+var myspan = ref(null)
+var myspan2 = ref(null)
 
 const columns = ref([])
 
@@ -110,7 +150,7 @@ async function loadData() {
     isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await ovitrampaService.getOvitrampas(JSON.stringify(filter))
+    const result = await pontualService.getPontuals(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
@@ -124,21 +164,22 @@ async function loadData() {
 }
 
 async function onEditRow(item) {
-  router.push(`/ovitrampa/${item.row.id}`)
+  router.push(`/pontual/${item.row.id}`)
 }
 
 async function onDeleteRow(item) {
   const ok = await confirmDialog.value.show({
     title: 'Excluir',
-    message: 'Deseja mesmo excluir essa Ovitrampa?',
+    message: 'Deseja mesmo excluir essa visita?',
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await ovitrampaService.delete(item.row.id)
+    const resultado = await vc_ovitrampaService.delete(item.row.id)
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
-      toast.success('Registro excluído com sucesso!')
+      toast.success('Visiita excluída com sucesso!')
+      loadData()
     }
   }
 }
@@ -151,7 +192,7 @@ onMounted(() => {
 
   let cUser = currentUser
   if (cUser.value) {
-    idUser.value = cUser.value.id
+    idUser.value = cUser.value
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
       loadData()

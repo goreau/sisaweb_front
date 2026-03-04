@@ -87,7 +87,7 @@ export const reportMenu = [
     child: [
       {
         href: '/mainReport/controle/ctResumoVC',
-        title: 'Resumo de Visita a Imóveis',
+        title: 'Resumo Vis. a Imóveis',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -99,7 +99,7 @@ export const reportMenu = [
       },
       {
         href: '/mainReport/controle/ctResumoIC',
-        title: 'Resumo de Imóveis Cadastrados',
+        title: 'Resumo Im. Cadastrados',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -111,7 +111,7 @@ export const reportMenu = [
       },
       {
         href: '/mainReport/controle/ctPositividadeIC',
-        title: 'Positividade de Imóveis Cadastrados',
+        title: 'Posit. Imóveis Cadastrados',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -123,7 +123,7 @@ export const reportMenu = [
       },
       {
         href: '/mainReport/controle/ctListaIC',
-        title: 'Listagem de Imóveis Cadastrados',
+        title: 'Lista Imóveis Cadastrados',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -147,7 +147,7 @@ export const reportMenu = [
       },
       {
         href: '/mainReport/controle/ctCoberturaCad',
-        title: 'Cobertura de Imóveis Cadastrados',
+        title: 'Cob. Imóveis Cadastrados',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -172,6 +172,30 @@ export const reportMenu = [
       {
         href: '/mainReport/controle/ctMensalIC',
         title: 'Mensal Imóveis Cadastrados',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/controle/resumoRecVC',
+        title: 'Recipientes - Vigilância e Controle ',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/controle/resumoRecIC',
+        title: 'Recipientes - Imóveis Cadastrados ',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -222,6 +246,30 @@ export const reportMenu = [
       {
         href: '/mainReport/adl/adlValidacao',
         title: 'Validação de ADL',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/adl/adlGrupoRec',
+        title: 'Grupo de Recipientes',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/adl/adlResumoRec',
+        title: 'Resumo de Recipientes',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -433,6 +481,68 @@ export const reportMenu = [
       },
       {
         href: '/mainReport/edl/Mensal',
+        title: 'Mensal',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+    ],
+  },
+  {
+    href: '',
+    title: 'Ovitrampa',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-square-virus',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: [
+      {
+        href: '/mainReport/ovitrampa/resumoOvi',
+        title: 'Resumo',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/ovitrampa/listagemOvi',
+        title: 'Listagem',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/ovitrampa/ovosSemana',
+        title: 'Ovos por semana',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/ovitrampa/oviMensal',
         title: 'Mensal',
         icon: {
           element: 'font-awesome-icon',
