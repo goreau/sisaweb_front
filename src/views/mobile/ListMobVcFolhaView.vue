@@ -48,6 +48,20 @@
                 </div>
               </div>
               <div class="columns">
+                <div class="column is-4 is-offset-4">
+                  <div class="field">
+                    <label class="label">Agente</label>
+                    <input
+                      type="text"
+                      class="input"
+                      name="agente"
+                      id="agente"
+                      v-model="filter.agente"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div class="columns">
                 <div class="column is-3 is-offset-3">
                   <div class="field">
                     <label class="label">Data Inicial</label>
@@ -159,6 +173,7 @@ const tabelaRef = ref(null)
 const filter = reactive({
   id_municipio: 0,
   id_atividade: 0,
+  agente: '',
   dt_inicial: '',
   dt_final: '',
 })

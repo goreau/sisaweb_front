@@ -142,4 +142,10 @@ export default [
         /* webpackChunkName: "user" */ '@/views/gerenciamento/contaOvos/ListContaOvosView.vue'
       ),
   },
+  {
+    path: '/contaOvosAdm',
+    name: 'contaovosadm',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/gerenciamento/contaOvos/AdmContaOvosView.vue'),
+  },
 ]

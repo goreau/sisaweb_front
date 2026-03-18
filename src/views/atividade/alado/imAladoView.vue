@@ -597,7 +597,7 @@ var imovel = reactive({
   amostra: '',
   aegypti: 0,
   albopictus: 0,
-  pupa_aegypti: '',
+  pupa_aegypti: 0,
   pupa_albopictus: 0,
   intra_amostra: '',
   intra_aeg_macho: 0,

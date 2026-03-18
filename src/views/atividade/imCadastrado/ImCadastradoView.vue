@@ -390,7 +390,8 @@
               v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
-              @cancel="null"
+              @cancel="cancel"
+              customBack="true"
               @aux="recipientes"
               :cFooter="cFooter"
             />
@@ -510,6 +511,10 @@ async function recipientes() {
   }
 }
 
+async function cancel() {
+  router.push({ name: 'imCadastrados' })
+}
+
 function canSend() {
   readyToGo.value = true
 }
@@ -531,6 +536,7 @@ async function save() {
     if (resultado.status) {
       vc_imovel.id_vc_imovel = resultado.master
       toast.success(resultado.msg)
+      limpa()
     } else {
       toast.error(resultado.error.msg)
     }
@@ -539,33 +545,47 @@ async function save() {
   }
 }
 
+function limpa() {
+  vc_imovel.id_vc_imovel = 0
+  vc_imovel.id_imovel = 0
+  vc_imovel.alternativo = 0
+  vc_imovel.mecanico = 0
+  vc_imovel.focal = 0
+  vc_imovel.perifocal = 0
+  vc_imovel.nebulizacao = 0
+  vc_imovel.br_aedes = 0
+  vc_imovel.qt_focal = 0
+  vc_imovel.qt_peri = 0
+  vc_imovel.qt_neb = 0
+  vc_imovel.qt_br = 0
+  vc_imovel.recipientes = []
+  loadImoveis()
+  store.setVisita({ ...vc_imovel })
+}
+
+async function loadImoveis() {
+  if (vc_imovel.id_municipio == 0 || vc_imovel.id_atividade == 0) return
+  const filter = { id_municipio: vc_imovel.id_municipio, id_atividade: vc_imovel.id_atividade }
+  const result = await imovelService.getCombo(JSON.stringify(filter))
+  if (result.error) {
+    console.log(result.error)
+    imoveis.value = []
+  } else {
+    imoveis.value = result
+  }
+}
+
 watch(
   () => vc_imovel.id_atividade,
-  async (val) => {
-    if (vc_imovel.id_municipio == 0) return
-    const filter = { id_municipio: vc_imovel.id_municipio, id_atividade: val }
-    const result = await imovelService.getCombo(JSON.stringify(filter))
-    if (result.error) {
-      console.log(result.error)
-      imoveis.value = []
-    } else {
-      imoveis.value = result
-    }
+  async () => {
+    await loadImoveis()
   },
 )
 
 watch(
   () => vc_imovel.id_municipio,
-  async (val) => {
-    if (vc_imovel.id_atividade == 0) return
-    const filter = { id_municipio: vc_imovel.id_municipio, id_atividade: val }
-    const result = await imovelService.getCombo(JSON.stringify(filter))
-    if (result.error) {
-      console.log(result.error)
-      imoveis.value = []
-    } else {
-      imoveis.value = result
-    }
+  async () => {
+    await loadImoveis()
   },
 )
 
@@ -649,7 +669,11 @@ watch(
 )
 
 onMounted(async () => {
-  if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
+  if (route.query.returnFrom === 'recipiente') {
+    store.visita.id_municipio = Number(store.visita.id_municipio)
+    Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
+    save()
+  } else if (route.query.from === 'edit') {
     readyToGo.value = true
     store.visita.id_municipio = Number(store.visita.id_municipio)
     Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))

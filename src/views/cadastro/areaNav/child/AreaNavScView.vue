@@ -44,7 +44,7 @@
             <br />
             <div class="columns">
               <div class="column is-6 is-offset-3">
-                <button class="button is-link aux-btn is-fullwidth" @click="insert">Inserir</button>
+                <button class="button is-link aux-btn is-fullwidth" @click="insert">Incluir</button>
               </div>
             </div>
             <hr />
@@ -145,7 +145,7 @@ var caption = ref('')
 var type = ref('')
 var showMessage = ref(false)
 var cFooter = ref({
-  strSubmit: 'Inserir',
+  strSubmit: 'Salvar',
   strCancel: 'Voltar',
   strAux: '',
   aux: false,

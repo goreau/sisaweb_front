@@ -90,7 +90,8 @@
               v-enter-to-next="'submit-action'"
               @submit="create"
               :ready="readyToGo"
-              @cancel="null"
+              @cancel="cancel"
+              customBack="true"
               @aux="details"
               :cFooter="cFooter"
             />
@@ -168,6 +169,20 @@ function details() {
 
 const isEditMode = computed(() => Number(areaNav.id_area_nav) > 0)
 
+async function cancel() {
+  router.push({ name: 'areanavs' })
+}
+
+async function limpar() {
+  areaNav.id_area_nav = 0
+  areaNav.area = ''
+  areaNav.descricao = ''
+  areaNav.percurso = ''
+  areaNav.filhos = []
+
+  store.setObjeto({ ...areaNav })
+}
+
 async function create() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -185,6 +200,7 @@ async function create() {
     } else {
       areaNav.id_area_nav = resultado.master
       toast.success(msg)
+      limpar()
     }
   } else {
     toast.warning('Corrija os erros para enviar as informações')
@@ -196,7 +212,10 @@ const readyToGo = computed(() => {
 })
 
 onMounted(() => {
-  if (route.query.returnFrom === 'filho' || route.query.from === 'edit') {
+  if (route.query.returnFrom === 'filho') {
+    Object.assign(areaNav, JSON.parse(JSON.stringify(store.objetoPrincipal)))
+    create()
+  } else if (route.query.from === 'edit') {
     console.log(store.objetoPrincipal)
     Object.assign(areaNav, JSON.parse(JSON.stringify(store.objetoPrincipal)))
   } else {

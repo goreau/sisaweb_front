@@ -250,7 +250,7 @@ export const gerenciamentoMenu = [
   {
     href: '',
     title: 'Conta Ovos',
-    disabled: notAdm,
+    requiresAdmin: true,
     icon: {
       element: 'font-awesome-icon',
       attributes: {
@@ -262,7 +262,7 @@ export const gerenciamentoMenu = [
     child: [
       {
         href: '/contaOvos/0',
-        title: 'Novo',
+        title: 'Novo Município',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -274,7 +274,7 @@ export const gerenciamentoMenu = [
       },
       {
         href: '/contaOvoss',
-        title: 'Consultar',
+        title: 'Consultar Municípios',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
@@ -287,6 +287,18 @@ export const gerenciamentoMenu = [
       {
         href: '/contaOvosLogs',
         title: 'Logs de Envio',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-file-text',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/contaOvosAdm',
+        title: 'Ferramentas',
         icon: {
           element: 'font-awesome-icon',
           attributes: {

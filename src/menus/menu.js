@@ -9,7 +9,7 @@ import { referenciaMenu } from './referencia.js'
 import { ajudaMenu } from './ajuda.js'
 import { utilitariosMenu } from './utilitarios.js'
 
-export const menuData = [
+export const originalMenuData = [
   {
     hiddenOnCollapse: true,
   },

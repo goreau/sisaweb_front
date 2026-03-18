@@ -273,6 +273,8 @@ const readyToGo = computed(() => {
   return Array.isArray(store.objetoBri?.imoveis) && store.objetoBri.imoveis.length > 0
 })
 
+async function limpa() {}
+
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -349,8 +351,11 @@ watch(
 )
 
 onMounted(async () => {
-  if (route.query.returnFrom === 'imoveis' || route.query.from === 'edit') {
-    console.log(store.objetoBri)
+  if (route.query.returnFrom === 'imoveis') {
+    // readyToGo.value = true
+    Object.assign(vc_bri, JSON.parse(JSON.stringify(store.objetoBri)))
+    save()
+  } else if (route.query.from === 'edit') {
     readyToGo.value = true
     Object.assign(vc_bri, JSON.parse(JSON.stringify(store.objetoBri)))
   } else {

@@ -14,11 +14,38 @@
 import { SidebarMenu } from 'vue-sidebar-menu'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { menuData } from '@/menus/menu'
+import { originalMenuData } from '@/menus/menu'
+import { useCurrentUser } from '@/composables/currentUser'
 
 const route = useRoute()
 const showMenu = ref(false)
 const collapsed = ref(true)
+const menuData = ref([])
+
+const { currentUser } = useCurrentUser()
+var isAdmin = false
+
+let cUser = currentUser
+if (cUser.value) {
+  isAdmin = cUser.value.tipo == 1
+}
+
+const processMenu = (items) => {
+  return items.map((item) => {
+    // 1. Verifica se o item atual deve ser desabilitado/escondido
+    const isDisabled = item.requiresAdmin && !isAdmin
+
+    // 2. Se o item tem filhos, processa eles recursivamente
+    const updatedChildren =
+      item.child && item.child.length > 0 ? processMenu(item.child) : item.child
+
+    return {
+      ...item,
+      disabled: isDisabled,
+      child: updatedChildren,
+    }
+  })
+}
 
 function onToggleCollapse(c) {
   collapsed.value = c
@@ -27,7 +54,8 @@ watch(
   () => route.path,
   (newPath) => {
     showMenu.value = !['/', '/login', '/forgot', '/reset'].includes(newPath)
-    console.log(newPath)
+
+    menuData.value = processMenu(originalMenuData)
   },
   { immediate: true },
 )

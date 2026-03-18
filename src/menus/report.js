@@ -344,6 +344,18 @@ export const reportMenu = [
         },
       },
       {
+        href: '/mainReport/alado/aladoIndicadores',
+        title: 'Indicadores',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
         href: '/mainReport/alado/aladoMensal',
         title: 'Mensal de Capturas',
         icon: {

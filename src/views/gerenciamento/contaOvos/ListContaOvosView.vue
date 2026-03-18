@@ -82,7 +82,8 @@ const { currentUser } = useCurrentUser()
 const router = useRouter()
 const toast = useToast()
 
-var tpUser = ref(0)
+const idUser = ref(0)
+const tpUser = ref(0)
 
 var confirmDialog = ref(null)
 var isLoading = ref(false)
@@ -92,7 +93,6 @@ var id_municipio = ref(0)
 
 var hasRows = ref(false)
 var dataTable = ref([])
-const idUser = ref(0)
 
 const filter = reactive({
   id_municipio,

@@ -12,7 +12,7 @@
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
+            <button class="button is-primary is-outlined" @click="newReg">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-plus-circle" />
               </span>
@@ -141,6 +141,10 @@ function newFilter() {
   hasRows.value = false
 }
 
+function newReg() {
+  router.push(`/vigLinha`)
+}
+
 async function loadData() {
   try {
     isLoading.value = true
@@ -208,15 +212,6 @@ onMounted(() => {
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
-
-  /* columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Quarteirão', field: 'quarteirao' },
-    { headerName: 'Tipo', field: 'atividade' },
-    { headerName: 'Data', field: 'data' },
-    { headerName: 'Responsável', field: 'owner' },
-    { headerName: 'OwnerId', field: 'owner_id', hide: true },
-  ]*/
 
   let cUser = currentUser
   if (cUser.value) {

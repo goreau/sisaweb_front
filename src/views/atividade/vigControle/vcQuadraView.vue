@@ -659,12 +659,12 @@
               </div>
             </div>
           </div>
-          {{ navs }}
           <footer class="card-footer">
             <footerCard
               v-enter-to-next="'submit-action'"
               @submit="save"
-              @cancel="null"
+              @cancel="cancel"
+              customBack="true"
               @aux="null"
               :cFooter="cFooter"
             />
@@ -722,6 +722,8 @@ var vc_linha = reactive({
   id_atividade: 0,
   id_execucao: 0,
   id_area_nav: 0,
+  id_area: 0,
+  id_censitario: 0,
   id_quarteirao: 0,
   id_tipo: 0,
   trab: 0,
@@ -827,6 +829,10 @@ watch(filtro, async ([novo1, novo2]) => {
   }
 })
 
+function cancel() {
+  router.push(`/vigLinhas`)
+}
+
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -836,6 +842,7 @@ async function save() {
     if (resultado.status) {
       vc_linha.id_vc_linha = resultado.master
       toast.success(resultado.msg)
+      //await limpar()
     } else {
       toast.error(resultado.error.msg)
     }

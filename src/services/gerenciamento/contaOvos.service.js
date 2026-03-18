@@ -126,6 +126,102 @@ class ContaOvosService {
       }
     }
   }
+
+  async getTesteCron() {
+    try {
+      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/testecron`
+      console.log(link)
+      console.log(`Bearer ${import.meta.env.VITE_SISAPI_KEY}`)
+
+      let config = {
+        method: 'get',
+        maxBodyLength: Infinity,
+        url: link,
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+        },
+      }
+
+      const response = await axios.request(config)
+
+      return response.data
+    } catch (error) {
+      const mensagemErro = error.response?.data || 'Erro desconhecido'
+
+      // Retornamos um objeto que seu componente saiba ler como erro
+      return { error: true, msg: mensagemErro }
+    }
+  }
+
+  async postManual(data) {
+    try {
+      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/postManual`
+
+      // Se o backend exige form-urlencoded, precisamos transformar o objeto
+      const params = new URLSearchParams()
+      params.append('data', data)
+
+      const config = {
+        method: 'post',
+        url: link,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+        },
+        data: params, // Agora os dados estão no formato correto
+      }
+
+      const response = await axios.request(config)
+      return response.data // Sucesso puro
+    } catch (error) {
+      const mensagemErro = error.response?.data || 'Erro desconhecido'
+
+      // Retornamos um objeto que seu componente saiba ler como erro
+      return { error: true, msg: mensagemErro }
+    }
+  }
+
+  async delete(data) {
+    try {
+      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/deleteEnviado`
+
+      // Se o backend exige form-urlencoded, precisamos transformar o objeto
+      const params = new URLSearchParams()
+      params.append('data', data)
+
+      const config = {
+        method: 'post',
+        url: link,
+        headers: {
+          'Content-Type': 'application/x-www-form-urlencoded',
+          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+        },
+        data: params, // Agora os dados estão no formato correto
+      }
+
+      const response = await axios.request(config)
+      return response.data // Sucesso puro
+    } catch (error) {
+      const mensagemErro = error.response?.data || 'Erro desconhecido'
+
+      // Retornamos um objeto que seu componente saiba ler como erro
+      return { error: true, msg: mensagemErro }
+    }
+  }
+
+  async getOrfaos(id) {
+    try {
+      const res = await axios.get(`/api/cadastro/getorfaos`)
+      return res
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
 }
 
 export default new ContaOvosService()

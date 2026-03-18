@@ -292,7 +292,8 @@
               v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
-              @cancel="null"
+              @cancel="cancel"
+              customBack="true"
               @aux="imoveis"
               :cFooter="cFooter"
             />
@@ -358,7 +359,7 @@ var id_prop = ref(0)
 
 var vc_linha = reactive({
   id: 0,
-  id_vc_linha: 0,
+  id_vc_folha: 0,
   id_municipio: 0,
   dt_cadastro: '',
   id_atividade: 0,
@@ -426,6 +427,10 @@ watch(filtro, async ([novo1, novo2]) => {
   }
 })
 
+async function cancel() {
+  router.push({ name: 'vcVisitas' })
+}
+
 async function imoveis() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -438,6 +443,16 @@ async function imoveis() {
 const readyToGo = computed(() => {
   return Array.isArray(store.objetoFolha?.imoveis) && store.objetoFolha.imoveis.length > 0
 })
+
+async function limpar() {
+  vc_linha.id_vc_folha = 0
+  vc_linha.id_censitario = 0
+  vc_linha.id_quarteirao = 0
+
+  vc_linha.imoveis = []
+
+  store.setFolha({ ...vc_linha })
+}
 
 async function save() {
   v$.value.$touch()
@@ -452,6 +467,7 @@ async function save() {
     if (resultado.status) {
       vc_linha.id_vc_linha = resultado.master
       toast.success(resultado.msg)
+      await limpar()
     } else {
       toast.error(resultado.error.msg)
     }
@@ -585,7 +601,11 @@ watch(
 )
 
 onMounted(async () => {
-  if (route.query.returnFrom === 'imovel' || route.query.from === 'edit') {
+  if (route.query.returnFrom === 'imovel') {
+    store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
+    Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
+    save()
+  } else if (route.query.from === 'edit') {
     store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
   } else {

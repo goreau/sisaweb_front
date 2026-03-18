@@ -111,4 +111,7 @@ const modelValueProxy = computed({
   align-items: center;
   gap: 0.5rem;
 }
+.radio + .radio {
+  margin-left: 0;
+}
 </style>

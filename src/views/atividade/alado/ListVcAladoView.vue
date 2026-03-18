@@ -137,7 +137,7 @@ function newFilter() {
 }
 
 function newReg() {
-  router.push('vcAlado/0')
+  router.push('vcAlado')
 }
 
 async function loadData() {

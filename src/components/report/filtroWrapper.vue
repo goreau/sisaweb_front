@@ -170,6 +170,24 @@
         </div>
       </div>
     </div>
+    <div class="columns" v-if="props.ativos?.indicadores > 0">
+      <div class="column is-6 is-offset-3">
+        <div class="content">
+          <fieldset class="fieldset">
+            <legend>Tipo de Indicador</legend>
+            <div class="field">
+              <RadioGeneric
+                v-enter-to-next="'form-report'"
+                v-model="filtros.indicadores"
+                :options="indicadores"
+                name="indicador"
+                :inline="false"
+              />
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
     <div class="columns" v-if="props.ativos?.variaveis > 0">
       <div class="column is-6 is-offset-3">
         <div class="content">
@@ -226,6 +244,7 @@ const { currentUser } = useCurrentUser()
 const municipios = ref([])
 const atividades = ref([])
 const ref_ativs = ref([])
+const indicadores = ref([])
 const execucoes = ref([])
 const variaveis = ref([])
 const areas_nav = ref([])
@@ -240,6 +259,7 @@ const filtros = reactive({
   id_municipio: '',
   id_atividade: 0,
   ref_ativ: 0,
+  indicadores: 0,
   id_execucao: 0,
   id_variavel: 0,
   dt_inicial: '',
@@ -304,6 +324,12 @@ function limparFiltros() {
   }
   if (props.ativos['bairro'] && filtros.id_bairro !== '' && filtros.id_bairro != null) {
     filtrosAtivos.id_bairro = filtros.id_bairro
+  }
+  if (props.ativos['ref_ativ'] && filtros.ref_ativ !== '' && filtros.ref_ativ != null) {
+    filtrosAtivos.ref_ativ = filtros.ref_ativ
+  }
+  if (props.ativos['indicadores'] && filtros.indicadores !== '' && filtros.indicadores != null) {
+    filtrosAtivos.indicadores = filtros.indicadores
   }
   filtrosAtivos.tipo_rel = filtros.tipo_rel
 }
@@ -390,6 +416,22 @@ watch(
       ]
     } else {
       filtros.ref_ativ = 0
+    }
+    if (props.ativos?.indicadores && props.ativos?.indicadores > 0) {
+      const indic = {
+        10: [
+          { id: 1, nome: 'Positividade de Imóveis' },
+          { id: 2, nome: 'Fêmeas por Imóvel' },
+          { id: 3, nome: 'Fêmeas por Pessoa' },
+          { id: 4, nome: 'Proporção fêmeas/machos (Total)' },
+          { id: 5, nome: 'Proporção fêmeas/machos (Intra)' },
+          { id: 6, nome: 'Proporção fêmeas/machos (Peri)' },
+        ],
+        20: [{ id: 3, nome: 'Relatórios' }],
+      }
+      indicadores.value = indic[props.ativos?.indicadores]
+    } else {
+      filtros.indicadores = 0
     }
     if (props.ativos?.variaveis && props.ativos?.variaveis > 0) {
       const result = await reportService.getVariaveis(val.variaveis)

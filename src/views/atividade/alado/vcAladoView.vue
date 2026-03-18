@@ -169,7 +169,8 @@
               v-enter-to-next="'submit-action'"
               @submit="save"
               :ready="readyToGo"
-              @cancel="null"
+              @cancel="cancel"
+              customBack="true"
               @aux="imoveis"
               :cFooter="cFooter"
             />
@@ -224,6 +225,8 @@ var vc_alado = reactive({
   id_atividade: 0,
   id_execucao: 0,
   ref_ativ: 0,
+  id_area: 0,
+  id_censitario: 0,
   id_quarteirao: 0,
   agente: '',
   imoveis: [],
@@ -260,9 +263,21 @@ async function imoveis() {
   }
 }
 
+async function cancel() {
+  router.push({ name: 'vcAlados' })
+}
+
 const readyToGo = computed(() => {
   return Array.isArray(store.objetoAlado?.imoveis) && store.objetoAlado.imoveis.length > 0
 })
+
+async function limpar() {
+  vc_alado.id_vc_alado = 0
+  vc_alado.id_quarteirao = 0
+  vc_alado.imoveis = []
+
+  store.setFolha({ ...vc_alado })
+}
 
 async function save() {
   v$.value.$touch()
@@ -277,6 +292,7 @@ async function save() {
     if (resultado.status) {
       vc_alado.id_vc_alado = resultado.master
       toast.success(resultado.msg)
+      limpar()
     } else {
       toast.error(resultado.error.msg)
     }
@@ -289,6 +305,7 @@ watch(
   () => vc_alado.ref_ativ,
   async (val) => {
     let at = val == 10 ? 1 : 4
+    loadAreas(vc_alado.id_municipio)
     const result = await auxiliarService.getAtividadeCombo(at)
     if (result.error) {
       atividades.value = []
@@ -317,17 +334,21 @@ async function loadCombos() {
   ]
 }
 
+async function loadAreas(val) {
+  if (vc_alado.ref_ativ == 1) return
+  const result = await areaService.getCombo(JSON.stringify({ id_municipio: val }))
+  if (result.error) {
+    console.log(result.error)
+    areas.value = []
+  } else {
+    areas.value = result
+  }
+}
+
 watch(
   () => vc_alado.id_municipio,
   async (val) => {
-    if (vc_alado.ref_ativ == 1) return
-    const result = await areaService.getCombo(JSON.stringify({ id_municipio: val }))
-    if (result.error) {
-      console.log(result.error)
-      areas.value = []
-    } else {
-      areas.value = result
-    }
+    loadAreas(val)
   },
 )
 
@@ -358,9 +379,12 @@ watch(
 )
 
 onMounted(async () => {
-  if (route.query.returnFrom === 'imoveis' || route.query.from === 'edit') {
+  if (route.query.returnFrom === 'imoveis') {
+    Object.assign(vc_alado, JSON.parse(JSON.stringify(store.objetoAlado)))
+    save()
+  } else if (route.query.from === 'edit') {
     //console.log(store.objetoAlado)
-    //readyToGo.value = true
+    readyToGo.value = true
     Object.assign(vc_alado, JSON.parse(JSON.stringify(store.objetoAlado)))
   } else {
     vc_alado.ref_ativ = 1
