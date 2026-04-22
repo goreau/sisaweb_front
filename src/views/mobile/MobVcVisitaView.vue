@@ -232,13 +232,28 @@
                 </div>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-10 is-offset-1">
+                <div class="field">
+                  <label class="label">Observação</label>
+                  <textarea
+                    name="obs"
+                    id="obs"
+                    v-model="vc_linha.obs"
+                    rows="2"
+                    class="textarea"
+                    placeholder="Observação"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
 
             <div class="columns">
               <div class="column is-6">
                 <fieldset class="fieldset">
                   <legend>Tratamento Focal</legend>
                   <div class="columns">
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
@@ -252,7 +267,7 @@
                         </label>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-6">
                       <div class="content">
                         <label class="label">Produto</label>
                         <div class="control">
@@ -268,7 +283,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <div class="field">
                         <label class="label">Consumo</label>
                         <div class="control">
@@ -289,7 +304,7 @@
                 <fieldset class="fieldset">
                   <legend>Tratamento Perifocal</legend>
                   <div class="columns">
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
@@ -303,7 +318,7 @@
                         </label>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-6">
                       <div class="content">
                         <label class="label">Produto</label>
                         <div class="control">
@@ -319,7 +334,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <div class="field">
                         <label class="label">Consumo</label>
                         <div class="control">
@@ -342,7 +357,7 @@
                 <fieldset class="fieldset">
                   <legend>Nebulização</legend>
                   <div class="columns">
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
@@ -356,7 +371,7 @@
                         </label>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-6">
                       <div class="content">
                         <label class="label">Produto</label>
                         <div class="control">
@@ -372,7 +387,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <div class="field">
                         <label class="label">Consumo</label>
                         <div class="control">
@@ -393,7 +408,7 @@
                 <fieldset class="fieldset">
                   <legend>BR Aedes</legend>
                   <div class="columns">
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <label>&nbsp;</label>
                       <div class="field">
                         <label class="checkbox">
@@ -407,7 +422,7 @@
                         </label>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-6">
                       <div class="content">
                         <label class="label">Produto</label>
                         <div class="control">
@@ -423,7 +438,7 @@
                         </div>
                       </div>
                     </div>
-                    <div class="column is-4">
+                    <div class="column is-3">
                       <div class="field">
                         <label class="label">Consumo</label>
                         <div class="control">
@@ -555,6 +570,7 @@ var vc_linha = reactive({
   agente: '',
   imovel: '',
   casa: '',
+  obs: '',
   recipientes: [],
 })
 

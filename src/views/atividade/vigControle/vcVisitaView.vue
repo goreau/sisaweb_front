@@ -293,7 +293,7 @@
               @submit="save"
               :ready="readyToGo"
               @cancel="cancel"
-              customBack="true"
+              :customBack="true"
               @aux="imoveis"
               :cFooter="cFooter"
             />
@@ -539,12 +539,12 @@ async function loadCombos() {
     atividades.value = result
   }
 
-  const result0 = await auxiliarService.getAtividadeCombo(3)
+  /*const result0 = await auxiliarService.getAtividadeCombo(3)
   if (result0.error) {
     console.log(result0.error)
   } else {
     atividades.value = [...atividades.value, ...result0]
-  }
+  }*/
 
   const result1 = await auxiliarService.getProdutoCombo(1)
   if (result1.error) {

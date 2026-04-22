@@ -80,6 +80,8 @@
                 :buttons="['edit', 'delete']"
                 :has-exports="true"
                 :loggedUser="{ id: idUser, tipo: tpUser }"
+                :title="'Mobile EDL'"
+                :filter="filtros"
               />
               <hr />
               <div class="columns">
@@ -129,6 +131,7 @@ const STORAGE_KEY = 'consulta-mobedlsw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 
 const tabelaRef = ref(null)
 
@@ -155,6 +158,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {

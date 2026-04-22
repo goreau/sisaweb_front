@@ -36,6 +36,17 @@ export default [
     meta: { onlyUser: true },
   },
   {
+    path: '/listMobOvi',
+    name: 'listMobOvi',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/ListMobOviView.vue'),
+  },
+  {
+    path: '/mobOvi/:id',
+    name: 'mobOvi',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/MobOviView.vue'),
+    meta: { onlyUser: true },
+  },
+  {
     path: '/listMobAlado',
     name: 'listMobAlado',
     component: () => import(/* webpackChunkName: "user" */ '@/views/mobile/ListMobAladoView.vue'),

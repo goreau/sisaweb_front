@@ -67,32 +67,6 @@ export const originalMenuData = [
   },
   {
     href: '',
-    title: 'Gerenciamento',
-    icon: {
-      element: 'font-awesome-icon',
-      attributes: {
-        icon: 'fa-solid fa-gears',
-        size: 'lg',
-        transform: 'shrink-8',
-      },
-    },
-    child: gerenciamentoMenu,
-  },
-  {
-    href: '',
-    title: 'Utilitarios',
-    icon: {
-      element: 'font-awesome-icon',
-      attributes: {
-        icon: 'fa-solid fa-screwdriver-wrench',
-        size: 'lg',
-        transform: 'shrink-8',
-      },
-    },
-    child: utilitariosMenu,
-  },
-  {
-    href: '',
     title: 'Atividades',
     icon: {
       element: 'font-awesome-icon',
@@ -116,6 +90,32 @@ export const originalMenuData = [
       },
     },
     child: mobileMenu,
+  },
+  {
+    href: '',
+    title: 'Gerenciamento',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-gears',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: gerenciamentoMenu,
+  },
+  {
+    href: '',
+    title: 'Utilitarios',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-screwdriver-wrench',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: utilitariosMenu,
   },
   {
     href: '',

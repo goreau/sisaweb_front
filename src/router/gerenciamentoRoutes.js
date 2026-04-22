@@ -42,6 +42,14 @@ export default [
       ),
   },
   {
+    path: '/duplicaAreaNav',
+    name: 'duplicaAreaNav',
+    component: () =>
+      import(
+        /* webpackChunkName: "user" */ '@/views/gerenciamento/duplicidades/ListDuplicaAreaNavView.vue'
+      ),
+  },
+  {
     path: '/duplicaImovel',
     name: 'duplicaImovel',
     component: () =>
@@ -147,5 +155,13 @@ export default [
     name: 'contaovosadm',
     component: () =>
       import(/* webpackChunkName: "user" */ '@/views/gerenciamento/contaOvos/AdmContaOvosView.vue'),
+  },
+  {
+    path: '/inconsistencia',
+    name: 'inconsistencia',
+    component: () =>
+      import(
+        /* webpackChunkName: "user" */ '@/views/gerenciamento/inconsistencia/ListInconsistenciaView.vue'
+      ),
   },
 ]

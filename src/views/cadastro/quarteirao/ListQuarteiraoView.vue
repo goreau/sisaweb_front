@@ -57,6 +57,8 @@
                 @delete="onDeleteRow"
                 :buttons="['edit', 'delete']"
                 :has-exports="true"
+                :title="'Cadastro de Quarteirão'"
+                :filter="filtros"
               />
             </section>
           </div>
@@ -92,6 +94,7 @@ var confirmDialog = ref(null)
 var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 const idUser = ref(0)
 
 const filter = reactive({
@@ -115,6 +118,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {

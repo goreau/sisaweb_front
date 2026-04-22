@@ -54,7 +54,7 @@
                 :loggedUser="{ id: 0, tipo: 0 }"
                 :data="filhos"
                 :columns="columns"
-                calc-height="true"
+                :calc-height="true"
                 :pagination="false"
                 @delete="handleDelete"
                 @quarteirao="handleView"

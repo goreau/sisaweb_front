@@ -33,6 +33,8 @@
                   :pagination="true"
                   :has-exports="true"
                   :buttons="[]"
+                  :title="fantTitle"
+                  :filter="fantFiltro"
                 />
               </div>
               <hr />

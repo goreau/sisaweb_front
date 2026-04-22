@@ -9,6 +9,7 @@ import { jsPDF } from 'jspdf'
 export function boletim(data) {
   var doc = header(data)
   doc = cabecalho(doc)
+  var hasObs = false
 
   const colWidths = [
     10, 53, 10, 10, 7, 7, 7, 7, 7, 7, 11, 11, 11, 11, 11, 12, 10, 10, 10, 10, 15, 10, 10, 10,
@@ -24,6 +25,7 @@ export function boletim(data) {
 
   var qtLinha = 0
   imoveis.forEach((row) => {
+    hasObs = row.obs && row.obs != ''
     const lineData = [
       // Adapte para o nome do campo correto
       { value: row.ordem, align: 'C' },
@@ -164,6 +166,10 @@ export function boletim(data) {
     })
     currentY += LINE_HEIGHT
     qtLinha++
+  }
+
+  if (hasObs) {
+    doc = verso(doc, data)
   }
 
   doc.output('dataurlnewwindow')
@@ -576,5 +582,67 @@ function cabecalho(doc) {
     baseline: 'middle',
   })
 
+  return doc
+}
+
+function verso(doc, data) {
+  doc.addPage()
+  const imoveis = data.imoveis
+  let currentX = 10
+  let currentY = 10 // Margem inicial Y
+  const LINE_HEIGHT = 6
+
+  doc.setFont('arial', '')
+  doc.setFontSize(12)
+
+  doc.text('Observações sobre os imóveis visitados: ', 145, currentY, {
+    align: 'center',
+    baseline: 'middle',
+  })
+
+  currentY = 20
+
+  doc.setFontSize(9)
+
+  doc.rect(currentX, currentY, 15, LINE_HEIGHT * 2, 'S')
+  doc.rect(25, currentY, 15, LINE_HEIGHT * 2, 'S')
+  doc.rect(40, currentY, 250, LINE_HEIGHT * 2, 'S')
+  doc.text('ORDEM', 17, currentY + LINE_HEIGHT, {
+    align: 'center',
+    baseline: 'middle',
+  })
+  doc.text('CASA', 33, currentY + LINE_HEIGHT, {
+    align: 'center',
+    baseline: 'middle',
+  })
+  doc.text('OBSERVAÇÃO', 160, currentY + LINE_HEIGHT, {
+    align: 'center',
+    baseline: 'middle',
+  })
+
+  currentY += LINE_HEIGHT * 2
+  currentX = 17
+
+  imoveis.forEach((row) => {
+    doc.rect(10, currentY, 15, LINE_HEIGHT, 'S')
+    doc.rect(25, currentY, 15, LINE_HEIGHT, 'S')
+    doc.rect(40, currentY, 250, LINE_HEIGHT, 'S')
+    doc.text(String(row.ordem).trim(), currentX, currentY + LINE_HEIGHT / 2, {
+      align: 'center',
+      baseline: 'middle',
+    })
+    currentX += 15
+    doc.text(String(row.casa).trim(), currentX, currentY + LINE_HEIGHT / 2, {
+      align: 'center',
+      baseline: 'middle',
+    })
+    currentX += 10
+    doc.text(String(row.obs).trim(), currentX, currentY + LINE_HEIGHT / 2, {
+      align: 'left',
+      baseline: 'middle',
+    })
+    currentY += 6
+    currentX = 17
+  })
   return doc
 }

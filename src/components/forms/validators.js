@@ -61,8 +61,16 @@ export const requiredIf$ = (cond) =>
 export const minLengthIfFilled$ = (min) =>
   helpers.withMessage(
     ({ $params }) => `O tamanho mínimo permitido é de ${$params.min} caracteres.`,
-    (value) => value.length === 0 || value.length >= min,
+    helpers.withParams(
+      { min, type: 'minLengthIfFilled' }, // Registra o parâmetro aqui
+      (value) => !helpers.req(value) || value.length >= min,
+    ),
   )
+/*export const minLengthIfFilled$ = (min) =>
+  helpers.withMessage(
+    ({ $params }) => `O tamanho mínimo permitido é de ${$params.min} caracteres.`,
+    (value) => value.length === 0 || value.length >= min,
+  )*/
 
 export const coordenada$ = helpers.withMessage(
   'O valor deve ser um número decimal, negativo ou zero',

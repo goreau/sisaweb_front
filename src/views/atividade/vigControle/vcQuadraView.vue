@@ -664,7 +664,7 @@
               v-enter-to-next="'submit-action'"
               @submit="save"
               @cancel="cancel"
-              customBack="true"
+              :customBack="true"
               @aux="null"
               :cFooter="cFooter"
             />

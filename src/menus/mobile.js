@@ -36,6 +36,18 @@ export const mobileMenu = [
     },
   },
   {
+    href: '/listMobOvi',
+    title: 'Ovitrampas',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-search',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+  },
+  {
     href: '/listMobAlado',
     title: 'Captura de Alados',
     icon: {

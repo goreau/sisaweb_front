@@ -170,7 +170,7 @@
               @submit="save"
               :ready="readyToGo"
               @cancel="cancel"
-              customBack="true"
+              :customBack="true"
               @aux="imoveis"
               :cFooter="cFooter"
             />

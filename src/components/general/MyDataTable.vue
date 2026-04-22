@@ -18,6 +18,7 @@ import localeText from '@/utils/agGridLocale'
 import { ClientSideRowModelModule } from 'ag-grid-community'
 import { CsvExportModule } from 'ag-grid-community'
 import tickCrossRenderer from '@/components/report/tickCrossRenderer.vue'
+import valueRenderer from '../report/valueRenderer.vue'
 
 ModuleRegistry.registerModules([
   ClientSideRowModelModule,
@@ -57,6 +58,14 @@ const props = defineProps({
   calcHeight: {
     type: Boolean,
     default: false,
+  },
+  title: {
+    type: String,
+    default: 'Sisaweb3',
+  },
+  filter: {
+    type: String,
+    default: '',
   },
 })
 const emit = defineEmits([
@@ -156,16 +165,31 @@ async function download_xlsx() {
     ),
   )
 
-  // monta os dados já com headers "pai - filho"
-  /* const exportData = data.map((row) =>
-    Object.fromEntries(exportCols.map((col) => [col.exportHeader, row[col.field]])),
-  )*/
+  const filtrosAplicados = [
+    ['Relatório:', props.title], // Título que você já tem
+    ['Filtros:', props.filter],
+    [], // Linha vazia para separar os filtros da tabela
+  ]
 
-  const worksheet = XLSX.utils.json_to_sheet(exportData)
+  // 4. Cria o worksheet começando pelos filtros
+  const worksheet = XLSX.utils.aoa_to_sheet(filtrosAplicados)
+
+  // 5. Adiciona os dados logo abaixo (na linha 4, por exemplo)
+  // origin: -1 faz o SheetJS adicionar os dados na próxima linha disponível
+  XLSX.utils.sheet_add_json(worksheet, exportData, {
+    origin: 'A5',
+    skipHeader: false,
+  })
+
+  // 6. Opcional: Ajustar largura das colunas para não ficar tudo espremido
+  const max_width = exportCols.length
+  worksheet['!cols'] = Array(max_width).fill({ wch: 20 })
+
+  /*const worksheet = XLSX.utils.json_to_sheet(exportData)*/
   const workbook = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(workbook, worksheet, 'Dados')
+  XLSX.utils.book_append_sheet(workbook, worksheet, props.title)
   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
-  saveAs(new Blob([excelBuffer]), 'Sisaweb3.xlsx')
+  saveAs(new Blob([excelBuffer]), `${props.title}.xlsx`)
 }
 
 function flattenColumns(columns, parentHeader = '') {
@@ -191,19 +215,35 @@ async function download_pdf() {
 
   // achata colunas igual ao Excel
   const exportCols = flattenColumns(props.columns).filter(
-    (col) => col.field && col.field !== 'acoes',
+    (col) => col.field && col.field !== 'acoes' && !col.hide,
   )
 
   const headers = exportCols.map((col) => col.exportHeader)
 
-  const rows = getFilteredRows().map((row) => exportCols.map((col) => row[col.field]))
+  const rows = getFilteredRows().map((row) =>
+    exportCols.map((col) => {
+      const val = row[col.field]
+      // Se val for null ou undefined, retorna string vazia.
+      // Caso contrário, converte para string e remove espaços.
+      return val != null ? String(val).trim() : ''
+    }),
+  )
+
+  doc.setFontSize(16)
+  doc.text(props.title, 14, 15) // x=14 (margem padrão), y=15
+
+  doc.setFontSize(11)
+  doc.setTextColor(100)
+  doc.text(props.filter, 14, 22)
 
   autoTable(doc, {
     head: [headers],
     body: rows,
+    startY: 30,
+    styles: { fontSize: 8 },
   })
 
-  doc.save('Sisaweb3.pdf')
+  doc.save(`${props.title}.pdf`)
 }
 
 function toGrafico() {
@@ -286,6 +326,7 @@ const gridHeight = computed(() => {
 defineExpose({
   getFilteredRows,
   tickCrossRenderer,
+  valueRenderer,
   clearFilters() {
     gridApi.value?.setFilterModel(null)
   },

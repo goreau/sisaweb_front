@@ -98,6 +98,8 @@
                 :buttons="['edit', 'delete']"
                 :has-exports="true"
                 :loggedUser="{ id: idUser, tipo: tpUser }"
+                :title="'Mobile Captura de Alados'"
+                :filter="filtros"
               />
               <hr />
               <div class="columns">
@@ -149,6 +151,7 @@ const STORAGE_KEY = 'consulta-mobvcimovelsw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 const atividades = ref([])
 
 const tabelaRef = ref(null)
@@ -177,8 +180,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
-      //let teste = result.data[0]
-      //console.log(teste.amostras)
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {

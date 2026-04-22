@@ -91,7 +91,7 @@
               @submit="create"
               :ready="readyToGo"
               @cancel="cancel"
-              customBack="true"
+              :customBack="true"
               @aux="details"
               :cFooter="cFooter"
             />
@@ -216,7 +216,7 @@ onMounted(() => {
     Object.assign(areaNav, JSON.parse(JSON.stringify(store.objetoPrincipal)))
     create()
   } else if (route.query.from === 'edit') {
-    console.log(store.objetoPrincipal)
+    //console.log(store.objetoPrincipal)
     Object.assign(areaNav, JSON.parse(JSON.stringify(store.objetoPrincipal)))
   } else {
     Object.assign(areaNav, {

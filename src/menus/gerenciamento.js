@@ -136,6 +136,18 @@ export const gerenciamentoMenu = [
         },
       },
       {
+        href: '/duplicaAreaNav',
+        title: 'Área de Transmissão',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
         href: '/duplicaCadOvi',
         title: 'Ovitrampa (Cadastro)',
         icon: {
@@ -303,6 +315,32 @@ export const gerenciamentoMenu = [
           element: 'font-awesome-icon',
           attributes: {
             icon: 'fa-solid fa-file-text',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+    ],
+  },
+  {
+    href: '',
+    title: 'Inconsistências',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-ban',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+    child: [
+      {
+        href: '/inconsistencia',
+        title: 'Analisar Registros',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-search',
             size: 'lg',
             transform: 'shrink-8',
           },

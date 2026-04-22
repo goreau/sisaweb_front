@@ -87,6 +87,8 @@
                 @delete="onDeleteRow"
                 @impersonate="onImpersonate"
                 @reset="onReset"
+                :title="'Cadastro de Usuários'"
+                :filter="filtros"
               />
             </section>
           </div>
@@ -126,6 +128,7 @@ var id_gve = ref(0)
 var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 
 const filter = reactive({
   id_regional,
@@ -150,6 +153,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {

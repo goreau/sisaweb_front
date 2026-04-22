@@ -5,7 +5,7 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Mobile: Imóveis Cadastrados</p>
+            <p class="card-header-title is-centered">Inconsistências</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
@@ -15,31 +15,17 @@
           </header>
           <div class="card-content">
             <section v-show="!hasRows">
-              <div class="columns" v-if="tpUser < 4">
-                <div class="column is-5 is-offset-3">
-                  <div class="field">
-                    <label class="label">Município</label>
-                    <div class="control">
-                      <CmbTerritorio
-                        v-enter-to-next="'form-mobile'"
-                        v-model:sel="filter.id_municipio"
-                        :tipo="99"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
               <div class="columns">
-                <div class="column is-5 is-offset-3">
+                <div class="column">
                   <div class="content">
                     <fieldset class="fieldset">
-                      <legend>Atividade</legend>
+                      <legend>Tipo</legend>
                       <div class="field">
                         <RadioGeneric
-                          v-enter-to-next="'form-mobile'"
-                          v-model="filter.id_atividade"
-                          :options="atividades"
-                          name="id_atividade"
+                          v-enter-to-next="'form-vc'"
+                          v-model="filter.tipo"
+                          :options="tipos"
+                          name="tipo"
                           :inline="true"
                         />
                       </div>
@@ -47,17 +33,17 @@
                   </div>
                 </div>
               </div>
-              <div class="columns">
-                <div class="column is-4 is-offset-4">
+              <div class="columns" v-if="tpUser < 4">
+                <div class="column is-5 is-offset-3">
                   <div class="field">
-                    <label class="label">Agente</label>
-                    <input
-                      type="text"
-                      class="input"
-                      name="agente"
-                      id="agente"
-                      v-model="filter.agente"
-                    />
+                    <label class="label">Município</label>
+                    <div class="control">
+                      <CmbTerritorio
+                        v-enter-to-next="'form-vc'"
+                        :tipo="99"
+                        v-model:sel="filter.id_municipio"
+                      />
+                    </div>
                   </div>
                 </div>
               </div>
@@ -67,7 +53,7 @@
                     <label class="label">Data Inicial</label>
                     <div class="control">
                       <DatePicker
-                        v-enter-to-next="'form-mobile'"
+                        v-enter-to-next="'form-vc'"
                         v-model="filter.dt_inicial"
                         :error="false"
                         placeholder="Escolha a data"
@@ -80,7 +66,7 @@
                     <label class="label">Data Final</label>
                     <div class="control">
                       <DatePicker
-                        v-enter-to-next="'form-mobile'"
+                        v-enter-to-next="'form-vc'"
                         v-model="filter.dt_final"
                         :error="false"
                         placeholder="Escolha a data"
@@ -102,31 +88,25 @@
               </div>
             </section>
             <section v-if="hasRows">
+              <div class="columns">
+                <p class="title">{{ title }}</p>
+              </div>
+              <div class="columns">
+                <p class="subtitle">{{ subtitle }}</p>
+              </div>
               <MyDataTable
-                ref="tabelaRef"
+                ref="dataTableRef"
+                :logged-user="idUser"
                 :data="dataTable"
                 :columns="columns"
                 :pagination="true"
                 @edit="onEditRow"
                 @delete="onDeleteRow"
                 @boletim="printSheet"
-                :buttons="['edit', 'delete', 'boletim']"
+                :buttons="['edit', 'boletim']"
                 :has-exports="true"
-                :loggedUser="{ id: idUser, tipo: tpUser }"
-                :title="'Mobile Imóveis Cadastrados'"
-                :filter="filtros"
+                :title="title"
               />
-              <hr />
-              <div class="columns">
-                <div class="column is-6 is-offset-3">
-                  <button
-                    class="button is-success is-outlined aux-btn is-fullwidth"
-                    @click="sincroniza"
-                  >
-                    Sincronizar
-                  </button>
-                </div>
-              </div>
             </section>
           </div>
         </div>
@@ -137,19 +117,19 @@
 </template>
 
 <script setup>
-import mobVcImovelService from '@/services/mobile/mobVc_imovel.service'
+import inconsistenciaService from '@/services/gerenciamento/inconsistencia.service'
+import vc_linhaService from '@/services/atividade/vc_linha.service'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
-import { ref, onMounted, reactive } from 'vue'
+import { ref, onMounted, reactive, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
-import { useMobileStore } from '@/stores/mobileStore'
-import auxiliarService from '@/services/general/auxiliar.service'
+import { useVcVisitaStore } from '@/stores/vcVisitaStore'
 import { boletim } from '@/services/general/geraBoletim.service'
 import utilitariosService from '@/services/utilitarios.service'
 
@@ -157,29 +137,30 @@ const { currentUser } = useCurrentUser()
 
 const router = useRouter()
 const toast = useToast()
-const store = useMobileStore()
+const store = useVcVisitaStore()
 
+const idUser = ref(0)
 var tpUser = ref(0)
-var idUser = ref(0)
+const dataTableRef = ref(null)
 
 var confirmDialog = ref(null)
 var isLoading = ref(false)
-const STORAGE_KEY = 'consulta-mobvcimovelsw'
+const STORAGE_KEY = 'consulta-vcvisitasw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
-var filtros = ref('')
-const atividades = ref([])
-
-const tabelaRef = ref(null)
 
 const filter = reactive({
+  tipo: 0,
   id_municipio: 0,
-  id_atividade: 0,
-  agente: 0,
   dt_inicial: '',
   dt_final: '',
 })
+
+const title = ref('')
+const subtitle = ref('')
+
+const tipos = ref([])
 
 const columns = ref([])
 
@@ -187,18 +168,25 @@ function newFilter() {
   hasRows.value = false
 }
 
+function newReg() {
+  router.push(`/vigLinha`)
+}
+
 async function loadData() {
   try {
     isLoading.value = true
     localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const result = await mobVcImovelService.getMobVcImovels(JSON.stringify(filter))
+    const item = tipos.value.find((o) => o.id === filter.tipo)
+    title.value = item.title
+    subtitle.value = item.subtitle
+
+    const result = await inconsistenciaService.get(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
       dataTable.value = result.data.rows
-      columns.value = result.data.cols
-      filtros.value = result.data.filtros
+      columns.value = result.data.columns
       hasRows.value = true
     }
   } finally {
@@ -207,39 +195,34 @@ async function loadData() {
 }
 
 async function onEditRow(item) {
-  const ret = await mobVcImovelService.getMobVcImovel(item.row.id)
+  const ret = await vc_linhaService.getVcLinha(item.row.id)
   if (ret.error) {
     toast.error(ret.msg)
   } else {
-    store.setVisita({ ...ret })
-    router.push({ name: 'mobVcImovel', query: { from: 'edit' } })
+    store.setFolha({ ...ret })
+    router.push({ name: 'vigLinha', query: { from: 'edit' } })
   }
 }
 
 async function onDeleteRow(item) {
-  try {
-    isLoading.value = true
-    const ok = await confirmDialog.value.show({
-      title: 'Excluir',
-      message: 'Deseja mesmo excluir essa Visita?',
-      okButton: 'Confirmar',
-    })
-    if (ok) {
-      const resultado = await mobVcImovelService.delete(item.row.id)
-      if (resultado.error) {
-        toast.error(resultado.msg)
-      } else {
-        toast.success('Imóvel excluído com sucesso!')
-        loadData()
-      }
+  const ok = await confirmDialog.value.show({
+    title: 'Excluir',
+    message: 'Deseja mesmo excluir essa Visita?',
+    okButton: 'Confirmar',
+  })
+  if (ok) {
+    const resultado = await vc_linhaService.delete(item.row.id)
+    if (resultado.error) {
+      toast.error(resultado.msg)
+    } else {
+      toast.success('Imóvel excluído com sucesso!')
+      loadData()
     }
-  } finally {
-    isLoading.value = false
   }
 }
 
 async function printSheet(item) {
-  const ret = await utilitariosService.boletimMobImovel(item.row.id)
+  const ret = await utilitariosService.boletimFolha(item.row.id)
   if (ret.error) {
     toast.error(ret.msg)
   } else {
@@ -247,48 +230,29 @@ async function printSheet(item) {
   }
 }
 
-async function sincroniza() {
-  try {
-    isLoading.value = true
-    if (tabelaRef.value) {
-      const linhas = tabelaRef.value.getFilteredRows()
+watch('filter.tipo', (value) => {
+  const item = tipos.value.find((o) => o.id === value)
+  title.value = item.title
+  subtitle.value = item.subtitle
+})
 
-      const ret = await mobVcImovelService.sync(linhas)
-      if (ret.error) {
-        toast.error(ret.msg)
-      } else {
-        tabelaRef.value.clearFilters()
-        toast.success(`${ret.master} ${ret.msg}`)
-        loadData()
-      }
-    }
-  } finally {
-    isLoading.value = false
-  }
-}
-
-async function loadCombos() {
-  const result = await auxiliarService.getAtividadeCombo(1)
-  if (result.error) {
-    console.log(result.error)
-    atividades.value = []
-  } else {
-    atividades.value = result
-  }
-}
-
-onMounted(() => {
+onMounted(async () => {
   const saved = localStorage.getItem(STORAGE_KEY)
   if (saved) {
     Object.assign(filter, JSON.parse(saved))
   }
 
-  loadCombos()
+  const result = await inconsistenciaService.getOptions()
+  if (result.error) {
+    console.log(result.error)
+  } else {
+    tipos.value = result.data
+  }
 
   let cUser = currentUser
   if (cUser.value) {
+    idUser.value = cUser.value
     tpUser.value = cUser.value.tipo
-    idUser.value = 0
     if (tpUser.value == 4) {
       loadData()
     }
@@ -296,4 +260,16 @@ onMounted(() => {
 })
 </script>
 
-<style></style>
+<style scoped>
+.title {
+  font-size: large;
+  padding-left: 2rem;
+  color: rgb(23, 24, 102);
+}
+.subtitle {
+  font-size: small;
+  padding-top: 1rem;
+  padding-left: 2rem;
+  color: rgb(23, 24, 102);
+}
+</style>

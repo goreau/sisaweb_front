@@ -85,6 +85,8 @@
                 @delete="onDeleteRow"
                 :buttons="['edit', 'delete']"
                 :has-exports="true"
+                :title="'BRI'"
+                :filter="filtros"
               />
             </section>
           </div>
@@ -123,6 +125,7 @@ const STORAGE_KEY = 'consulta-vcbrisw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 
 const filter = reactive({
   id_municipio: 0,
@@ -147,6 +150,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {

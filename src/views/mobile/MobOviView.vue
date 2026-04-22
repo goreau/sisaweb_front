@@ -14,7 +14,7 @@
                 <CmbTerritorio
                   v-enter-to-next="'form-ovi'"
                   :tipo="99"
-                  v-model:sel="vc_ovitrampa.id_municipio"
+                  v-model:sel="mob_vc_ovitrampa.id_municipio"
                   :errclass="{ 'is-danger': v$.id_municipio.$error }"
                 />
                 <span class="is-error" v-if="v$.id_municipio.$error">
@@ -27,7 +27,7 @@
               <div class="control">
                 <CmbGeneric
                   v-enter-to-next="'form-ovi'"
-                  v-model:sel="vc_ovitrampa.id_ovitrampa"
+                  v-model:sel="mob_vc_ovitrampa.id_ovitrampa"
                   :data="imoveis"
                   :errclass="{ 'is-danger': v$.id_ovitrampa.$error }"
                 />
@@ -42,7 +42,7 @@
                 <div class="field">
                   <RadioGeneric
                     v-enter-to-next="'form-ovi'"
-                    v-model="vc_ovitrampa.id_execucao"
+                    v-model="mob_vc_ovitrampa.id_execucao"
                     :options="execucoes"
                     name="id_execucao"
                     :inline="true"
@@ -56,7 +56,7 @@
                 <div class="control">
                   <DatePicker
                     v-enter-to-next="'form-ovi'"
-                    v-model="vc_ovitrampa.dt_instala"
+                    v-model="mob_vc_ovitrampa.dt_instala"
                     :error="false"
                     placeholder="Escolha a data"
                     :class="{ 'is-danger': v$.dt_instala.$error }"
@@ -73,7 +73,7 @@
                 <div class="control">
                   <DatePicker
                     v-enter-to-next="'form-ovi'"
-                    v-model="vc_ovitrampa.dt_retira"
+                    v-model="mob_vc_ovitrampa.dt_retira"
                     :error="false"
                     placeholder="Escolha a data"
                     :class="{ 'is-danger': v$.dt_retira.$error }"
@@ -90,7 +90,7 @@
                 <div class="field">
                   <RadioGeneric
                     v-enter-to-next="'form-ovi'"
-                    v-model="vc_ovitrampa.peri_intra"
+                    v-model="mob_vc_ovitrampa.peri_intra"
                     :options="locais"
                     name="peri_intra"
                     :inline="true"
@@ -103,7 +103,7 @@
               <div class="control">
                 <CmbGeneric
                   v-enter-to-next="'form-ovi'"
-                  v-model:sel="vc_ovitrampa.obs"
+                  v-model:sel="mob_vc_ovitrampa.obs"
                   :data="obss"
                 />
               </div>
@@ -115,7 +115,7 @@
                   v-enter-to-next="'form-ovi-id-1'"
                   class="textarea"
                   rows="2"
-                  v-model="vc_ovitrampa.observacao"
+                  v-model="mob_vc_ovitrampa.observacao"
                   placeholder="Complementação da informação"
                 ></textarea>
               </div>
@@ -129,7 +129,7 @@
                     class="input"
                     type="text"
                     placeholder="Opcional"
-                    v-model="vc_ovitrampa.ovos"
+                    v-model="mob_vc_ovitrampa.ovos"
                   />
                 </div>
               </div>
@@ -143,7 +143,7 @@
                     class="input"
                     type="text"
                     placeholder="Executor da visita"
-                    v-model="vc_ovitrampa.agente"
+                    v-model="mob_vc_ovitrampa.agente"
                   />
                 </div>
               </div>
@@ -168,7 +168,7 @@
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
-import vc_ovitrampaService from '@/services/atividade/vc_ovitrampa.service'
+import mobOviService from '@/services/mobile/mobOvi.service'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import useValidate from '@vuelidate/core'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
@@ -194,8 +194,8 @@ var imoveis = ref([])
 
 var id_prop = ref(0)
 
-var vc_ovitrampa = reactive({
-  id_vc_ovitrampa: 0,
+var mob_vc_ovitrampa = reactive({
+  id_mob_vc_ovitrampa: 0,
   id_municipio: 0,
   dt_instala: '',
   dt_retira: '',
@@ -228,20 +228,20 @@ const rules = {
   agente: { required$ },
 }
 
-const v$ = useValidate(rules, vc_ovitrampa)
+const v$ = useValidate(rules, mob_vc_ovitrampa)
 
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
     var resultado = null
     if (isEditMode.value) {
-      resultado = await vc_ovitrampaService.update(vc_ovitrampa)
+      resultado = await mobOviService.update(mob_vc_ovitrampa)
     } else {
-      resultado = await vc_ovitrampaService.create(vc_ovitrampa)
+      resultado = await mobOviService.create(mob_vc_ovitrampa)
     }
 
     if (resultado.status) {
-      vc_ovitrampa.id_vc_ovitrampa = resultado.master
+      mob_vc_ovitrampa.id_mob_vc_ovitrampa = resultado.master
       toast.success(resultado.msg)
     } else {
       toast.error(resultado.error.msg)
@@ -252,7 +252,7 @@ async function save() {
 }
 
 watch(
-  () => vc_ovitrampa.id_municipio,
+  () => mob_vc_ovitrampa.id_municipio,
   async (val) => {
     const filter = { id_municipio: val }
     const result = await ovitrampaService.getCombo(JSON.stringify(filter))
@@ -265,7 +265,7 @@ watch(
   },
 )
 
-const isEditMode = computed(() => Number(vc_ovitrampa.id_vc_ovitrampa) > 0)
+const isEditMode = computed(() => Number(mob_vc_ovitrampa.id_mob_vc_ovitrampa) > 0)
 
 async function loadCombos() {
   obss.value = [
@@ -294,11 +294,11 @@ async function loadCombos() {
 
 onMounted(async () => {
   if (route.params.id > 0) {
-    const result = await vc_ovitrampaService.getVcOvitrampa(route.params.id)
+    const result = await mobOviService.getMobOvi(route.params.id)
     if (result.error) {
       toast.error(result.msg)
     } else {
-      Object.assign(vc_ovitrampa, result)
+      Object.assign(mob_vc_ovitrampa, result)
     }
   }
 

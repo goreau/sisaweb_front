@@ -391,7 +391,7 @@
               @submit="save"
               :ready="readyToGo"
               @cancel="cancel"
-              customBack="true"
+              :customBack="true"
               @aux="recipientes"
               :cFooter="cFooter"
             />

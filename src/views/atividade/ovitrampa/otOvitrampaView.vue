@@ -371,13 +371,14 @@ const isEditMode = computed(() => Number(ot_ovitrampa.id_ot_ovitrampa) > 0)
 async function loadCombos() {
   obss.value = [
     { id: 0, nome: '--Selecione--' },
-    { id: 1, nome: 'Intervalo acima 7 dias' },
-    { id: 2, nome: 'Ovitrampa ou palheta desaparecidas' },
-    { id: 3, nome: 'Ovitrampa ou palheta danificadas' },
+    { id: 1, nome: 'Intervalo acima 5 dias' },
+    { id: 2, nome: 'Ovitrampa ou palheta desaparecida' },
+    { id: 3, nome: 'Ovitrampa ou palheta danificada' },
     { id: 4, nome: 'Ovitrampa seca' },
     { id: 5, nome: 'Casa fechada' },
     { id: 6, nome: 'Ovitrampa cheia d`água' },
-    { id: 7, nome: 'Ovitrampa pouca água' },
+    { id: 7, nome: 'Ovitrampa com pouca água' },
+    { id: 8, nome: 'Ovitrampa com larva' },
   ]
 
   execucoes.value = [

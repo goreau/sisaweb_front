@@ -57,6 +57,8 @@
                 @delete="onDeleteRow"
                 :buttons="['edit', 'delete']"
                 :has-exports="true"
+                :title="'Cadastro de Áreas NAV'"
+                :filter="filtros"
               />
             </section>
           </div>
@@ -95,6 +97,7 @@ var confirmDialog = ref(null)
 var id_municipio = ref(0)
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 const idUser = ref(0)
 
 const filter = reactive({
@@ -122,6 +125,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {
@@ -161,7 +165,7 @@ onMounted(() => {
   }
 
   let cUser = currentUser
-  console.log(cUser)
+  //console.log(cUser)
   if (cUser.value) {
     idUser.value = cUser.value.id
     tpUser.value = cUser.value.tipo

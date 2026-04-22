@@ -113,7 +113,7 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-5">
+              <div class="column is-4">
                 <div class="field">
                   <label class="label">Endereço</label>
                   <div class="control">
@@ -131,7 +131,7 @@
                   </div>
                 </div>
               </div>
-              <div class="column is-5">
+              <div class="column is-4">
                 <div class="field">
                   <label class="label">Morador</label>
                   <div class="control">
@@ -145,6 +145,24 @@
                     />
                     <span class="is-error" v-if="v$.morador.$error">
                       {{ v$.morador.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-2">
+                <div class="field">
+                  <label class="label">Telefone</label>
+                  <div class="control">
+                    <input
+                      v-enter-to-next="'form-edl'"
+                      class="input"
+                      type="text"
+                      placeholder="opcional"
+                      v-model="ovitrampa.telefone"
+                      :class="{ 'is-danger': v$.telefone.$error }"
+                    />
+                    <span class="is-error" v-if="v$.telefone.$error">
+                      {{ v$.telefone.$errors[0].$message }}
                     </span>
                   </div>
                 </div>
@@ -289,6 +307,7 @@ import {
   combo$,
   coordenada$,
   minLength$,
+  maxLength$,
 } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -320,6 +339,7 @@ var ovitrampa = reactive({
   bairro: '',
   cadastro: '',
   morador: '',
+  telefone: '',
   id_censitario: 0,
   id_quarteirao: 0,
   latitude: 0.0,
@@ -343,6 +363,7 @@ const rules = {
   cadastro: { required$, minLength: minLength$(1) },
   morador: { required$, minLength: minLength$(10) },
   endereco: { minLengthIfFilled: minLengthIfFilled$(10) },
+  telefone: { maxLength: maxLength$(30) },
   id_area: { required$, minValue: combo$(1) },
   id_censitario: { required$, minValue: combo$(1) },
   id_quarteirao: { required$, minValue: combo$(1) },

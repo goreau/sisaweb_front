@@ -5,7 +5,7 @@
         <MyLoader :active="isLoading" />
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
-            <p class="card-header-title is-centered">Exclusão de Quarteirões</p>
+            <p class="card-header-title is-centered">Exclusão de Áreas de Transmissão</p>
             <button class="button is-info is-outlined" @click="newFilter" v-show="hasRows">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-repeat" />
@@ -32,26 +32,13 @@
               <div class="columns">
                 <div class="column is-5 is-offset-3">
                   <div class="content">
-                    <label class="label">Área</label>
+                    <label class="label">Ano</label>
                     <div class="control">
-                      <CmbGeneric
+                      <input
                         v-enter-to-next="'form-quart'"
-                        v-model:sel="filter.id_area"
-                        :data="areas"
-                      />
-                    </div>
-                  </div>
-                </div>
-              </div>
-              <div class="columns">
-                <div class="column is-5 is-offset-3">
-                  <div class="field">
-                    <label class="label">Setor Censitário</label>
-                    <div class="control">
-                      <CmbGeneric
-                        v-enter-to-next="'form-quart'"
-                        v-model:sel="filter.id_censitario"
-                        :data="censitarios"
+                        class="input"
+                        type="text"
+                        v-model="filter.ano"
                       />
                     </div>
                   </div>
@@ -60,14 +47,14 @@
               <div class="columns">
                 <div class="column is-5 is-offset-3">
                   <div class="content">
-                    <label class="label">Quarteirao</label>
+                    <label class="label">Nome</label>
                     <div class="control">
                       <input
                         v-enter-to-next="'form-quart'"
                         class="input"
                         type="text"
-                        placeholder="Permite parcial"
-                        v-model="filter.quarteirao"
+                        placeholder="Opcional. Permite parcial"
+                        v-model="filter.descricao"
                       />
                     </div>
                   </div>
@@ -91,7 +78,7 @@
               <div class="columns">
                 <div class="column is-4 is-offset-1">
                   <div class="content">
-                    <label class="label">Quarteirao a excluir</label>
+                    <label class="label">Área a excluir</label>
                     <div class="control">
                       <CmbGeneric
                         v-enter-to-next="'form-quart'"
@@ -103,7 +90,7 @@
                 </div>
                 <div class="column is-4 is-offset-2">
                   <div class="content">
-                    <label class="label">Quarteirao que receberá</label>
+                    <label class="label">Área que receberá</label>
                     <div class="control">
                       <CmbGeneric
                         v-enter-to-next="'form-quart'"
@@ -142,7 +129,7 @@ import MyLoader from '@/components/general/MyLoader.vue'
 import { ref, onMounted, reactive, watch } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
-import quarteiraoService from '@/services/cadastro/quarteirao.service'
+import areaNavService from '@/services/cadastro/areaNav.service'
 
 const { currentUser } = useCurrentUser()
 
@@ -160,9 +147,8 @@ var censitarios = ref([])
 
 const filter = reactive({
   id_municipio: 0,
-  id_area: 0,
-  id_censitario: 0,
-  quarteirao: '',
+  ano: new Date().getFullYear(),
+  descricao: '',
 })
 
 const regExclui = ref([])
@@ -177,9 +163,9 @@ function newFilter() {
 async function loadData() {
   try {
     isLoading.value = true
-    localStorage.setItem('censSW', JSON.stringify(filter))
+    localStorage.setItem('cadNavSW', JSON.stringify(filter))
 
-    const result = await quarteiraoService.getDuplica(JSON.stringify(filter))
+    const result = await areaNavService.getDuplica(JSON.stringify(filter))
     if (result.error) {
       console.log(result.error)
     } else {
@@ -194,11 +180,11 @@ async function loadData() {
 async function processa() {
   const ok = await confirmDialog.value.show({
     title: 'Transferência',
-    message: `Toda referência ao quarteirao ID ${regExclui.value} será transferida para o quarteirao ID ${regRecebe.value}! Confirma?`,
+    message: `Toda referência à área ID ${regExclui.value} será transferida para a área ID ${regRecebe.value}! Confirma?`,
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await quarteiraoService.troca({ sai: regExclui.value, fica: regRecebe.value })
+    const resultado = await areaNavService.troca({ sai: regExclui.value, fica: regRecebe.value })
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
@@ -239,9 +225,9 @@ watch(
 onMounted(() => {
   columns.value = [
     { headerName: 'ID', field: 'id' },
-    { headerName: 'Censitário', field: 'censitario' },
-    { headerName: 'Área', field: 'area' },
-    { headerName: 'Quarteirões', field: 'quarts' },
+    { headerName: 'Área', field: 'descricao' },
+    { headerName: 'Censitários', field: 'qt_cens' },
+    { headerName: 'Quarteirões', field: 'qt_quart' },
   ]
 
   let cUser = currentUser

@@ -83,6 +83,21 @@
                 </div>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-10 is-offset-1">
+                <div class="field">
+                  <label class="label">Observação</label>
+                  <textarea
+                    name="obs"
+                    id="obs"
+                    v-model="imovel.obs"
+                    rows="2"
+                    class="textarea"
+                    placeholder="Observação"
+                  ></textarea>
+                </div>
+              </div>
+            </div>
             <hr />
             <div class="columns">
               <div class="column is-3">
@@ -166,7 +181,7 @@
                           <input
                             type="checkbox"
                             value="1"
-                            v-model="imovel.nebulizacao"
+                            v-model="imovel.nebul"
                             v-enter-to-next="'form-vc'"
                           />
                           Tratado
@@ -362,7 +377,7 @@ var imovel = reactive({
   qt_focal: '',
   perifocal: 0,
   qt_peri: '',
-  nebulizacao: 0,
+  nebul: 0,
   qt_neb: '',
   br_aedes: 0,
   qt_br: '',
@@ -424,6 +439,7 @@ function limpar() {
     id_imovel: 0,
     ordem: imovel.ordem + 1,
     casa: '',
+    obs: '',
     latitude: '',
     longitude: '',
     id_situacao: 0,
@@ -433,7 +449,7 @@ function limpar() {
     qt_focal: '',
     perifocal: 0,
     qt_peri: '',
-    nebulizacao: 0,
+    nebul: 0,
     qt_neb: '',
     br_aedes: 0,
     qt_br: '',

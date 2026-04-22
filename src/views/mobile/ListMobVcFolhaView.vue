@@ -113,6 +113,8 @@
                 :buttons="['edit', 'delete', 'boletim']"
                 :has-exports="true"
                 :loggedUser="{ id: idUser, tipo: tpUser }"
+                :title="'Mobile Visita a Imóveis'"
+                :filter="filtros"
               />
               <hr />
               <div class="columns">
@@ -166,6 +168,7 @@ const STORAGE_KEY = 'consulta-mobvcfolhasw'
 
 var hasRows = ref(false)
 var dataTable = ref([])
+var filtros = ref('')
 const atividades = ref([])
 
 const tabelaRef = ref(null)
@@ -195,6 +198,7 @@ async function loadData() {
     } else {
       dataTable.value = result.data.rows
       columns.value = result.data.cols
+      filtros.value = result.data.filtros
       hasRows.value = true
     }
   } finally {
