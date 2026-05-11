@@ -133,7 +133,7 @@ async function onDeleteRow(item) {
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await contaOvosService.delete(item.row.id)
+    const resultado = await contaOvosService.deleteReg(item.row.id)
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {

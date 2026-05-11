@@ -275,6 +275,44 @@
                 </div>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-2 is-offset-2">
+                <div class="field">
+                  <label class="label">Data Cadastro</label>
+                  <div class="control">
+                    <DatePicker
+                      v-enter-to-next="'form-ovi'"
+                      v-model="ovitrampa.dt_cadastro"
+                      :error="false"
+                      placeholder="Escolha a data"
+                      :class="{ 'is-danger': v$.dt_cadastro.$error }"
+                    />
+                    <span class="is-error" v-if="v$.dt_cadastro.$error">
+                      {{ v$.dt_cadastro.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div class="column is-6">
+                <div class="field">
+                  <label class="label">Responsável</label>
+                  <div class="control">
+                    <input
+                      v-enter-to-next="'form-ovi'"
+                      class="input"
+                      type="text"
+                      placeholder="Opcional"
+                      v-model="ovitrampa.responsavel"
+                      v-decimal
+                      :class="{ 'is-danger': v$.responsavel.$error }"
+                    />
+                    <span class="is-error" v-if="v$.responsavel.$error">
+                      {{ v$.responsavel.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <footer class="card-footer">
               <footerCard
                 v-enter-to-next="'submit-action'"
@@ -301,6 +339,7 @@ import areaService from '@/services/cadastro/area.service'
 import useValidate from '@vuelidate/core'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
+import DatePicker from '@/components/forms/MyDatePicker.vue'
 import {
   required$,
   minLengthIfFilled$,
@@ -348,6 +387,8 @@ var ovitrampa = reactive({
   prioritario: 0,
   motivo: 0,
   inativo: 0,
+  responsavel: '',
+  dt_cadastro: '',
 })
 
 var cFooter = ref({
@@ -371,6 +412,8 @@ const rules = {
   latitude: { coordenada$ },
   longitude: { coordenada$ },
   periodicidade: { required$, minValue: combo$(1) },
+  responsavel: { maxLength: maxLength$(60) },
+  dt_cadastro: {},
 }
 
 const v$ = useValidate(rules, ovitrampa)
@@ -475,6 +518,7 @@ onMounted(async () => {
       longitude: 0.0,
       periodicidade: 0,
       motivo: 0,
+      responsavel: '',
     })
   }
   let cUser = currentUser

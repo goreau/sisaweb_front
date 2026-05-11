@@ -234,6 +234,7 @@ import auxiliarService from '@/services/general/auxiliar.service'
 import area_navService from '@/services/cadastro/areaNav.service'
 import reportService from '@/services/report.service'
 import bairroService from '@/services/cadastro/bairro.service'
+import { endOfDay, startOfDay, format } from 'date-fns'
 
 const emit = defineEmits(['submit'])
 
@@ -307,17 +308,35 @@ function limparFiltros() {
     filtrosAtivos.id_variavel = filtros.id_variavel
   }
   if (props.ativos['datas'] && filtros.dt_inicial !== '' && filtros.dt_inicial != null) {
-    let dataIni = new Date(filtros.dt_inicial)
+    /*let dataIni = new Date(filtros.dt_inicial)
 
     dataIni.setHours(0, 0, 0, 0)
-    filtrosAtivos.dt_inicial = dataIni
+    filtrosAtivos.dt_inicial = dataIni*/
+    // 1. Cria o objeto Date a partir do valor do calendar
+    const dataIni = new Date(filtros.dt_inicial)
+
+    // 2. Define o horário para 23:59:59.999 no fuso LOCAL
+    const dataIniAjustada = startOfDay(dataIni)
+
+    // 3. Formata como string ISO, mas SEM o "Z" no final ou offset
+    // Isso garante que o backend receba exatamente o que você vê na tela
+    filtrosAtivos.dt_inicial = format(dataIniAjustada, "yyyy-MM-dd'T'HH:mm:ss.SSS")
   }
   if (props.ativos['datas'] && filtros.dt_final !== '' && filtros.dt_final != null) {
-    let dataFim = new Date(filtros.dt_final)
+    /*let dataFim = new Date(filtros.dt_final)
 
     dataFim.setHours(23, 59, 59, 999)
 
-    filtrosAtivos.dt_final = dataFim
+    filtrosAtivos.dt_final = dataFim*/
+    // 1. Cria o objeto Date a partir do valor do calendar
+    const dataFim = new Date(filtros.dt_final)
+
+    // 2. Define o horário para 23:59:59.999 no fuso LOCAL
+    const dataFimAjustada = endOfDay(dataFim)
+
+    // 3. Formata como string ISO, mas SEM o "Z" no final ou offset
+    // Isso garante que o backend receba exatamente o que você vê na tela
+    filtrosAtivos.dt_final = format(dataFimAjustada, "yyyy-MM-dd'T'HH:mm:ss.SSS")
   }
   if (props.ativos['area_nav'] && filtros.id_area_nav !== '' && filtros.id_area_nav != null) {
     filtrosAtivos.id_area_nav = filtros.id_area_nav

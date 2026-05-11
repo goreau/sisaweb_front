@@ -14,6 +14,8 @@ import {
   decimal,
 } from '@vuelidate/validators'
 
+import { differenceInMonths, parseISO, isDate, isValid } from 'date-fns'
+
 export const required$ = helpers.withMessage('Esse campo é obrigatório', required)
 
 export const numeric$ = helpers.withMessage('Apenas caracteres numéricos são aceitos', numeric)
@@ -92,3 +94,67 @@ export const minValueIf$ = (min, cond) =>
     if (value === null || value === undefined || value === '') return true // vazio passa
     return Number(value) >= min // aplica minValue
   })
+
+export const maxMonths$ = (max) => {
+  return helpers.withMessage(
+    `O intervalo máximo permitido é de ${max} meses`,
+    (value, siblingState) => {
+      // 1. Pega o valor bruto do campo inicial
+      const startDateRaw = siblingState.dt_inicial
+
+      // Se algum estiver vazio, não valida o intervalo (o 'required' cuida disso)
+      if (!value || !startDateRaw) return true
+
+      try {
+        // 2. Converter Data Inicial
+        let start
+        if (isDate(startDateRaw)) {
+          start = startDateRaw
+        } else if (typeof startDateRaw === 'string') {
+          // Se for string do <input type="date">, usa parseISO
+          // Se for outro formato de string, usa new Date()
+          start = startDateRaw.includes('-') ? parseISO(startDateRaw) : new Date(startDateRaw)
+        } else {
+          start = new Date(startDateRaw)
+        }
+
+        // 3. Converter Data Final (value)
+        let end
+        if (isDate(value)) {
+          end = value
+        } else if (typeof value === 'string') {
+          end = value.includes('-') ? parseISO(value) : new Date(value)
+        } else {
+          end = new Date(value)
+        }
+
+        // 4. Verificação de validade final
+        if (!isValid(start) || !isValid(end)) return false
+
+        // 5. Cálculo
+        const diff = differenceInMonths(end, start)
+
+        // Se a data final for menor que a inicial, diff será negativo (também é válido checkar)
+        return diff >= 0 && diff <= max
+      } catch (e) {
+        console.error('Erro no validador maxMonths$:', e)
+        return false
+      }
+    },
+  )
+}
+
+export const isAfterOrEqual$ = (startDateField) => {
+  return helpers.withMessage(
+    'A data final não pode ser anterior à data inicial',
+    (value, siblingState) => {
+      const startDateRaw = siblingState[startDateField]
+      if (!value || !startDateRaw) return true
+
+      const start = isDate(startDateRaw) ? startDateRaw : parseISO(startDateRaw)
+      const end = isDate(value) ? value : parseISO(value)
+
+      return isValid(start) && isValid(end) && end >= start
+    },
+  )
+}

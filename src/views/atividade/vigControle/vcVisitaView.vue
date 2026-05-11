@@ -452,6 +452,7 @@ async function limpar() {
   vc_linha.imoveis = []
 
   store.setFolha({ ...vc_linha })
+  v$.value.$reset()
 }
 
 async function save() {

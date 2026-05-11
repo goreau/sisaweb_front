@@ -101,7 +101,7 @@ class ContaOvosService {
     }
   }
 
-  async delete(id) {
+  async deleteReg(id) {
     try {
       const res = await axios.delete(`/api/cadastro/contaovos/${id}`)
       return res.data
@@ -130,7 +130,7 @@ class ContaOvosService {
   async getTesteCron() {
     try {
       const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/testecron`
-      console.log(link)
+      //console.log(link)
       console.log(`Bearer ${import.meta.env.VITE_SISAPI_KEY}`)
 
       let config = {

@@ -187,7 +187,19 @@ async function download_xlsx() {
 
   /*const worksheet = XLSX.utils.json_to_sheet(exportData)*/
   const workbook = XLSX.utils.book_new()
-  XLSX.utils.book_append_sheet(workbook, worksheet, props.title)
+
+  const formatSheetName = (name) => {
+    if (!name) return 'Aba_Sem_Nome'
+
+    return name
+      .replace(/[:\\/?*[\]]/g, '') // Remove proibidos
+      .trim() // Limpa espaços
+      .substring(0, 31) // Corta no limite exato
+  }
+
+  const sheetName = formatSheetName(props.title)
+
+  XLSX.utils.book_append_sheet(workbook, worksheet, sheetName)
   const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' })
   saveAs(new Blob([excelBuffer]), `${props.title}.xlsx`)
 }

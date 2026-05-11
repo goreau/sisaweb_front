@@ -833,6 +833,36 @@ function cancel() {
   router.push(`/vigLinhas`)
 }
 
+function limpar() {
+  vc_linha.id_vc_folha = 0
+  vc_linha.id_censitario = 0
+  vc_linha.id_quarteirao = 0
+  vc_linha.trab = 0
+  vc_linha.fech = 0
+  vc_linha.temp = 0
+  vc_linha.rec = 0
+  vc_linha.desab = 0
+  vc_linha.parcial = 0
+  vc_linha.mecanico = 0
+  vc_linha.alternativo = 0
+  vc_linha.focal = 0
+  vc_linha.perifocal = 0
+  vc_linha.nebulizacao = 0
+  vc_linha.br_aedes = 0
+
+  vc_linha.recipiente = []
+  recipiente.id_grupo_rec = 0
+  recipiente.id_tipo_rec = 0
+  recipiente.existente = 0
+  recipiente.agua = 0
+  recipiente.larva = 0
+  recipiente.amostra = ''
+  recipiente.examinadas = 0
+  recipiente.aegypti = 0
+  recipiente.albopictus = 0
+  v$.value.$reset()
+}
+
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -842,7 +872,7 @@ async function save() {
     if (resultado.status) {
       vc_linha.id_vc_linha = resultado.master
       toast.success(resultado.msg)
-      //await limpar()
+      limpar()
     } else {
       toast.error(resultado.error.msg)
     }

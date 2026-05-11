@@ -123,7 +123,7 @@ export const atividadesMenu = [
           },
         },
       },
-      {
+      /*      {
         href: '/otOvitrampa/0',
         title: 'Outras',
         icon: {
@@ -134,7 +134,7 @@ export const atividadesMenu = [
             transform: 'shrink-8',
           },
         },
-      },
+      },*/
       {
         href: '/otOvitrampas',
         title: 'Consultar Outras',

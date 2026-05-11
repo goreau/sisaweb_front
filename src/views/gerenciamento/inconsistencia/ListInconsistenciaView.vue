@@ -30,6 +30,9 @@
                         />
                       </div>
                     </fieldset>
+                    <span class="is-error" v-if="v$.tipo.$error">
+                      {{ v$.tipo.$errors[0].$message }}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -42,7 +45,11 @@
                         v-enter-to-next="'form-vc'"
                         :tipo="99"
                         v-model:sel="filter.id_municipio"
+                        :errclass="{ 'is-danger': v$.id_municipio.$error }"
                       />
+                      <span class="is-error" v-if="v$.id_municipio.$error">
+                        {{ v$.id_municipio.$errors[0].$message }}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -57,7 +64,11 @@
                         v-model="filter.dt_inicial"
                         :error="false"
                         placeholder="Escolha a data"
+                        :class="{ 'is-danger': v$.dt_inicial.$error }"
                       />
+                      <span class="is-error" v-if="v$.dt_inicial.$error">
+                        {{ v$.dt_inicial.$errors[0].$message }}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -70,7 +81,11 @@
                         v-model="filter.dt_final"
                         :error="false"
                         placeholder="Escolha a data"
+                        :class="{ 'is-danger': v$.dt_final.$error }"
                       />
+                      <span class="is-error" v-if="v$.dt_final.$error">
+                        {{ v$.dt_final.$errors[0].$message }}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -125,13 +140,15 @@ import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import MyLoader from '@/components/general/MyLoader.vue'
-import { ref, onMounted, reactive, watch } from 'vue'
+import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import { useVcVisitaStore } from '@/stores/vcVisitaStore'
 import { boletim } from '@/services/general/geraBoletim.service'
 import utilitariosService from '@/services/utilitarios.service'
+import useValidate from '@vuelidate/core'
+import { required$, requiredIf$, maxMonths$, isAfterOrEqual$ } from '@/components/forms/validators'
 
 const { currentUser } = useCurrentUser()
 
@@ -157,6 +174,19 @@ const filter = reactive({
   dt_final: '',
 })
 
+const rules = computed(() => ({
+  tipo: { required$ },
+  id_municipio: { requiredIf: requiredIf$(currentUser.value.tipo < 4) },
+  dt_inicial: { required$ },
+  dt_final: {
+    required$,
+    sequenciaCorreta: isAfterOrEqual$('dt_inicial'),
+    maxPeriodo: maxMonths$(2),
+  },
+}))
+
+const v$ = useValidate(rules, filter)
+
 const title = ref('')
 const subtitle = ref('')
 
@@ -168,26 +198,27 @@ function newFilter() {
   hasRows.value = false
 }
 
-function newReg() {
-  router.push(`/vigLinha`)
-}
-
 async function loadData() {
   try {
-    isLoading.value = true
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
+    v$.value.$touch()
+    if (!v$.value.$invalid) {
+      isLoading.value = true
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(filter))
 
-    const item = tipos.value.find((o) => o.id === filter.tipo)
-    title.value = item.title
-    subtitle.value = item.subtitle
+      const item = tipos.value.find((o) => o.id === filter.tipo)
+      title.value = item.title
+      subtitle.value = item.subtitle
 
-    const result = await inconsistenciaService.get(JSON.stringify(filter))
-    if (result.error) {
-      console.log(result.error)
+      const result = await inconsistenciaService.get(JSON.stringify(filter))
+      if (result.error) {
+        console.log(result.error)
+      } else {
+        dataTable.value = result.data.rows
+        columns.value = result.data.columns
+        hasRows.value = true
+      }
     } else {
-      dataTable.value = result.data.rows
-      columns.value = result.data.columns
-      hasRows.value = true
+      toast.warning('Corrija os erros para enviar as informações')
     }
   } finally {
     isLoading.value = false
@@ -230,11 +261,17 @@ async function printSheet(item) {
   }
 }
 
-watch('filter.tipo', (value) => {
-  const item = tipos.value.find((o) => o.id === value)
-  title.value = item.title
-  subtitle.value = item.subtitle
-})
+watch(
+  () => filter.tipo,
+  (value) => {
+    const item = tipos.value.find((o) => o.id === value)
+    if (item) {
+      // É sempre bom garantir que o item foi encontrado
+      title.value = item.title
+      subtitle.value = item.subtitle
+    }
+  },
+)
 
 onMounted(async () => {
   const saved = localStorage.getItem(STORAGE_KEY)
