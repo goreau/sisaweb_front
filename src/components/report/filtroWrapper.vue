@@ -170,6 +170,22 @@
         </div>
       </div>
     </div>
+    <div class="columns" v-if="props.ativos?.agente">
+      <div class="column is-6 is-offset-3">
+        <div class="content">
+          <label class="label">Agente</label>
+          <div class="control">
+            <input
+              v-enter-to-next="'form-report'"
+              class="input"
+              type="text"
+              v-model="filtros.agente"
+              placeholder="Aceita parcial"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="columns" v-if="props.ativos?.indicadores > 0">
       <div class="column is-6 is-offset-3">
         <div class="content">
@@ -269,6 +285,7 @@ const filtros = reactive({
   id_area_nav: 0,
   id_bairro: 0,
   tipo_rel: 0,
+  agente: '',
 })
 
 /**const filtrosAtivos = computed(() => {
@@ -343,6 +360,9 @@ function limparFiltros() {
   }
   if (props.ativos['bairro'] && filtros.id_bairro !== '' && filtros.id_bairro != null) {
     filtrosAtivos.id_bairro = filtros.id_bairro
+  }
+  if (props.ativos['agente'] && filtros.agente !== '' && filtros.agente != null) {
+    filtrosAtivos.agente = filtros.agente
   }
   if (props.ativos['ref_ativ'] && filtros.ref_ativ !== '' && filtros.ref_ativ != null) {
     filtrosAtivos.ref_ativ = filtros.ref_ativ

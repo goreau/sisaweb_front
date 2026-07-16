@@ -17,7 +17,6 @@
                       v-enter-to-next="'form-mob-rec'"
                       v-model:sel="recipiente.id_grupo_rec"
                       :data="grupos"
-                      :errclass="{ 'is-danger': v$.id_grupo_rec.$error }"
                     />
                   </div>
                 </div>
@@ -30,7 +29,6 @@
                       v-enter-to-next="'form-mob-rec'"
                       v-model:sel="recipiente.id_tipo_rec"
                       :data="tipos"
-                      :errclass="{ 'is-danger': v$.id_tipo_rec.$error }"
                     />
                   </div>
                 </div>

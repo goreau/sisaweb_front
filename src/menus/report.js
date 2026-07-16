@@ -217,6 +217,18 @@ export const reportMenu = [
           },
         },
       },
+      {
+        href: '/mainReport/controle/ctAgenteVC',
+        title: 'Produção por Agente',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
     ],
   },
   {

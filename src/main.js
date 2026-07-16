@@ -78,6 +78,7 @@ import {
   faBraille,
   faDownload,
   faX,
+  faCopy,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { EnterToNext } from './directives/EnterToNext'
@@ -143,6 +144,7 @@ library.add(
   faBraille,
   faDownload,
   faX,
+  faCopy,
 )
 
 const options = {

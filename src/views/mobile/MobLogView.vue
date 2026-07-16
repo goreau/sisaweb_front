@@ -84,13 +84,31 @@
                 <p><b>Timestamp:</b> {{ item.timestamp }}</p>
                 <p><b>Tipo:</b> {{ item.tipo }}</p>
 
-                <details>
+                <details class="container-dados">
                   <summary>Dados</summary>
-                  <pre>{{ item.dados }}</pre>
+
+                  <div class="actions">
+                    <button @click="copiarDados(item.dados)" class="btn-copy" title="Copiar">
+                      <font-awesome-icon
+                        :icon="copiado ? 'fa-solid fa-check' : 'fa-solid fa-copy'"
+                      />
+                    </button>
+                  </div>
+
+                  <pre>{{ formatarJSON(item.dados) }}</pre>
                 </details>
 
-                <details>
+                <details class="container-dados">
                   <summary>Retorno</summary>
+
+                  <div class="actions">
+                    <button @click="copiarDados(item.retorno)" class="btn-copy" title="Copiar">
+                      <font-awesome-icon
+                        :icon="copiado ? 'fa-solid fa-check' : 'fa-solid fa-copy'"
+                      />
+                    </button>
+                  </div>
+
                   <pre>{{ item.retorno }}</pre>
                 </details>
               </div>
@@ -123,6 +141,22 @@ const origems = ref([])
 
 const logs = ref([])
 const hasLog = ref(false)
+
+const copiado = ref(false)
+
+const copiarDados = async (dados) => {
+  const texto = typeof dados === 'string' ? dados : JSON.stringify(dados, null, 2)
+
+  await navigator.clipboard.writeText(texto)
+
+  // Feedback visual
+  copiado.value = true
+  setTimeout(() => {
+    copiado.value = false
+  }, 2000)
+}
+
+const formatarJSON = (dados) => (typeof dados === 'string' ? dados : JSON.stringify(dados, null, 2))
 
 var mobile = reactive({
   id_municipio: 0,
@@ -216,5 +250,33 @@ onMounted(async () => {
 .radio {
   display: block;
   margin-left: 0.5em !important;
+}
+
+.container-dados {
+  position: relative;
+}
+
+.btn-copy {
+  position: absolute;
+  top: 35px; /* Ajuste conforme a altura do seu summary */
+  right: 10px;
+  z-index: 10;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  padding: 4px 8px;
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  transition: all 0.2s;
+}
+
+.btn-copy:hover {
+  background-color: #f0f0f0;
+}
+.actions {
+  background-color: whitesmoke;
+  align-items: end;
 }
 </style>
