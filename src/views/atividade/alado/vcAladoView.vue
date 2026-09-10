@@ -306,13 +306,13 @@ watch(
   async (val) => {
     let at = val == 10 ? 1 : 4
     loadAreas(vc_alado.id_municipio)
-    const result = await auxiliarService.getAtividadeCombo(at)
+    const result = await auxiliarService.getAtividadeCombo(at, 1)
     if (result.error) {
       atividades.value = []
     } else {
       atividades.value = result
       if (at == 1) {
-        const result1 = await auxiliarService.getAtividadeCombo(9)
+        const result1 = await auxiliarService.getAtividadeCombo(9, 1)
         atividades.value = [...atividades.value, ...result1]
       }
     }
@@ -380,11 +380,11 @@ watch(
 
 onMounted(async () => {
   if (route.query.returnFrom === 'imoveis') {
+    store.objetoAlado.id_municipio = Number(store.objetoAlado.id_municipio)
     Object.assign(vc_alado, JSON.parse(JSON.stringify(store.objetoAlado)))
     save()
   } else if (route.query.from === 'edit') {
-    //console.log(store.objetoAlado)
-    readyToGo.value = true
+    store.objetoAlado.id_municipio = Number(store.objetoAlado.id_municipio)
     Object.assign(vc_alado, JSON.parse(JSON.stringify(store.objetoAlado)))
   } else {
     vc_alado.ref_ativ = 1

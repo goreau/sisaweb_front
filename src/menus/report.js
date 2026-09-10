@@ -219,7 +219,19 @@ export const reportMenu = [
       },
       {
         href: '/mainReport/controle/ctAgenteVC',
-        title: 'Produção por Agente',
+        title: 'Produção por Agente - Visita a Imóvel',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/controle/ctAgenteIC',
+        title: 'Produção por Agente - Imóvel Cadastrado',
         icon: {
           element: 'font-awesome-icon',
           attributes: {

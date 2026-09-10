@@ -91,6 +91,19 @@
                 :filter="filtros"
               />
             </section>
+            <br />
+            <section v-show="authStore.isImpersonating">
+              <div class="columns">
+                <div class="column is-2 is-offset-5">
+                  <button class="button is-info is-outlined" @click="onStopImpersonate">
+                    <span class="icon">
+                      <font-awesome-icon icon="fa-solid fa-power-off" />
+                    </span>
+                    <span>Interromper Login Simulado</span>
+                  </button>
+                </div>
+              </div>
+            </section>
           </div>
         </div>
       </div>
@@ -109,10 +122,11 @@ import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
-//import { useAuthStore } from '@/stores/auth'
+import { useAuthStore } from '@/stores/auth'
 
 const { currentUser } = useCurrentUser()
 //const auth = useAuthStore()
+const authStore = useAuthStore()
 
 const router = useRouter()
 const toast = useToast()
@@ -182,13 +196,46 @@ async function onDeleteRow(item) {
 }
 
 async function onImpersonate(item) {
-  const user = { username: item.row.login, password: 'AH@g654321' }
+  try {
+    const user = { username: item.row.login, password: 'AH@g654321' }
+    const resp = await authService.impersonate(user)
+
+    if (resp.error) {
+      toast.error(resp.msg)
+    } else {
+      // 1. Chama a action que salva o Adm original e seta o novo usuário
+      authStore.startImpersonate(resp.data)
+
+      // 2. Redireciona para a Home (via Vue Router ou location.href)
+      // Usar router.push evita recarregar do zero a aplicação caso não precise
+      window.location.href = router.resolve({ name: 'home' }).href
+    }
+  } catch (error) {
+    toast.error('Erro ao realizar o impersonate')
+    console.error(error)
+  }
+  /*const user = { username: item.row.login, password: 'AH@g654321' }
   const resp = await authService.impersonate(user)
   if (resp.error) {
     toast.error(resp.msg)
   } else {
     localStorage.setItem('user', JSON.stringify(resp.data))
     location.href = router.resolve({ name: 'home' }).href
+  }*/
+}
+
+function onStopImpersonate() {
+  try {
+    // 1. Restaura o usuário Admin no state e limpa o localStorage 'impersonator'
+    authStore.stopImpersonate()
+
+    // 2. Notifica o usuário
+    toast.info('Sessão de simulação finalizada. Você voltou para a sua conta.')
+
+    // 3. Redireciona de volta para a Home ou Lista de Usuários
+    window.location.href = router.resolve({ name: 'home' }).href
+  } catch (error) {
+    console.error('Erro ao sair do impersonate:', error)
   }
 }
 

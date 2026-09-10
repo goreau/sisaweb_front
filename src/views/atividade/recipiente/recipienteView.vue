@@ -223,17 +223,21 @@ var cFooter = ref({
 })
 
 function insert() {
-  colRecipientes.value.push({ ...recipiente })
+  colRecipientes.value.push({
+    ...recipiente,
+    existente: Number(recipiente.existente),
+    larva: Number(recipiente.larva),
+  })
   limpar()
 }
 
 function voltar() {
   store.updateRecipientes(colRecipientes)
-  back()
+  router.push({ name: 'imCadastrado', query: { returnFrom: 'recipiente' } })
 }
 
 function back() {
-  router.push({ name: 'imCadastrado', query: { returnFrom: 'recipiente' } }) // params: { id: 0 }
+  router.push({ name: 'imCadastrado', query: { from: 'edit' } }) // params: { id: 0 }
 }
 
 function limpar() {
@@ -269,18 +273,33 @@ watch(
 watch(
   () => recipiente.id_tipo_rec,
   (id) => {
+    if (tipos.value.length == 0) return
     const item = tipos.value.find((a) => a.id === Number(id))
     recipiente.fantTipo = item?.nome || ''
   },
 )
 
 function onEditRow(item) {
-  let row = colRecipientes.value.splice(item.index, 1)
-  Object.assign(recipiente, row[0])
+  // let row = colRecipientes.value.splice(item.index, 1)
+  // Object.assign(recipiente, row[0])
+
+  const rowData = item.data || item
+
+  // 2. Encontra o índice real no array original pelo ID
+  const realIndex = colRecipientes.value.findIndex((r) => r.id === rowData.id_recipiente)
+
+  if (realIndex !== -1) {
+    // 3. Remove do array e popula o formulário
+    const [removedItem] = colRecipientes.value.splice(realIndex, 1)
+    Object.assign(recipiente, removedItem)
+  }
 }
 
 function onDeleteRow(item) {
-  colRecipientes.value.splice(item.index, 1)
+  const rowData = item.data || item
+
+  const realIndex = colRecipientes.value.findIndex((r) => r.id === rowData.id_recipiente)
+  colRecipientes.value.splice(realIndex, 1)
 }
 
 onMounted(async () => {

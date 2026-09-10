@@ -379,13 +379,25 @@ watch(
   (val) => (defValues.prodBr = val),
 )
 
+const inicializarValores = () => {
+  // Tenta carregar preferências salvas previamente
+  const salvos = defValues
+
+  // Regra: Pega o valor salvo OR o id do 1º item da lista recém-carregada OR mantém o que estava
+  vc_imovel.id_prod_focal = salvos.prodFocal || prod_focais.value[0]?.id || 0
+  vc_imovel.id_prod_peri = salvos.prodPeri || prod_peris.value[0]?.id || 0
+  vc_imovel.id_prod_neb = salvos.prodNeb || prod_nebs.value[0]?.id || 0
+  vc_imovel.id_prod_br = salvos.prodBr || prod_peris.value[0]?.id || 0
+}
+
 onMounted(async () => {
   let cUser = currentUser
   if (cUser.value) {
     id_prop.value = cUser.value.id
   }
 
-  loadCombos()
+  await loadCombos()
+  inicializarValores()
 })
 </script>
 

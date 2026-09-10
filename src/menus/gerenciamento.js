@@ -346,6 +346,32 @@ export const gerenciamentoMenu = [
           },
         },
       },
+      {
+        href: '/coordenadas',
+        title: 'Cadastros - Coordenadas',
+        requiresAdmin: false,
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-location-dot',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
     ],
+  },
+  {
+    href: '/numeroMapa',
+    title: 'Número do Mapa',
+    requiresAdmin: true,
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-location-dot',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
   },
 ]

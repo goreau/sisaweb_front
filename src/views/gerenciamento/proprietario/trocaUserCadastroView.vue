@@ -25,6 +25,24 @@
                 </div>
               </div>
               <div class="columns">
+                <div class="column is-6 is-offset-3">
+                  <div class="content">
+                    <fieldset class="fieldset">
+                      <legend>Atividade</legend>
+                      <div class="field">
+                        <RadioGeneric
+                          v-enter-to-next="'form-mobile'"
+                          v-model="filter.tipo"
+                          :options="tipos"
+                          name="tipo"
+                          :inline="true"
+                        />
+                      </div>
+                    </fieldset>
+                  </div>
+                </div>
+              </div>
+              <div class="columns">
                 <div class="field column is-4 is-offset-4">
                   <label class="label">&nbsp;</label>
                   <div class="control">
@@ -85,6 +103,7 @@
 import avulsosService from '@/services/gerenciamento/avulsos.service'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
+import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { ref, onMounted, reactive } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -100,11 +119,12 @@ var confirmDialog = ref(null)
 
 var hasRows = ref(false)
 var dataTable = ref([])
-var execucoes = ref([])
+var tipos = ref([])
 
 const filter = reactive({
   id_municipio: 0,
   id_execucao: 0,
+  tipo: 9,
   dt_inicial: '',
   dt_final: '',
 })
@@ -143,7 +163,11 @@ async function processa() {
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await avulsosService.trocaCad({ sai: regExclui.value, fica: regRecebe.value })
+    const resultado = await avulsosService.trocaCad({
+      sai: regExclui.value,
+      fica: regRecebe.value,
+      tipo: filter.tipo,
+    })
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {
@@ -156,10 +180,15 @@ async function processa() {
 }
 
 onMounted(() => {
-  execucoes.value = [
-    { id: 1, nome: 'Estado' },
-    { id: 2, nome: 'Município' },
-    { id: 3, nome: 'ACS' },
+  tipos.value = [
+    { id: 9, nome: 'Todas' },
+    { id: 0, nome: 'Quarteirao' },
+    { id: 1, nome: 'Censitário' },
+    { id: 2, nome: 'Área' },
+    { id: 3, nome: 'Imóvel' },
+    { id: 4, nome: 'Área NAV' },
+    { id: 5, nome: 'Ovitrampa' },
+    { id: 6, nome: 'EDL' },
   ]
 
   let cUser = currentUser

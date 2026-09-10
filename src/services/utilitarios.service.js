@@ -65,6 +65,45 @@ class UtilitariosService {
       }
     }
   }
+
+  async getAgentes(filtros) {
+    try {
+      const res = await axios.post(`/api/utilitarios/agentes`, filtros)
+      return res.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
+
+  async getQuadras(filtros) {
+    try {
+      const res = await axios.post(`/api/utilitarios/quadras`, filtros)
+      return res.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
+
+  async getPontos(filtros) {
+    try {
+      const res = await axios.post(`/api/utilitarios/pontos`, filtros)
+      return res.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
 }
 
 export default new UtilitariosService()

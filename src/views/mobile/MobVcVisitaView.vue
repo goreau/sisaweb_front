@@ -604,6 +604,29 @@ const rules = {
 
 const v$ = useValidate(rules, vc_linha)
 
+const inicializarValores = (registroApi) => {
+  const salvos = defValues
+
+  // Função genérica com a sua nova regra de negócio
+  const resolverId = (idApi, idSalvo, lista) => {
+    // 1. Verifica se o produto retornado pela API existe na lista atual
+    const existeNaLista = lista.some((item) => item.id === idApi)
+    if (existeNaLista) return idApi
+
+    // 2. Se não existir na API, recua para o padrão salvo
+    const salvoExisteNaLista = lista.some((item) => item.id === idSalvo)
+    if (salvoExisteNaLista) return idSalvo
+
+    // 3. Fallbacks finais: 1º item da lista ou 0
+    return lista[0]?.id || 0
+  }
+
+  vc_linha.id_prod_focal = resolverId(registroApi?.prodFocal, salvos.prodFocal, prod_focais.value)
+  vc_linha.id_prod_peri = resolverId(registroApi?.prodPeri, salvos.prodPeri, prod_peris.value)
+  vc_linha.id_prod_neb = resolverId(registroApi?.prodNeb, salvos.prodNeb, prod_nebs.value)
+  vc_linha.id_prod_br = resolverId(registroApi?.prodBr, salvos.prodBr, prod_peris.value)
+}
+
 async function recipientes() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -714,6 +737,8 @@ async function loadCombos() {
     prod_nebs.value = result3
   }
 
+  inicializarValores()
+
   execucoes.value = [
     { id: 1, nome: 'Estado' },
     { id: 2, nome: 'Município' },
@@ -741,7 +766,7 @@ async function loadCombos() {
   ]
 }
 
-watch(
+/*watch(
   () => vc_linha.id_prod_focal,
   (val) => (defValues.prodFocal = val),
 )
@@ -756,7 +781,7 @@ watch(
 watch(
   () => vc_linha.id_prod_br,
   (val) => (defValues.prodBr = val),
-)
+)*/
 
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
@@ -765,17 +790,13 @@ onMounted(async () => {
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.visita)))
   } else {
     store.setVisita({})
-    vc_linha.id_prod_focal = defValues.prodFocal
-    vc_linha.id_prod_peri = defValues.prodPeri
-    vc_linha.id_prod_neb = defValues.prodNeb
-    vc_linha.id_prod_br = defValues.prodBr
   }
   let cUser = currentUser
   if (cUser.value) {
     id_prop.value = cUser.value.id
   }
-
-  loadCombos()
+  await loadCombos()
+  inicializarValores(vc_linha)
 })
 </script>
 

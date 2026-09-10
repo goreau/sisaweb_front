@@ -130,6 +130,26 @@
                 </div>
               </div>
             </div>
+            <div class="columns" v-show="impersonator?.nivel == 1">
+              <div class="column is-4 is-offset-4">
+                <div class="field">
+                  <label class="label">Identificador do Mapa</label>
+                  <div class="control">
+                    <input
+                      v-enter-to-next="'form-quart'"
+                      class="input"
+                      type="text"
+                      placeholder="Opcional"
+                      v-model="quarteirao.id_mapa"
+                      :class="{ 'is-danger': v$.id_mapa.$error }"
+                    />
+                    <span class="is-error" v-if="v$.id_mapa.$error">
+                      {{ v$.id_mapa.$errors[0].$message }}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
             <hr />
             <p class="divisor">Imóveis por tipo</p>
             <div class="columns">
@@ -347,10 +367,11 @@ import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useRoute } from 'vue-router'
 import { useToast } from 'vue-toastification'
+import { maxLength } from '@vuelidate/validators'
 
 const toast = useToast()
 const route = useRoute()
-const { currentUser } = useCurrentUser()
+const { currentUser, impersonator, isImpersonating } = useCurrentUser()
 
 var areas = ref([])
 var censitarios = ref([])
@@ -377,6 +398,7 @@ var quarteirao = reactive({
   baldio: 0,
   obra: 0,
   cadastrado: 0,
+  id_mapa: '',
 })
 
 var cFooter = ref({
@@ -404,6 +426,7 @@ const rules = {
   baldio: { required$ },
   obra: { required$ },
   cadastrado: { required$ },
+  id_mapa: { maxLength: 30 },
 }
 
 const v$ = useValidate(rules, quarteirao)
@@ -411,6 +434,9 @@ const v$ = useValidate(rules, quarteirao)
 async function save() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
+    if (quarteirao.id_mapa == '') {
+      quarteirao.id_mapa = quarteirao.id_area + 'Q' + quarteirao.numero_quarteirao.trim()
+    }
     var resultado = null
     var msg = ''
     if (isEditMode.value) {

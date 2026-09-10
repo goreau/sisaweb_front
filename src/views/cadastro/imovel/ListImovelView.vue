@@ -12,7 +12,7 @@
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
+            <button class="button is-primary is-outlined" @click="newReg">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-plus-circle" />
               </span>
@@ -101,6 +101,10 @@ const idUser = ref(0)
 const filter = reactive({
   id_municipio,
 })
+
+function newReg() {
+  router.push('imovel/0')
+}
 
 const columns = ref([])
 

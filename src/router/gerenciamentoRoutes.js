@@ -164,4 +164,18 @@ export default [
         /* webpackChunkName: "user" */ '@/views/gerenciamento/inconsistencia/ListInconsistenciaView.vue'
       ),
   },
+  {
+    path: '/numeroMapa',
+    name: 'numeroMapa',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/gerenciamento/mapa/NumeroMapaView.vue'),
+  },
+  {
+    path: '/coordenadas',
+    name: 'coordenadas',
+    component: () =>
+      import(
+        /* webpackChunkName: "user" */ '@/views/gerenciamento/coordenadas/ListCoordenadasView.vue'
+      ),
+  },
 ]

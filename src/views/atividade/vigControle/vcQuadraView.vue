@@ -88,6 +88,9 @@
                         name="id_tipo"
                         :inline="true"
                       />
+                      <span class="is-error" v-if="v$.id_tipo.$error">
+                        {{ v$.id_tipo.$errors[0].$message }}
+                      </span>
                     </div>
                   </fieldset>
                 </div>
@@ -693,6 +696,7 @@ import { required$, combo$, numeric$, requiredIf$ } from '@/components/forms/val
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
+import { useDefautValues } from '@/composables/defaultValues'
 
 const toast = useToast()
 
@@ -715,6 +719,14 @@ var quarteiraos = ref([])
 
 var areas_nav = ref([])
 var navs = ref(false)
+
+const { defValues } = useDefautValues('defaultValues', {
+  prodFocal: 0,
+  prodPeri: 0,
+  prodNeb: 0,
+  prodBr: 0,
+  exec: 2,
+})
 
 var vc_linha = reactive({
   id_municipio: 0,
@@ -808,6 +820,18 @@ const rules = {
 const v$ = useValidate(rules, vc_linha)
 
 const filtro = computed(() => [vc_linha.id_atividade, vc_linha.id_municipio])
+
+const inicializarValores = () => {
+  // Tenta carregar preferências salvas previamente
+  const salvos = defValues
+
+  // Regra: Pega o valor salvo OR o id do 1º item da lista recém-carregada OR mantém o que estava
+  vc_linha.id_prod_focal = salvos.prodFocal || prod_focais.value[0]?.id || 0
+  vc_linha.id_prod_peri = salvos.prodPeri || prod_peris.value[0]?.id || 0
+  vc_linha.id_prod_neb = salvos.prodNeb || prod_nebs.value[0]?.id || 0
+  vc_linha.id_prod_br = salvos.prodBr || prod_peris.value[0]?.id || 0
+  vc_linha.id_execucao = salvos.exec || 2
+}
 
 watch(filtro, async ([novo1, novo2]) => {
   if (novo1 && novo2) {
@@ -922,6 +946,8 @@ async function loadCombos() {
     prod_nebs.value = result3
   }
 
+  inicializarValores()
+
   execucoes.value = [
     { id: 1, nome: 'Estado' },
     { id: 2, nome: 'Município' },
@@ -998,6 +1024,27 @@ watch(
       quarteiraos.value = result
     }
   },
+)
+
+watch(
+  () => vc_linha.id_prod_focal,
+  (val) => (defValues.prodFocal = val),
+)
+watch(
+  () => vc_linha.id_prod_peri,
+  (val) => (defValues.prodPeri = val),
+)
+watch(
+  () => vc_linha.id_prod_neb,
+  (val) => (defValues.prodNeb = val),
+)
+watch(
+  () => vc_linha.id_prod_br,
+  (val) => (defValues.prodBr = val),
+)
+watch(
+  () => vc_linha.id_execucao,
+  (val) => (defValues.exec = val),
 )
 
 onMounted(async () => {

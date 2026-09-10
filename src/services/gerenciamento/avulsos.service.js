@@ -27,6 +27,19 @@ class AvulsosService {
     }
   }
 
+  async numeroMapa(data) {
+    try {
+      const res = await axios.post('/api/avulso/numeroMapa', data)
+      return res.data
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
+
   async getDuplicaOvi(ano) {
     try {
       const res = await axios.get(`/api/avulso/getDuplicaOvi/${ano}`)

@@ -11,4 +11,16 @@ export const utilitariosMenu = [
       },
     },
   },
+  {
+    href: '/mapa',
+    title: 'Percurso dos agentes',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-draw-polygon',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+  },
 ]

@@ -336,6 +336,7 @@ const { defValues } = useDefautValues('defaultValues', {
   prodPeri: 0,
   prodNeb: 0,
   prodBr: 0,
+  exec: 2,
 })
 
 const { currentUser } = useCurrentUser()
@@ -356,6 +357,7 @@ var areas_nav = ref([])
 var navs = ref(false)
 
 var id_prop = ref(0)
+var canClear = ref(true)
 
 var vc_linha = reactive({
   id: 0,
@@ -406,6 +408,18 @@ const rules = {
 const v$ = useValidate(rules, vc_linha)
 
 const filtro = computed(() => [vc_linha.id_atividade, vc_linha.id_municipio])
+
+const inicializarValores = () => {
+  // Tenta carregar preferências salvas previamente
+  const salvos = defValues
+
+  // Regra: Pega o valor salvo OR o id do 1º item da lista recém-carregada OR mantém o que estava
+  vc_linha.id_prod_focal = salvos.prodFocal || prod_focais.value[0]?.id || 0
+  vc_linha.id_prod_peri = salvos.prodPeri || prod_peris.value[0]?.id || 0
+  vc_linha.id_prod_neb = salvos.prodNeb || prod_nebs.value[0]?.id || 0
+  vc_linha.id_prod_br = salvos.prodBr || prod_peris.value[0]?.id || 0
+  vc_linha.id_execucao = salvos.exec || 2
+}
 
 watch(filtro, async ([novo1, novo2]) => {
   if (novo1 && novo2) {
@@ -466,9 +480,13 @@ async function save() {
     }
 
     if (resultado.status) {
-      vc_linha.id_vc_linha = resultado.master
+      vc_linha.id_vc_folha = resultado.master
       toast.success(resultado.msg)
-      await limpar()
+      if (canClear.value) {
+        await limpar()
+      } else {
+        canClear = true
+      }
     } else {
       toast.error(resultado.error.msg)
     }
@@ -571,6 +589,8 @@ async function loadCombos() {
     prod_nebs.value = result3
   }
 
+  inicializarValores()
+
   execucoes.value = [
     { id: 1, nome: 'Estado' },
     { id: 2, nome: 'Município' },
@@ -590,6 +610,7 @@ watch(
 )
 watch(
   () => vc_linha.id_prod_peri,
+
   (val) => (defValues.prodPeri = val),
 )
 watch(
@@ -600,21 +621,22 @@ watch(
   () => vc_linha.id_prod_br,
   (val) => (defValues.prodBr = val),
 )
+watch(
+  () => vc_linha.id_execucao,
+  (val) => (defValues.exec = val),
+)
 
 onMounted(async () => {
   if (route.query.returnFrom === 'imovel') {
     store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
+    canClear.value = false
     save()
   } else if (route.query.from === 'edit') {
     store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
     Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
   } else {
     store.setFolha({})
-    vc_linha.id_prod_focal = defValues.prodFocal
-    vc_linha.id_prod_peri = defValues.prodPeri
-    vc_linha.id_prod_neb = defValues.prodNeb
-    vc_linha.id_prod_br = defValues.prodBr
   }
   let cUser = currentUser
   if (cUser.value) {

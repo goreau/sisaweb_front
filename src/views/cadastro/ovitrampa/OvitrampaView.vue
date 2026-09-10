@@ -247,6 +247,7 @@
                       placeholder="Opcional"
                       v-model="ovitrampa.latitude"
                       v-decimal
+                      @blur="onBlurCoordenada('latitude')"
                       :class="{ 'is-danger': v$.latitude.$error }"
                     />
                     <span class="is-error" v-if="v$.latitude.$error">
@@ -266,6 +267,7 @@
                       placeholder="Opcional"
                       v-model="ovitrampa.longitude"
                       v-decimal
+                      @blur="onBlurCoordenada('longitude')"
                       :class="{ 'is-danger': v$.longitude.$error }"
                     />
                     <span class="is-error" v-if="v$.longitude.$error">
@@ -344,9 +346,10 @@ import {
   required$,
   minLengthIfFilled$,
   combo$,
-  coordenada$,
   minLength$,
   maxLength$,
+  latitudeSP$,
+  longitudeSP$,
 } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -409,8 +412,8 @@ const rules = {
   id_censitario: { required$, minValue: combo$(1) },
   id_quarteirao: { required$, minValue: combo$(1) },
   motivo: { required$, minValue: combo$(1) },
-  latitude: { coordenada$ },
-  longitude: { coordenada$ },
+  latitude: { latitudeSP$ },
+  longitude: { longitudeSP$ },
   periodicidade: { required$, minValue: combo$(1) },
   responsavel: { maxLength: maxLength$(60) },
   dt_cadastro: {},
@@ -440,6 +443,48 @@ async function save() {
   } else {
     toast.warning('Corrija os erros para enviar as informações')
   }
+}
+
+function onBlurCoordenada(campo) {
+  // 1. Executa a formatação do campo em imovel[campo]
+  formatarCoordenada(campo)
+
+  // 2. Notifica o Vuelidate do evento blur
+  // (Ajuste o caminho do v$ conforme o seu schema, ex: v$.imovel[campo].$touch() ou v$[campo].$touch())
+  if (v$.value && v$.value[campo]) {
+    v$.value[campo].$touch()
+  }
+}
+
+function formatarCoordenada(campo) {
+  const valorOriginal = ovitrampa[campo]
+  if (valorOriginal === null || valorOriginal === '' || valorOriginal === undefined) return
+
+  // 1. Substitui vírgula por ponto decimal
+  let str = String(valorOriginal).trim().replace(',', '.')
+  let num = parseFloat(str)
+
+  if (isNaN(num)) return
+
+  // 2. Garante o sinal negativo (hemisférios Sul e Oeste)
+  if (num > 0) {
+    num = -num
+  }
+
+  // 3. Corrige a falta de ponto decimal se o valor for muito alto
+  // Exemplo: -2355054 vira -23.55054
+  if (campo === 'latitude') {
+    while (Math.abs(num) > 90) {
+      num = num / 10
+    }
+  } else if (campo === 'longitude') {
+    while (Math.abs(num) > 180) {
+      num = num / 10
+    }
+  }
+
+  // 4. Atualiza a propriedade reativa com a precisão ajustada
+  ovitrampa[campo] = Number(num.toFixed(6))
 }
 
 watch(

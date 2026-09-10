@@ -186,6 +186,24 @@
         </div>
       </div>
     </div>
+    <div class="columns" v-if="props.ativos?.cobertura">
+      <div class="column is-6 is-offset-3">
+        <div class="content">
+          <fieldset class="fieldset">
+            <legend>Tipo de Produção</legend>
+            <div class="field">
+              <RadioGeneric
+                v-enter-to-next="'form-report'"
+                v-model="filtros.cobertura"
+                :options="coberturas"
+                name="cobertura"
+                :inline="true"
+              />
+            </div>
+          </fieldset>
+        </div>
+      </div>
+    </div>
     <div class="columns" v-if="props.ativos?.indicadores > 0">
       <div class="column is-6 is-offset-3">
         <div class="content">
@@ -267,6 +285,7 @@ const variaveis = ref([])
 const areas_nav = ref([])
 const bairros = ref([])
 const tipos_rel = ref([])
+const coberturas = ref([])
 const filtrosAtivos = reactive({})
 
 const STORAGE_KEY = 'consulta-reportsw'
@@ -277,6 +296,7 @@ const filtros = reactive({
   id_atividade: 0,
   ref_ativ: 0,
   indicadores: 0,
+  cobertura: 1,
   id_execucao: 0,
   id_variavel: 0,
   dt_inicial: '',
@@ -369,6 +389,9 @@ function limparFiltros() {
   }
   if (props.ativos['indicadores'] && filtros.indicadores !== '' && filtros.indicadores != null) {
     filtrosAtivos.indicadores = filtros.indicadores
+  }
+  if (props.ativos['cobertura'] && filtros.cobertura !== '' && filtros.cobertura != null) {
+    filtrosAtivos.cobertura = filtros.cobertura
   }
   filtrosAtivos.tipo_rel = filtros.tipo_rel
 }
@@ -471,6 +494,14 @@ watch(
       indicadores.value = indic[props.ativos?.indicadores]
     } else {
       filtros.indicadores = 0
+    }
+    if (props.ativos?.cobertura && props.ativos?.cobertura > 0) {
+      coberturas.value = [
+        { id: 1, nome: 'Visitados' },
+        { id: 2, nome: 'Trabalhados' },
+      ]
+    } else {
+      filtros.cobertura = 0
     }
     if (props.ativos?.variaveis && props.ativos?.variaveis > 0) {
       const result = await reportService.getVariaveis(val.variaveis)

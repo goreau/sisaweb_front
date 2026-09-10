@@ -254,8 +254,8 @@ async function sincroniza() {
       const linhas = tabelaRef.value.getFilteredRows()
 
       const ret = await mobVcImovelService.sync(linhas)
-      if (ret.error) {
-        toast.error(ret.msg)
+      if (!ret.status) {
+        toast.error(ret.error.msg)
       } else {
         tabelaRef.value.clearFilters()
         toast.success(`${ret.master} ${ret.msg}`)

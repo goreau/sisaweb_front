@@ -397,6 +397,7 @@
             />
           </footer>
         </div>
+        <br />
       </div>
     </div>
   </div>
@@ -430,7 +431,10 @@ const { defValues } = useDefautValues('defaultValues', {
   prodPeri: 0,
   prodNeb: 0,
   prodBr: 0,
+  exec: 0,
 })
+
+var canClear = ref(true)
 
 const { currentUser } = useCurrentUser()
 const store = useVcImovelStore()
@@ -536,7 +540,11 @@ async function save() {
     if (resultado.status) {
       vc_imovel.id_vc_imovel = resultado.master
       toast.success(resultado.msg)
-      limpa()
+      if (canClear.value) {
+        limpa()
+      } else {
+        canClear = true
+      }
     } else {
       toast.error(resultado.error.msg)
     }
@@ -561,6 +569,7 @@ function limpa() {
   vc_imovel.recipientes = []
   loadImoveis()
   store.setVisita({ ...vc_imovel })
+  v$.value.$reset()
 }
 
 async function loadImoveis() {
@@ -649,6 +658,8 @@ async function loadCombos() {
     { id: 1, nome: 'Mecânico' },
     { id: 2, nome: 'Alternativo' },
   ]
+
+  inicializarValores()
 }
 
 watch(
@@ -667,11 +678,28 @@ watch(
   () => vc_imovel.id_prod_br,
   (val) => (defValues.prodBr = val),
 )
+watch(
+  () => vc_imovel.id_execucao,
+  (val) => (defValues.exec = val),
+)
+
+const inicializarValores = () => {
+  // Tenta carregar preferências salvas previamente
+  const salvos = defValues
+
+  // Regra: Pega o valor salvo OR o id do 1º item da lista recém-carregada OR mantém o que estava
+  vc_imovel.id_prod_focal = salvos.prodFocal || prod_focais.value[0]?.id || 0
+  vc_imovel.id_prod_peri = salvos.prodPeri || prod_peris.value[0]?.id || 0
+  vc_imovel.id_prod_neb = salvos.prodNeb || prod_nebs.value[0]?.id || 0
+  vc_imovel.id_prod_br = salvos.prodBr || prod_peris.value[0]?.id || 0
+  vc_imovel.id_execucao = salvos.exec || 2
+}
 
 onMounted(async () => {
   if (route.query.returnFrom === 'recipiente') {
     store.visita.id_municipio = Number(store.visita.id_municipio)
     Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
+    canClear.value = false
     save()
   } else if (route.query.from === 'edit') {
     readyToGo.value = true
@@ -679,10 +707,6 @@ onMounted(async () => {
     Object.assign(vc_imovel, JSON.parse(JSON.stringify(store.visita)))
   } else {
     store.setVisita({})
-    vc_imovel.id_prod_focal = defValues.prodFocal
-    vc_imovel.id_prod_peri = defValues.prodPeri
-    vc_imovel.id_prod_neb = defValues.prodNeb
-    vc_imovel.id_prod_br = defValues.prodBr
   }
 
   let cUser = currentUser

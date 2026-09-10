@@ -71,6 +71,9 @@ watch(
 .v-sidebar-menu .vsm--link_level-3 {
   background-color: #cfa03b;
 }
+.v-sidebar-menu .vsm--dropdown {
+  background-color: #f1d69a;
+}
 .v-sidebar-menu.vsm_expanded .vsm--link_level-2.vsm--link_open {
   color: var(--vsm-item-open-color);
   background-color: #dba93e;

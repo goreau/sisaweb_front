@@ -12,7 +12,7 @@
               </span>
               <span>Refazer Consulta</span>
             </button>
-            <button class="button is-primary is-outlined" @click="newUser">
+            <button class="button is-primary is-outlined" @click="newReg">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-plus-circle" />
               </span>
@@ -106,6 +106,10 @@ const columns = ref([])
 
 function newFilter() {
   hasRows.value = false
+}
+
+function newReg() {
+  router.push('area/0')
 }
 
 async function onEditRow(item) {

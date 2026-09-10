@@ -116,6 +116,8 @@ async function login() {
     } else {
       const redirectTo = localStorage.getItem('redirect_to')
 
+      auth.stopImpersonate()
+
       // 3. Limpa o armazenamento e redireciona
       if (redirectTo) {
         localStorage.removeItem('redirect_to')

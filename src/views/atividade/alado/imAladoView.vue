@@ -717,7 +717,7 @@ async function save() {
 }
 
 function voltar() {
-  router.push({ name: 'vcAlado', query: { returnFrom: 'imoveis' } }) // params: { id: 0 }
+  router.push({ name: 'vcAlado', query: { from: 'edit' } }) // params: { id: 0 }
 }
 
 async function loadCombos() {
@@ -757,6 +757,8 @@ onMounted(async () => {
   }*/
 
   Object.assign(colImoveis.value, JSON.parse(JSON.stringify(store.objetoAlado.imoveis)))
+
+  imovel.ordem = colImoveis.value.length + 1
 
   isCadastro.value = store.objetoAlado.ref_ativ == 10
 

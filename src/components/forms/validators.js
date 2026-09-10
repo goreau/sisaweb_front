@@ -74,11 +74,32 @@ export const minLengthIfFilled$ = (min) =>
     (value) => value.length === 0 || value.length >= min,
   )*/
 
-export const coordenada$ = helpers.withMessage(
-  'O valor deve ser um número decimal, negativo ou zero',
+const regexDecimalNegativo = /^-?\d+(\.\d+)?$/
+
+export const latitudeSP$ = helpers.withMessage(
+  'A latitude deve estar entre -25.3 e -19.7 (Estado de SP)',
   (value) => {
-    if (value === null || value === '') return true // Permitir vazio se necessário
-    return /^-?\d+(\.\d+)?$/.test(value) && parseFloat(value) <= 0
+    if (value === null || value === '' || value === undefined) return true
+
+    const stringVal = String(value).trim().replace(',', '.')
+    if (!regexDecimalNegativo.test(stringVal)) return false
+
+    const num = parseFloat(stringVal)
+    return num >= -25.3 && num <= -19.7
+  },
+)
+
+// 2. Validador para Longitude de SP (entre -53.1 e -44.1)
+export const longitudeSP$ = helpers.withMessage(
+  'A longitude deve estar entre -53.1 e -44.1 (Estado de SP)',
+  (value) => {
+    if (value === null || value === '' || value === undefined) return true
+
+    const stringVal = String(value).trim().replace(',', '.')
+    if (!regexDecimalNegativo.test(stringVal)) return false
+
+    const num = parseFloat(stringVal)
+    return num >= -53.1 && num <= -44.1
   },
 )
 

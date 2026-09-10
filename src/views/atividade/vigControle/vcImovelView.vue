@@ -254,6 +254,7 @@
                       placeholder="Graus decimais"
                       v-model="imovel.latitude"
                       v-decimal
+                      @blur="onBlurCoordenada('latitude')"
                       :class="{ 'is-danger': v$.latitude.$error }"
                     />
                     <span class="is-error" v-if="v$.latitude.$error">
@@ -273,6 +274,7 @@
                       placeholder="Graus decimais"
                       v-model="imovel.longitude"
                       v-decimal
+                      @blur="onBlurCoordenada('longitude')"
                       :class="{ 'is-danger': v$.longitude.$error }"
                     />
                     <span class="is-error" v-if="v$.longitude.$error">
@@ -332,10 +334,11 @@ import useValidate from '@vuelidate/core'
 import {
   required$,
   combo$,
-  coordenada$,
   numeric$,
   maxLength$,
   decimal$,
+  latitudeSP$,
+  longitudeSP$,
 } from '@/components/forms/validators'
 import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
@@ -402,8 +405,8 @@ const rules = {
   qt_peri: { decimal$ },
   qt_neb: { decimal$ },
   qt_br: { decimal$ },
-  latitude: { coordenada$ },
-  longitude: { coordenada$ },
+  latitude: { latitudeSP$ },
+  longitude: { longitudeSP$ },
 }
 
 const v$ = useValidate(rules, imovel)
@@ -431,6 +434,48 @@ function insert() {
     }
     limpar()
   }
+}
+
+function onBlurCoordenada(campo) {
+  // 1. Executa a formatação do campo em imovel[campo]
+  formatarCoordenada(campo)
+
+  // 2. Notifica o Vuelidate do evento blur
+  // (Ajuste o caminho do v$ conforme o seu schema, ex: v$.imovel[campo].$touch() ou v$[campo].$touch())
+  if (v$.value && v$.value[campo]) {
+    v$.value[campo].$touch()
+  }
+}
+
+function formatarCoordenada(campo) {
+  const valorOriginal = imovel[campo]
+  if (valorOriginal === null || valorOriginal === '' || valorOriginal === undefined) return
+
+  // 1. Substitui vírgula por ponto decimal
+  let str = String(valorOriginal).trim().replace(',', '.')
+  let num = parseFloat(str)
+
+  if (isNaN(num)) return
+
+  // 2. Garante o sinal negativo (hemisférios Sul e Oeste)
+  if (num > 0) {
+    num = -num
+  }
+
+  // 3. Corrige a falta de ponto decimal se o valor for muito alto
+  // Exemplo: -2355054 vira -23.55054
+  if (campo === 'latitude') {
+    while (Math.abs(num) > 90) {
+      num = num / 10
+    }
+  } else if (campo === 'longitude') {
+    while (Math.abs(num) > 180) {
+      num = num / 10
+    }
+  }
+
+  // 4. Atualiza a propriedade reativa com a precisão ajustada
+  imovel[campo] = Number(num.toFixed(6))
 }
 
 function limpar() {
@@ -464,14 +509,17 @@ const readyToGo = computed(() => {
 })
 
 function onEditRow(item) {
-  const row = colImoveis.value.find((a) => a.id === Number(item.row.id))
+  const rowData = item.row || item.node?.data || item.data || item
 
-  //let row = colImoveis.value.splice(item.index, 1)
-  Object.assign(imovel, row)
+  Object.assign(imovel, rowData)
 }
 
 function onDeleteRow(item) {
-  colImoveis.value.splice(item.index, 1)
+  //colImoveis.value.splice(item.index, 1)
+  const rowData = item.row || item.node?.data || item.data || item
+
+  const realIndex = colImoveis.value.findIndex((r) => r.id_im_folha === rowData.id_im_folha)
+  colImoveis.value.splice(realIndex, 1)
 }
 
 function onRecipiente(item) {
@@ -484,7 +532,7 @@ async function save() {
 }
 
 function voltar() {
-  router.push({ name: 'vigLinha', query: { returnFrom: 'imovel' } }) // params: { id: 0 }
+  router.push({ name: 'vigLinha', query: { from: 'edit' } }) // params: { id: 0 }
 }
 
 async function loadCombos() {
@@ -537,6 +585,8 @@ watch(
 
 onMounted(async () => {
   Object.assign(colImoveis.value, JSON.parse(JSON.stringify(store.objetoFolha.imoveis)))
+
+  imovel.ordem = colImoveis.value.length + 1
 
   let cUser = currentUser
   if (cUser.value) {

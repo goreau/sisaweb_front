@@ -3,20 +3,27 @@ import { defineStore } from 'pinia'
 import AuthService from '@/services/auth.service'
 
 const userFromStorage = JSON.parse(localStorage.getItem('user'))
+const impersonatorFromStorage = JSON.parse(localStorage.getItem('impersonator'))
 
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     status: {
-      loggedIn: !!userFromStorage
+      loggedIn: !!userFromStorage,
     },
-    user: userFromStorage || null
+    user: userFromStorage || null,
+    // Guarda o Admin original quando em modo Impersonate
+    impersonator: impersonatorFromStorage || null,
   }),
 
   getters: {
     stateToken: (state) => state.user?.token,
     stateUser: (state) => state.user?.id,
     loggedUser: (state) => state.user,
-    isLogged: (state) => state.status.loggedIn
+    isLogged: (state) => state.status.loggedIn,
+
+    // Novas propriedades para o Impersonate
+    impersonatorUser: (state) => state.impersonator,
+    isImpersonating: (state) => !!state.impersonator,
   },
 
   actions: {
@@ -41,9 +48,39 @@ export const useAuthStore = defineStore('auth', {
 
     logout() {
       AuthService.logout()
+      localStorage.removeItem('impersonator') // Limpa o impersonator se deslogar
       this.status.loggedIn = false
       this.user = null
+      this.impersonator = null
     },
+
+    // ----------------------------------------------------
+    // MÉTODOS DE IMPERSONATE
+    // ----------------------------------------------------
+    startImpersonate(targetUser) {
+      // 1. Salva o Admin atual como impersonator (se ainda não estiver em impersonate)
+      if (!this.impersonator) {
+        this.impersonator = { ...this.user }
+        localStorage.setItem('impersonator', JSON.stringify(this.user))
+      }
+
+      // 2. Substitui o usuário atual pelo usuário simulado
+      this.user = targetUser
+      localStorage.setItem('user', JSON.stringify(targetUser))
+    },
+
+    stopImpersonate() {
+      if (this.impersonator) {
+        // 1. Volta o usuário para ser o Admin original
+        this.user = { ...this.impersonator }
+        localStorage.setItem('user', JSON.stringify(this.impersonator))
+
+        // 2. Limpa o impersonator
+        this.impersonator = null
+        localStorage.removeItem('impersonator')
+      }
+    },
+    // ----------------------------------------------------
 
     async register(userData) {
       try {
@@ -67,6 +104,6 @@ export const useAuthStore = defineStore('auth', {
 
     newItem(msg) {
       console.log(msg)
-    }
-  }
+    },
+  },
 })

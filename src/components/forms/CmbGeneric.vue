@@ -31,7 +31,7 @@ import 'vue-select/dist/vue-select.css'
 
 const props = defineProps({
   data: { type: Array, required: true },
-  sel: [String, Number], // Corresponde ao modelValue
+  sel: [String, Number], // Já aceita texto ou número
   errclass: Object,
 })
 const emit = defineEmits(['update:sel', 'change'])
@@ -40,42 +40,39 @@ const vSelectRef = ref(null)
 
 const modelValueProxy = computed({
   get: () => {
-    // Ao ler, retorna o valor atual da prop 'sel'
-    return Number(props.sel)
+    // Retorna o valor original sem forçar Number().
+    // Se for undefined ou null, retorna null para o VSelect.
+    return props.sel ?? null
   },
   set: (newValue) => {
     console.log('Mudou o valor do controle')
-    // Ao receber um novo valor (do vue-select), emite para o componente pai
+    // Ao receber um novo valor (string ou number), emite diretamente
     emit('update:sel', newValue)
+    emit('change', newValue)
   },
 })
 
 const focusAndOpen = () => {
   if (vSelectRef.value) {
-    // 1. Foca o elemento de input interno
     vSelectRef.value.focus()
-
-    // 2. Abre o dropdown
     vSelectRef.value.toggleDropdown(true)
   }
 }
 
+// Aceita ID numérico ou string para não conflitar com opções baseadas em texto
 const placeholderOption = { id: 0, nome: '-- Selecione --' }
 
-// 🌟 Propriedade Computada para Gerar a Lista
 const combinedOptions = computed(() => {
-  const isPlaceholderPresent = props.data.some((item) => item.id === 0)
+  const isPlaceholderPresent = props.data.some((item) => item.id === 0 || item.id === '0')
 
   if (!isPlaceholderPresent) {
-    // 3. Retorna um novo array combinando o placeholder e os dados reais
     return [placeholderOption, ...props.data]
   }
 
-  return props.data || [] // Retorna os dados originais se vazios ou se o placeholder já estiver lá
+  return props.data || []
 })
 
 defineExpose({
-  // Expor apenas 'focus' que o FocusManager chamará
   focus: focusAndOpen,
 })
 </script>

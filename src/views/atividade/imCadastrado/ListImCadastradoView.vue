@@ -218,21 +218,12 @@ onMounted(() => {
     Object.assign(filter, JSON.parse(saved))
   }
 
-  /* columns.value = [
-    { headerName: 'Município', field: 'municipio' },
-    { headerName: 'Tipo', field: 'atividade' },
-    { headerName: 'Imóvel', field: 'imovel' },
-    { headerName: 'Data', field: 'data' },
-    { headerName: 'Responsável', field: 'owner' },
-    { headerName: 'OwnerId', field: 'owner_id', hide: true },
-  ]*/
-
   let cUser = currentUser
   if (cUser.value) {
     idUser.value = cUser.value
     tpUser.value = cUser.value.tipo
     if (tpUser.value == 4) {
-      loadData()
+      //      loadData()
     }
   }
 })

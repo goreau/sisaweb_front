@@ -473,6 +473,56 @@ watch(
   },
 )
 
+watch(
+  () => edl.larvas,
+  async (val) => {
+    let valorNumerico = Number(val)
+
+    if (isNaN(valorNumerico)) {
+      valorNumerico = 0
+    }
+
+    edl.larvas = valorNumerico
+
+    const deveEstarMarcado = valorNumerico > 0
+
+    const index = chkOcorrencias.value.indexOf(80)
+
+    if (deveEstarMarcado && index === -1) {
+      // Adiciona o valor se precisar marcar e ele ainda não estiver no array
+      chkOcorrencias.value.push(80)
+    } else if (!deveEstarMarcado && index !== -1) {
+      // Remove o valor se precisar desmarcar e ele estiver no array
+      chkOcorrencias.value.splice(index, 1)
+    }
+  },
+)
+
+watch(
+  () => edl.pupas,
+  async (val) => {
+    let valorNumerico = Number(val)
+
+    if (isNaN(valorNumerico)) {
+      valorNumerico = 0
+    }
+
+    edl.pupas = valorNumerico
+
+    const deveEstarMarcado = valorNumerico > 0
+
+    const index = chkOcorrencias.value.indexOf(81)
+
+    if (deveEstarMarcado && index === -1) {
+      // Adiciona o valor se precisar marcar e ele ainda não estiver no array
+      chkOcorrencias.value.push(81)
+    } else if (!deveEstarMarcado && index !== -1) {
+      // Remove o valor se precisar desmarcar e ele estiver no array
+      chkOcorrencias.value.splice(index, 1)
+    }
+  },
+)
+
 const isEditMode = computed(() => Number(route.params.id) > 0)
 
 async function loadCombos() {
