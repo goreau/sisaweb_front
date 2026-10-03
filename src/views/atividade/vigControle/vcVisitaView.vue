@@ -485,7 +485,7 @@ async function save() {
       if (canClear.value) {
         await limpar()
       } else {
-        canClear = true
+        canClear.value = true
       }
     } else {
       toast.error(resultado.error.msg)

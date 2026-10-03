@@ -224,14 +224,33 @@
                 <div class="content">
                   <fieldset class="fieldset">
                     <legend>Local de instalação</legend>
-                    <div class="field">
-                      <RadioGeneric
-                        v-enter-to-next="'form-edl'"
-                        v-model="edl.id_local"
-                        :options="locals"
-                        name="id_local"
-                        :inline="true"
-                      />
+                    <div class="columns">
+                      <div class="column is-8">
+                        <div class="field">
+                          <RadioGeneric
+                            v-enter-to-next="'form-edl'"
+                            v-model="edl.id_local"
+                            :options="locals"
+                            name="id_local"
+                            :inline="true"
+                          />
+                        </div>
+                      </div>
+                      <div class="column" v-show="edl.id_local == 64">
+                        <div class="field">
+                          <div class="control">
+                            <div class="field">
+                              <input
+                                v-enter-to-next="'form-edl'"
+                                class="input"
+                                type="text"
+                                placeholder="Especificação"
+                                v-model="edl.ot_especifica"
+                              />
+                            </div>
+                          </div>
+                        </div>
+                      </div>
                     </div>
                   </fieldset>
                 </div>
@@ -313,6 +332,26 @@
                 </div>
               </div>
             </div>
+            <div class="columns">
+              <div class="column is-4 is-offset-4">
+                <div class="content">
+                  <div class="field">
+                    <label class="label">Executado por</label>
+                    <div class="control">
+                      <div class="field">
+                        <input
+                          v-enter-to-next="'form-edl'"
+                          class="input"
+                          type="text"
+                          placeholder="Opcional"
+                          v-model="edl.agente"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
           <footer class="card-footer">
             <footerCard
@@ -387,6 +426,8 @@ const edl = reactive({
   longitude: '0',
   inativa: false,
   dt_inativa: '',
+  agente: '',
+  ot_especifica: '',
 })
 
 var isLoading = ref(false)
@@ -506,6 +547,7 @@ function limpar() {
     longitude: '0',
     inativa: false,
     dt_inativa: '',
+    agente: '',
   }
 
   Object.assign(edl, vazio)

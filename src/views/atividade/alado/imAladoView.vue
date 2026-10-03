@@ -19,6 +19,7 @@
                         v-enter-to-next="'form-alado'"
                         v-model:sel="imovel.id_imovel"
                         :data="imoveis"
+                        :filter-by="filtroIdEEndereco"
                         :errclass="{ 'is-danger': v$.id_imovel.$error }"
                       />
                       <span class="is-error" v-if="v$.id_imovel.$error">
@@ -663,6 +664,28 @@ function insert() {
     }
     limpar()
   }
+}
+
+const filtroIdEEndereco = (option, label, search) => {
+  if (!search) return true
+  if (option.id === 0) return true
+
+  const termo = search.toLowerCase().trim()
+  const nomeCompleto = (option.nome || label || '').toLowerCase()
+
+  // Captura tudo até o primeiro ponto (suporta números e underlines)
+  const match = nomeCompleto.match(/^([\d_]+)\./)
+  const idDoTexto = match ? match[1] : String(option.id)
+  const textoAposId = match ? nomeCompleto.slice(match[0].length) : nomeCompleto
+
+  // REGRA 1: Se digitou apenas números/underline (ex: "1251", "1251_09", "_09")
+  // Busca por correspondência exata do ID ou prefixo do ID
+  if (/^[\d_]+$/.test(termo)) {
+    return idDoTexto === termo || idDoTexto.startsWith(termo)
+  }
+
+  // REGRA 2: Se digitou texto (contendo letras/espaços/caracteres especiais)
+  return idDoTexto.includes(termo) || textoAposId.includes(termo)
 }
 
 function limpar() {

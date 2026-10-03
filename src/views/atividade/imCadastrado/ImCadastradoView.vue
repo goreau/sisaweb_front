@@ -103,6 +103,7 @@
                       v-model:sel="vc_imovel.id_imovel"
                       :data="imoveis"
                       :errclass="{ 'is-danger': v$.id_imovel.$error }"
+                      :filter-by="filtroIdEEndereco"
                     />
                     <span class="is-error" v-if="v$.id_imovel.$error">
                       {{ v$.id_imovel.$errors[0].$message }}
@@ -507,6 +508,26 @@ const rules = {
 
 const v$ = useValidate(rules, vc_imovel)
 
+const filtroIdEEndereco = (option, label, search) => {
+  if (!search) return true
+  if (option.id === 0) return true
+
+  const termo = search.toLowerCase().trim()
+  const nomeCompleto = (option.nome || label || '').toLowerCase()
+
+  const match = nomeCompleto.match(/^(\d+)\./)
+  const idDoTexto = match ? match[1] : String(option.id)
+  const textoAposId = match ? nomeCompleto.slice(match[0].length) : nomeCompleto
+
+  // REGRA 1: Se digitou APENAS NÚMEROS -> Busca EXATA pelo ID
+  if (/^\d+$/.test(termo)) {
+    return idDoTexto === termo
+  }
+
+  // REGRA 2: Se digitou TEXTO -> Busca no ID ou no texto do endereço
+  return idDoTexto.includes(termo) || textoAposId.includes(termo)
+}
+
 async function recipientes() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
@@ -543,7 +564,7 @@ async function save() {
       if (canClear.value) {
         limpa()
       } else {
-        canClear = true
+        canClear.value = true
       }
     } else {
       toast.error(resultado.error.msg)

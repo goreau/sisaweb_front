@@ -172,7 +172,8 @@ async function onEditRow(item) {
 
 async function onDeleteRow(item) {
   try {
-    isLoading.value = true
+    // isLoading.value = true
+    console.log('aqui')
     const ok = await confirmDialog.value.show({
       title: 'Excluir',
       message: 'Deseja mesmo excluir essa Visita?',

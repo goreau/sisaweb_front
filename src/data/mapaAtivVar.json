@@ -1,0 +1,111 @@
+[
+  {
+    "id": "1",
+    "nome": "Pontos Estratégicos",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "pend", "nome": "Imóveis pendentes" },
+      { "id": "pos", "nome": "Imóveis positivos" },
+      { "id": "exist", "nome": "Recipientes Existentes" },
+      { "id": "agua", "nome": "Recipientes Água" },
+      { "id": "larva", "nome": "Recipientes Larva" }
+    ]
+  },
+  {
+    "id": "2",
+    "nome": "Imóveis especiais",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "pend", "nome": "Imóveis pendentes" },
+      { "id": "pos", "nome": "Imóveis positivos" },
+      { "id": "exist", "nome": "Recipientes Existentes" },
+      { "id": "agua", "nome": "Recipientes Água" },
+      { "id": "larva", "nome": "Recipientes Larva" }
+    ]
+  },
+  {
+    "id": "12",
+    "nome": "Obras",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "pend", "nome": "Imóveis pendentes" },
+      { "id": "pos", "nome": "Imóveis positivos" },
+      { "id": "exist", "nome": "Recipientes Existentes" },
+      { "id": "agua", "nome": "Recipientes Água" },
+      { "id": "larva", "nome": "Recipientes Larva" }
+    ]
+  },
+  {
+    "id": "4",
+    "nome": "Ovitrampas",
+    "variaveis": [
+      { "id": "pesq", "nome": "Pesquisadas" },
+      { "id": "pos", "nome": "Positivas" },
+      { "id": "ovos", "nome": "Quantidade de ovos" }
+    ]
+  },
+  {
+    "id": "5",
+    "nome": "Visita a Imóveis",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "pend", "nome": "Imóveis pendentes" },
+      { "id": "visit", "nome": "Imóveis visitados" },
+      { "id": "exist", "nome": "Recipientes Existentes" },
+      { "id": "agua", "nome": "Recipientes Água" },
+      { "id": "larva", "nome": "Recipientes Larva" }
+    ]
+  },
+  {
+    "id": "6",
+    "nome": "Controle de Criadouros",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "pend", "nome": "Imóveis pendentes" },
+      { "id": "visit", "nome": "Imóveis visitados" },
+      { "id": "focal", "nome": "Tratamento focal" },
+      { "id": "peri", "nome": "Tratamento perifocal" },
+      { "id": "mec", "nome": "Controle mecânico" },
+      { "id": "alt", "nome": "Produto alternativo" },
+      { "id": "agua", "nome": "Recipientes Água" },
+      { "id": "larva", "nome": "Recipientes Larva" }
+    ]
+  },
+  {
+    "id": "7",
+    "nome": "Nebulização Eq Portátil",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "neb", "nome": "Imóveis nebulizados" }
+    ]
+  },
+  {
+    "id": "8",
+    "nome": "Aval Dens Larvária",
+    "variaveis": [
+      { "id": "trab", "nome": "Imóveis trabalhados" },
+      { "id": "pend", "nome": "Imóveis pendentes" },
+      { "id": "exist", "nome": "Recipientes Existentes" },
+      { "id": "agua", "nome": "Recipientes Água" },
+      { "id": "larva", "nome": "Recipientes Larva" },
+      { "id": "pos-aeg", "nome": "Recipientes Ae aegypti" },
+      { "id": "pos-alb", "nome": "Recipientes Ae albopictus" },
+      { "id": "ib-aeg", "nome": "IB Ae aegypti" },
+      { "id": "ib-alb", "nome": "IB Ae albopictus" },
+      { "id": "ip-aeg", "nome": "IP Ae aegypti" },
+      { "id": "ip-alb", "nome": "IP Ae albopictus" }
+    ]
+  },
+  {
+    "id": "14",
+    "nome": "Estação Dissem Larvicida",
+    "variaveis": [
+      { "id": "trab", "nome": "Estações trabalhadas" },
+      { "id": "pend", "nome": "Estações pendentes" },
+      { "id": "visit", "nome": "Estações visitadas" },
+      { "id": "larva", "nome": "Recipientes Larva" },
+      { "id": "pupa", "nome": "Recipientes Pupa" },
+      { "id": "are", "nome": "Recipientes Ae aegypti" }
+    ]
+  }
+]

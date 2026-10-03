@@ -72,7 +72,7 @@
             </section>
 
             <!-- SEÇÃO DO RESULTADO E MAPA -->
-            <section v-if="hasRows">
+            <section v-show="hasRows">
               <div class="columns mb-4">
                 <div class="column is-6 is-offset-3">
                   <div class="content">
@@ -88,34 +88,14 @@
               <div class="columns mb-4" v-if="quadras.length > 0">
                 <div class="column">
                   <label class="label">Quarteirões Trabalhados:</label>
-                  <Check v-model="selQuarts" :options="quadras" :columns-count="4" />
+                  <Check v-model="selQuarts" :options="quadras" :columns-count="8" />
                 </div>
               </div>
 
               <!-- CONTÊINER DO MAPA -->
-              <div class="map-wrapper" style="height: 700px; width: 100%">
-                <l-map
-                  v-model:zoom="zoom"
-                  :center="center"
-                  style="height: 100%; width: 100%"
-                  @ready="onMapReady"
-                >
-                  <l-tile-layer
-                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                    layer-type="base"
-                    name="OpenStreetMap"
-                  ></l-tile-layer>
-
-                  <!-- MULTÍPLAS POLYLINES (UMA PARA CADA QUARTEIRÃO SELECIONADO) -->
-                  <l-polyline
-                    v-for="(latLngs, idQuadra) in polylinesPorQuadra"
-                    :key="idQuadra"
-                    :lat-lngs="latLngs"
-                    color="#0066cc"
-                    :weight="3"
-                    :opacity="0.8"
-                  />
-                </l-map>
+              <div class="mapa-container" style="height: 500px; width: 100%; position: relative">
+                <!-- Div onde o OpenLayers vai injetar o canvas do mapa -->
+                <div id="map" style="width: 100%; height: 100%"></div>
               </div>
 
               <div class="mt-4">
@@ -132,12 +112,8 @@
 </template>
 
 <script setup>
-import { ref, reactive, watch, nextTick, onMounted } from 'vue'
+import { ref, reactive, watch, onMounted, nextTick } from 'vue'
 import { useToast } from 'vue-toastification'
-import 'leaflet/dist/leaflet.css'
-import L from 'leaflet'
-import { LMap, LTileLayer, LPolyline } from '@vue-leaflet/vue-leaflet'
-
 import Loader from '@/components/general/MyLoader.vue'
 import CmbTerritorio from '@/components/forms/CmbTerritorio.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
@@ -149,9 +125,21 @@ import utilitariosService from '@/services/utilitarios.service'
 import auxiliarService from '@/services/general/auxiliar.service'
 import { useCurrentUser } from '@/composables/currentUser'
 
-if (typeof window !== 'undefined') {
-  window.L = L
-}
+// Import fundamental do CSS do OpenLayers
+import 'ol/ol.css'
+
+// Imports OpenLayers
+import Map from 'ol/Map.js'
+import View from 'ol/View.js'
+import TileLayer from 'ol/layer/Tile.js'
+import VectorLayer from 'ol/layer/Vector.js'
+import VectorSource from 'ol/source/Vector.js'
+import OSM from 'ol/source/OSM.js'
+import Feature from 'ol/Feature.js'
+import LineString from 'ol/geom/LineString.js'
+import Point from 'ol/geom/Point.js'
+import { Stroke, Style, Circle as CircleStyle, Fill } from 'ol/style.js'
+import { fromLonLat } from 'ol/proj.js'
 
 const { currentUser } = useCurrentUser()
 const toast = useToast()
@@ -160,11 +148,6 @@ const toast = useToast()
 const title = ref('Percurso dos Agentes')
 const isLoading = ref(false)
 const hasRows = ref(false)
-const mapRef = ref(null)
-
-// Configuração inicial do Mapa
-const zoom = ref(8)
-const center = ref([-23.55052, -46.633308])
 
 // Dados dos combos, quadras e seleção
 const atividades = ref([])
@@ -172,8 +155,6 @@ const agentes = ref([])
 const quadras = ref([])
 const selQuarts = ref([])
 
-// Dicionário/Objeto reativo para guardar os pontos de cada quarteirão:
-// Estrutura: { [idQuadra]: [[lat1, lng1], [lat2, lng2], ...] }
 const polylinesPorQuadra = reactive({})
 
 const filter = reactive({
@@ -185,12 +166,73 @@ const filter = reactive({
   agente: '',
 })
 
-function onMapReady(mapObject) {
-  mapRef.value = mapObject
-  nextTick(() => {
-    mapObject.invalidateSize()
+// Variáveis de referência do OpenLayers
+let map = null
+let vectorSource = null
+let vectorLayer = null
+
+// Estilo para linha
+const estiloLinha = new Style({
+  stroke: new Stroke({
+    color: '#ff0000',
+    width: 4,
+  }),
+})
+
+// Estilo para o Ponto Isolado (1 ponto único)
+const estiloPontoIsolado = new Style({
+  image: new CircleStyle({
+    radius: 7, // Tamanho do círculo
+    fill: new Fill({ color: '#ff0000' }), // Cor de preenchimento
+    stroke: new Stroke({
+      color: '#ffffff', // Borda branca para destacar
+      width: 2,
+    }),
+  }),
+})
+
+// Inicializador do Mapa OpenLayers
+function initMap() {
+  if (map) {
+    // Se o mapa já existe, re-calcula o tamanho para evitar renderização incorreta
+    setTimeout(() => map.updateSize(), 100)
+    return
+  }
+
+  vectorSource = new VectorSource()
+
+  vectorLayer = new VectorLayer({
+    source: vectorSource,
+    style: new Style({
+      stroke: new Stroke({
+        color: '#ff0000',
+        width: 4,
+      }),
+    }),
+  })
+
+  map = new Map({
+    target: 'map',
+    layers: [
+      new TileLayer({
+        source: new OSM(),
+      }),
+      vectorLayer,
+    ],
+    view: new View({
+      center: fromLonLat([-48.548, -22.594]),
+      zoom: 7,
+    }),
   })
 }
+
+// Quando a tela do resultado é exibida (hasRows === true), inicializamos o mapa
+watch(hasRows, async (val) => {
+  if (val) {
+    await nextTick() // Aguarda o DOM renderizar a div#map
+    initMap()
+  }
+})
 
 // Carregamento inicial de opções
 async function loadInicial() {
@@ -225,18 +267,13 @@ async function buscar() {
   }
 }
 
-// Limpa o estado das polylines do mapa
-function limparTodasPolylines() {
-  Object.keys(polylinesPorQuadra).forEach((key) => delete polylinesPorQuadra[key])
-}
-
 // 2. Busca Lista de Quadras do Agente Selecionado
 async function getQuadras() {
   if (!filter.agente) return
 
   isLoading.value = true
+  selQuarts.value = []
   limparTodasPolylines()
-  selQuarts.value = [] // Reseta os checkboxes marcados
 
   try {
     const response = await utilitariosService.getQuadras(filter)
@@ -256,7 +293,6 @@ async function getQuadras() {
 async function carregarPontosQuadra(idQuadra) {
   isLoading.value = true
   try {
-    // Monte os parâmetros do backend informando o idQuadra selecionado
     const params = {
       ...filter,
       id_quadra: idQuadra,
@@ -265,14 +301,12 @@ async function carregarPontosQuadra(idQuadra) {
     const response = await utilitariosService.getPontos(params)
 
     if (response && response.length > 0) {
-      // Converte para [[lat, lng], [lat, lng], ...]
-      const coords = response.map((item) => [parseFloat(item.latitude), parseFloat(item.longitude)])
+      const coords = response.map((item) => [parseFloat(item.longitude), parseFloat(item.latitude)])
 
-      // Armazena no dicionário no ID da quadra correspondente
+      // Passa o idQuadra no primeiro parâmetro
+      desenharPolyline(idQuadra, coords)
+
       polylinesPorQuadra[idQuadra] = coords
-
-      // Enquadra o mapa para exibir todas as polylines visíveis no momento
-      reajustarBoundsMapa()
     } else {
       toast.warning(`Nenhum ponto encontrado para o quarteirão selecionado.`)
     }
@@ -284,19 +318,6 @@ async function carregarPontosQuadra(idQuadra) {
   }
 }
 
-// Reajusta o enquadramento (zoom/centro) do mapa com base nas polylines ativas
-function reajustarBoundsMapa() {
-  if (!mapRef.value) return
-
-  const todasCoordenadas = Object.values(polylinesPorQuadra).flat()
-
-  if (todasCoordenadas.length > 0) {
-    nextTick(() => {
-      mapRef.value.fitBounds(todasCoordenadas, { padding: [30, 30] })
-    })
-  }
-}
-
 // WATCH 1: Ao trocar o agente, recarrega a lista de quadras
 watch(
   () => filter.agente,
@@ -305,13 +326,13 @@ watch(
   },
 )
 
-// WATCH 2: Monitora seleções nos checkboxes dos quarteirões (selQuarts)
+// WATCH 2: Monitora seleções nos checkboxes dos quarteirões
 watch(
   () => [...selQuarts.value],
   async (novosSelecionados, antigosSelecionados) => {
     const antigos = antigosSelecionados || []
 
-    // 1. Identifica quarteirões NOVOS marcados -> Busca no backend
+    // 1. Identifica quarteirões NOVOS marcados -> Carrega e desenha
     const marcados = novosSelecionados.filter((id) => !antigos.includes(id))
     for (const idQuadra of marcados) {
       if (!polylinesPorQuadra[idQuadra]) {
@@ -319,28 +340,95 @@ watch(
       }
     }
 
-    // 2. Identifica quarteirões DESMARCADOS -> Remove a polyline instantaneamente
+    // 2. Identifica quarteirões DESMARCADOS -> Remove do OpenLayers
     const desmarcados = antigos.filter((id) => !novosSelecionados.includes(id))
     for (const idQuadra of desmarcados) {
-      delete polylinesPorQuadra[idQuadra]
-    }
-
-    // Se houver alteração, ajusta o enquadramento do mapa
-    if (desmarcados.length > 0) {
-      reajustarBoundsMapa()
+      delete polylinesPorQuadra[idQuadra] // Limpa a referência no objeto local
+      removerPolyline(idQuadra) // Remove a linha do mapa instantaneamente!
     }
   },
 )
 
+function limparTodasPolylines() {
+  if (!vectorSource) return
+
+  vectorSource.clear()
+  reajustarZoomMapa()
+}
+
 onMounted(() => {
   loadInicial()
 })
-</script>
 
-<style scoped>
-.map-wrapper {
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  overflow: hidden;
+/**
+ * Função para desenhar uma Polyline
+ * @param {Array<Array<number>>} coordenadasExemplo Array [[long, lat], [long, lat]]
+ */
+function desenharPolyline(idQuadra, coordenadas) {
+  if (!vectorSource || !coordenadas || coordenadas.length === 0) return
+
+  let featureGeometria = null
+
+  if (coordenadas.length === 1) {
+    // CASO 1: Apenas 1 ponto isolado -> Cria um Point
+    const pontoProjetado = fromLonLat(coordenadas[0])
+
+    featureGeometria = new Feature({
+      geometry: new Point(pontoProjetado),
+    })
+
+    // Aplica o estilo de círculo/marcador isolado
+    featureGeometria.setStyle(estiloPontoIsolado)
+  } else {
+    // CASO 2: 2 ou mais pontos -> Cria uma LineString (Polyline)
+    const coordenadasProjetadas = coordenadas.map((ponto) => fromLonLat(ponto))
+
+    featureGeometria = new Feature({
+      geometry: new LineString(coordenadasProjetadas),
+    })
+
+    // Aplica o estilo de linha
+    featureGeometria.setStyle(estiloLinha)
+  }
+
+  // Define o idQuadra para podermos remover ao desmarcar o checkbox
+  featureGeometria.set('idQuadra', idQuadra)
+
+  // Adiciona na camada do OpenLayers
+  vectorSource.addFeature(featureGeometria)
+
+  // Reajusta o enquadramento do mapa
+  reajustarZoomMapa()
 }
-</style>
+
+function removerPolyline(idQuadra) {
+  if (!vectorSource) return
+
+  // Procura no OpenLayers a Feature com esse idQuadra
+  const features = vectorSource.getFeatures()
+  const featureParaRemover = features.find((f) => f.get('idQuadra') === idQuadra)
+
+  if (featureParaRemover) {
+    vectorSource.removeFeature(featureParaRemover)
+  }
+
+  // Reajusta o zoom considerando apenas as quadras restantes
+  reajustarZoomMapa()
+}
+
+/**
+ * Função utilitária para reajustar o enquadramento do mapa
+ */
+function reajustarZoomMapa() {
+  if (!map || !vectorSource) return
+
+  const extent = vectorSource.getExtent()
+  // Verifica se o extent é válido (se existem linhas visíveis na tela)
+  if (extent && isFinite(extent[0])) {
+    map.getView().fit(extent, {
+      padding: [50, 50, 50, 50],
+      duration: 500,
+    })
+  }
+}
+</script>

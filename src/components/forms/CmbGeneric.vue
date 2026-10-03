@@ -5,20 +5,18 @@
       :options="combinedOptions"
       :reduce="(gen) => gen.id"
       label="nome"
+      :filter-by="customFilterBy"
       :modelValue="modelValueProxy"
       @update:modelValue="modelValueProxy = $event"
       :class="props.errclass"
       placeholder="-- Selecione --"
     >
-      <template #no-options="{ loading, searching, options }">
-        Nenhuma opção encontrada para a sua pesquisa. 😔
-      </template>
+      <template #no-options="{}"> Nenhuma opção encontrada para a sua pesquisa. 😔 </template>
     </VSelect>
   </div>
 </template>
 
 <script>
-// 1. Desativa a herança de atributos na raiz
 export default {
   inheritAttrs: false,
 }
@@ -31,22 +29,31 @@ import 'vue-select/dist/vue-select.css'
 
 const props = defineProps({
   data: { type: Array, required: true },
-  sel: [String, Number], // Já aceita texto ou número
+  sel: [String, Number],
   errclass: Object,
+  // 1. Nova prop opcional para receber a regra de filtro externa
+  filterBy: { type: Function, default: null },
 })
-const emit = defineEmits(['update:sel', 'change'])
 
+const emit = defineEmits(['update:sel', 'change'])
 const vSelectRef = ref(null)
 
+// 2. Filtro padrão do vue-select
+const defaultFilter = (option, label, search) => {
+  return (label || '').toLowerCase().indexOf((search || '').toLowerCase()) > -1
+}
+
+// 3. Usa o filtro recebido por prop ou recorre ao padrão
+const customFilterBy = (option, label, search) => {
+  if (typeof props.filterBy === 'function') {
+    return props.filterBy(option, label, search)
+  }
+  return defaultFilter(option, label, search)
+}
+
 const modelValueProxy = computed({
-  get: () => {
-    // Retorna o valor original sem forçar Number().
-    // Se for undefined ou null, retorna null para o VSelect.
-    return props.sel ?? null
-  },
+  get: () => props.sel ?? null,
   set: (newValue) => {
-    console.log('Mudou o valor do controle')
-    // Ao receber um novo valor (string ou number), emite diretamente
     emit('update:sel', newValue)
     emit('change', newValue)
   },
@@ -59,14 +66,13 @@ const focusAndOpen = () => {
   }
 }
 
-// Aceita ID numérico ou string para não conflitar com opções baseadas em texto
 const placeholderOption = { id: 0, nome: '-- Selecione --' }
 
 const combinedOptions = computed(() => {
-  const isPlaceholderPresent = props.data.some((item) => item.id === 0 || item.id === '0')
+  const isPlaceholderPresent = props.data?.some((item) => item.id === 0 || item.id === '0')
 
   if (!isPlaceholderPresent) {
-    return [placeholderOption, ...props.data]
+    return [placeholderOption, ...(props.data || [])]
   }
 
   return props.data || []

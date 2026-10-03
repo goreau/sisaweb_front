@@ -81,6 +81,8 @@ import {
   faCopy,
   faExchange,
   faDrawPolygon,
+  faPalette,
+  faTag,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { EnterToNext } from './directives/EnterToNext'
@@ -149,6 +151,8 @@ library.add(
   faCopy,
   faExchange,
   faDrawPolygon,
+  faPalette,
+  faTag,
 )
 
 const options = {

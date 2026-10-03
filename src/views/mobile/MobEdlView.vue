@@ -159,13 +159,6 @@
                     <legend>Ocorrências</legend>
                     <div class="field">
                       <GenericCheckBox
-                        v-enter-to-next="'form-mob-edl'"
-                        :checkAll="false"
-                        :columnsCount="6"
-                        :options="ocorrencias"
-                        v-model="chkOcorrencias"
-                      />
-                      <GenericCheckBox
                         :checkAll="false"
                         :columnsCount="6"
                         :options="ocorrencias"

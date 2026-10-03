@@ -14,6 +14,7 @@
 <script setup>
 const emit = defineEmits(['confirm', 'cancel'])
 
+// eslint-disable-next-line no-unused-vars
 const props = defineProps({
   hasAction: {
     type: Boolean,

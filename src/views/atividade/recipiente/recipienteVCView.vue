@@ -149,11 +149,11 @@
               </div>
             </div>
             <hr />
-            <span v-if="colRecipientes.length > 0">
+            <span v-if="Array.isArray(colRecipientes) && colRecipientes.length > 0">
               <p class="divisor">Recipientes</p>
               <MyDataTable
                 :loggedUser="{ id: 0, tipo: 0 }"
-                :data="colRecipientes"
+                :data="colRecipientes || []"
                 :columns="columns"
                 :buttons="['edit', 'delete']"
                 :pagination="false"
@@ -222,7 +222,7 @@ var recipiente = reactive({
 var isLoading = ref(false)
 
 var cFooter = ref({
-  strSubmit: 'Inserir',
+  strSubmit: 'Salvar Alterações',
   strCancel: 'Voltar',
   strAux: '',
   aux: false,
@@ -235,7 +235,7 @@ function insert() {
 }
 
 function voltar() {
-  store.updateRecipientes(idImovel, colRecipientes)
+  store.updateRecipientes(idImovel.value, colRecipientes.value)
   router.push({ name: 'vigImoveis', query: { returnFrom: 'recipiente' } })
 }
 
@@ -272,6 +272,7 @@ watch(
 watch(
   () => recipiente.id_tipo_rec,
   (id) => {
+    if (tipos.value.length == 0) return
     const item = tipos.value.find((a) => a.id === Number(id))
     recipiente.fantTipo = item?.nome || ''
   },
@@ -294,10 +295,10 @@ onMounted(async () => {
     { headerName: 'Amostra', field: 'amostra' },
   ]
 
-  idImovel.value = Number(route.params.idImovel)
+  idImovel.value = route.params.idImovel
   let oldData = store.objetoFolha.imoveis.find((i) => i.id === idImovel.value)?.recipientes
 
-  colRecipientes.value = oldData
+  colRecipientes.value = oldData ? [...oldData] : []
 
   const result = await auxiliarService.getGrupoRecCombo()
   if (result.error) {

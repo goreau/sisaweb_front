@@ -2,7 +2,7 @@
 import Datepicker from '@vuepic/vue-datepicker'
 import '@vuepic/vue-datepicker/dist/main.css'
 import { ptBR } from 'date-fns/locale'
-import { format, parse, isValid } from 'date-fns'
+import { format, isValid } from 'date-fns'
 import { computed, ref, watch, getCurrentInstance, onMounted } from 'vue'
 
 defineOptions({
