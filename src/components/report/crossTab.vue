@@ -82,7 +82,7 @@
 </template>
 
 <script setup>
-import { ref, onMounted, watch } from 'vue'
+import { ref, watch } from 'vue'
 import draggable from 'vuedraggable'
 import FiltroWrapper from '@/components/report/filtroWrapper.vue'
 

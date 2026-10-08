@@ -11,7 +11,6 @@
           <i class="fas fa-arrow-left"></i>
         </span>
       </button>
-
       <button
         class="button is-info is-outlined"
         title="Centralizar no Mapa Atual"
@@ -34,6 +33,27 @@
           <i class="fas fa-palette"></i>
         </span>
       </button>
+
+      <div class="toolbar-divider"></div>
+
+      <button class="button is-info is-outlined" title="Grade" @click="$emit('grade')">
+        <span class="icon is-small">
+          <i class="fas fa-table-cells-large"></i>
+        </span>
+      </button>
+      <button class="button is-info is-outlined" title="Pontos Aleatórios" @click="$emit('pontos')">
+        <span class="icon is-small">
+          <i class="fas fa-grip"></i>
+        </span>
+      </button>
+
+      <div class="toolbar-divider"></div>
+
+      <button class="button is-info is-outlined" title="Fundo" @click="$emit('tile')">
+        <span class="icon is-small">
+          <i class="fas fa-eye"></i>
+        </span>
+      </button>
       <button
         class="button is-info is-outlined"
         title="Exibe/Oculta legenda"
@@ -48,11 +68,6 @@
           <i class="fas fa-tag"></i>
         </span>
       </button>
-      <button class="button is-info is-outlined" title="Grade" @click="$emit('grade')">
-        <span class="icon is-small">
-          <i class="fas fa-eye"></i>
-        </span>
-      </button>
 
       <!-- Espaço reservado para futuras ferramentas (Ex: filtros, cores, camadas) -->
       <!-- <slot></slot> -->
@@ -61,7 +76,16 @@
 </template>
 
 <script setup>
-defineEmits(['reiniciar', 'centralizar', 'construir', 'paleta', 'legenda', 'label', 'grade'])
+defineEmits([
+  'reiniciar',
+  'centralizar',
+  'construir',
+  'paleta',
+  'legenda',
+  'label',
+  'grade',
+  'pontos',
+])
 </script>
 
 <style scoped>
@@ -76,7 +100,7 @@ defineEmits(['reiniciar', 'centralizar', 'construir', 'paleta', 'legenda', 'labe
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 .toolbar-divider {
-  width: 0.5rem;
+  width: 0.8rem;
   height: 24px;
 }
 </style>

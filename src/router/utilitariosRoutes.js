@@ -11,4 +11,10 @@ export default [
     component: () => import(/* webpackChunkName: "user" */ '@/views/utilitarios/MapaView.vue'),
     meta: { onlyUser: false },
   },
+  {
+    path: '/mapaCad',
+    name: 'mapaCad',
+    component: () => import(/* webpackChunkName: "user" */ '@/views/utilitarios/MapaCadView.vue'),
+    meta: { onlyUser: false },
+  },
 ]

@@ -23,4 +23,16 @@ export const utilitariosMenu = [
       },
     },
   },
+  {
+    href: '/mapaCad',
+    title: 'Mapa de cadastro',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-draw-polygon',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+  },
 ]

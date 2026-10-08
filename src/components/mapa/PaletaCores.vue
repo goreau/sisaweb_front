@@ -191,13 +191,14 @@ watch(
     // 2. Ajusta limites
     if (localDef.limites.length !== newCount) {
       const currentLimits = [...localDef.limites]
+      const lastVal = currentLimits[currentLimits.length - 1] || 100
       if (newCount > currentLimits.length) {
-        const lastVal = currentLimits[currentLimits.length - 1] || 100
         while (currentLimits.length < newCount) {
           currentLimits.push(lastVal + 10)
         }
       } else {
         currentLimits.splice(newCount)
+        currentLimits[currentLimits.length - 1] = lastVal
       }
       localDef.limites = currentLimits
     }

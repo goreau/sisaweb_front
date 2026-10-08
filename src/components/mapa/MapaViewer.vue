@@ -4,13 +4,6 @@
     <div ref="mapaElemento" class="mapa-canvas"></div>
 
     <Loader :active="carregando" />
-    <!-- Loader visual durante o carregamento
-    <div
-      v-if="carregando"
-      class="mapa-loader is-flex is-align-items-center is-justify-content-center"
-    >
-      <span class="button is-loading is-large is-white is-outlined">Carregando mapa...</span>
-    </div>-->
   </div>
 </template>
 
@@ -23,7 +16,7 @@ import {
   vincularDadosEAtualizarEstilo,
   aplicarEstiloCoropletico,
 } from '@/utils/mapa/geraPoligonos.js'
-import { criarGrade } from '@/utils/mapa/geraGrade.js'
+import { criarPontosLayer, criarGradeLayer } from '@/utils/mapa/geraMimos.js'
 
 // Importações do OpenLayers
 import Map from 'ol/Map'
@@ -57,6 +50,8 @@ defineExpose({
   atualizarCamadaComDados,
   redefinirEstiloLocal,
   alternarGrade,
+  alternarTileLayer,
+  alternarRandomPt,
 })
 
 const mapaElemento = ref(null)
@@ -68,11 +63,16 @@ let instanceMapa = shallowRef(null)
 
 let fonteVetorial = null
 let camadaVetorialRef = ref(null)
+let camadaLabelRef = ref(null)
 
 let fontePontos = null
 const camadaPontosRef = ref(null)
 
 let fonteGrade = null
+
+let fonteRandomPts = null
+
+let camadaOsm = null
 
 let ultimosDadosRecebidos = null
 let ultimaConfigEstilo = null
@@ -112,6 +112,8 @@ async function atualizarCamadaComDados({ dados, chaveMapa, chaveDados, estiloCon
 
   if (!resultado) return
 
+  ultimosDadosRecebidos = true
+
   // 1. Emite a atualização da legenda
   if (resultado.legenda) {
     emit('legendaAtualizada', resultado.legenda)
@@ -138,7 +140,15 @@ async function redefinirEstiloLocal(novaConfigPaleta) {
   }
 
   // Re-aplica a estilização usando o cache
-  aplicarEstiloCoropletico(camadaVetorialRef.value, ultimaConfigEstilo)
+  const resultado = aplicarEstiloCoropletico(camadaVetorialRef.value, ultimaConfigEstilo)
+  if (resultado.legenda) {
+    emit('legendaAtualizada', resultado.legenda)
+  }
+
+  // 2. Se os limites foram recalculados dinamicamente, avisa a View/Modal
+  if (resultado.novoEstiloConfig) {
+    emit('estiloAtualizado', resultado.novoEstiloConfig)
+  }
   camadaVetorialRef.value.changed()
 }
 
@@ -164,19 +174,120 @@ function centralizarVisao() {
 }
 
 //// grade /////
-function alternarGrade(ativo) {
-  if (ativo) {
-    const extent = fonteVetorial.getExtent()
+async function alternarGrade(ativo, size = 400) {
+  try {
+    if (ativo) {
+      carregando.value = true
 
-    fonteGrade = criarGrade(extent, 400)
+      const worker = new Worker(new URL('../../utils/mapa/gradeWorker.js', import.meta.url), {
+        type: 'module',
+      })
 
-    instanceMapa.value.addLayer(fonteGrade)
-  } else {
-    if (fonteGrade) {
-      instanceMapa.value.removeLayer(fonteGrade)
-      fonteGrade = null
+      const extent3857 = instanceMapa.value.getView().calculateExtent()
+
+      const poligonosCoordenadas = await new Promise((resolve, reject) => {
+        worker.onmessage = (e) => resolve(e.data)
+        worker.onerror = (err) => reject(err)
+
+        // Passa apenas o array simples de números [minX, minY, maxX, maxY]
+        worker.postMessage({ extent3857, tamanho: Number(size) })
+      })
+
+      worker.terminate()
+
+      // Cria a camada levemente na thread principal
+      fonteGrade = criarGradeLayer(poligonosCoordenadas)
+      instanceMapa.value.addLayer(fonteGrade)
+    } else {
+      if (fonteGrade) {
+        instanceMapa.value.removeLayer(fonteGrade)
+        fonteGrade = null
+      }
     }
+  } finally {
+    carregando.value = false
   }
+}
+
+/*function alternarGradeOld(ativo) {
+  try {
+    carregando.value = true
+    if (ativo) {
+      const extent = fonteVetorial.getExtent()
+
+    //  fonteGrade = criarGrade(extent, 400)
+
+      instanceMapa.value.addLayer(fonteGrade)
+    } else {
+      if (fonteGrade) {
+        instanceMapa.value.removeLayer(fonteGrade)
+        fonteGrade = null
+      }
+    }
+  } finally {
+    carregando.value = false
+  }
+}*/
+
+async function alternarRandomPt(ativo) {
+  try {
+    carregando.value = true
+    console.log('loader on')
+
+    if (ativo) {
+      const features = fonteVetorial.getFeatures()
+
+      const format = new GeoJSON()
+
+      // Converte as features do OpenLayers
+      // para GeoJSON EPSG:4326
+      const geojsonFeatures = features.map((feature) => {
+        return format.writeFeatureObject(feature, {
+          featureProjection: 'EPSG:3857',
+          dataProjection: 'EPSG:4326',
+        })
+      })
+
+      const geojson = {
+        type: 'FeatureCollection',
+        features: geojsonFeatures,
+      }
+
+      const worker = new Worker(new URL('../../utils/mapa/randomPtWorker.js', import.meta.url), {
+        type: 'module',
+      })
+      // const retorno = gerarPontosAleatorios(fonteVetorial, 400, 100)
+
+      const pontosCalculados = await new Promise((resolve, reject) => {
+        worker.onmessage = (e) => resolve(e.data)
+        worker.onerror = (err) => reject(err)
+
+        // Envia os parâmetros para o Worker
+        worker.postMessage({ geojson, quantidade: 400, raio: 100 })
+      })
+
+      worker.terminate()
+
+      const retorno = criarPontosLayer(pontosCalculados)
+
+      fonteRandomPts = retorno
+      console.log('carregado')
+
+      instanceMapa.value.addLayer(fonteRandomPts)
+    } else {
+      if (fonteRandomPts) {
+        instanceMapa.value.removeLayer(fonteRandomPts)
+        fonteRandomPts = null
+      }
+    }
+  } finally {
+    carregando.value = false
+    console.log('loader off')
+  }
+}
+
+function alternarTileLayer(ativo) {
+  camadaOsm.setVisible(ativo)
 }
 
 // Inicializa a instância base do OpenLayers
@@ -185,6 +296,13 @@ onMounted(async () => {
     carregando.value = true
     // Fonte e Camada Vetorial onde o GeoJSON será injetado
     fonteVetorial = new VectorSource()
+
+    camadaLabelRef.value = new VectorLayer({
+      source: fonteVetorial,
+      declutter: true,
+      visible: mostrarRotulo.value,
+      style: criarEstiloLabel,
+    })
 
     camadaVetorialRef.value = new VectorLayer({
       source: fonteVetorial,
@@ -197,19 +315,15 @@ onMounted(async () => {
       style: estiloPontoPadrao,
     })
 
+    camadaOsm = new TileLayer({
+      source: new OSM(),
+    })
+
     await nextTick()
     // Criação do Mapa OpenLayers
     instanceMapa.value = new Map({
       target: mapaElemento.value,
-      layers: [
-        // Camada base do OpenStreetMap (Background)
-        new TileLayer({
-          source: new OSM(),
-        }),
-        // Camada dos Polígonos (GeoJSON)
-        camadaVetorialRef.value,
-        camadaPontosRef.value,
-      ],
+      layers: [camadaOsm, camadaVetorialRef.value, camadaPontosRef.value, camadaLabelRef.value],
       controls: defaultControls({
         zoom: false,
         rotate: false,
@@ -249,15 +363,14 @@ watch(
 
 watch(
   () => mostrarRotulo.value,
-  // eslint-disable-next-line no-unused-vars
   (novoValor) => {
-    if (camadaVetorialRef.value) {
-      camadaVetorialRef.value.changed()
+    if (camadaLabelRef.value) {
+      camadaLabelRef.value.setVisible(novoValor)
     }
   },
 )
 
-const criarEstiloGeoJson = (feature) => {
+const criarEstiloLabel = (feature) => {
   var idValue = ''
   // Pega o valor do campo "ID" do GeoJSON da feature atual
   if (props.selecaoAtual.camada == 'quarteirao') {
@@ -269,6 +382,35 @@ const criarEstiloGeoJson = (feature) => {
   }
 
   return new Style({
+    // Rótulo de texto dinâmico (só é renderizado se mostrarRotulos for true)
+    text: new Text({
+      text: String(idValue), // O texto que vai aparecer no polígono
+      font: 'bold 12px sans-serif',
+      fill: new Fill({ color: '#1a1a1a' }),
+
+      // 1. Cor de fundo da caixa
+      /*  backgroundFill: new Fill({
+            color: 'rgba(255, 255, 255, 0.9)', // Branco com 90% de opacidade
+          }),*/
+
+      // 2. Borda ao redor do fundo
+      /*  backgroundStroke: new Stroke({
+            color: '#2980b9',
+            width: 1.5,
+          }),*/
+
+      // 3. Espaçamento interno em pixels [Topo, Direita, Baixo, Esquerda]
+      padding: [3, 6, 3, 6],
+
+      // Garante que o rótulo apareça completo no centroide
+      overflow: true,
+      placement: 'point', // Força exibição mesmo se o polígono for pequeno
+    }),
+  })
+}
+
+const criarEstiloGeoJson = () => {
+  return new Style({
     // Preenchimento e Borda padrão do polígono
     fill: new Fill({
       color: 'rgba(50, 115, 220, 0.1)', // Azul do Bulma semi-transparente
@@ -277,33 +419,6 @@ const criarEstiloGeoJson = (feature) => {
       color: '#3273dc',
       width: 1.5,
     }),
-
-    // Rótulo de texto dinâmico (só é renderizado se mostrarRotulos for true)
-    text: mostrarRotulo.value
-      ? new Text({
-          text: String(idValue), // O texto que vai aparecer no polígono
-          font: 'bold 12px sans-serif',
-          fill: new Fill({ color: '#1a1a1a' }),
-
-          // 1. Cor de fundo da caixa
-          /*  backgroundFill: new Fill({
-            color: 'rgba(255, 255, 255, 0.9)', // Branco com 90% de opacidade
-          }),*/
-
-          // 2. Borda ao redor do fundo
-          /*  backgroundStroke: new Stroke({
-            color: '#2980b9',
-            width: 1.5,
-          }),*/
-
-          // 3. Espaçamento interno em pixels [Topo, Direita, Baixo, Esquerda]
-          padding: [3, 6, 3, 6],
-
-          // Garante que o rótulo apareça completo no centroide
-          overflow: true,
-          placement: 'point', // Força exibição mesmo se o polígono for pequeno
-        })
-      : null, // Se for false, não desenha o texto
   })
 }
 

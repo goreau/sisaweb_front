@@ -697,8 +697,10 @@ import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 import { useDefautValues } from '@/composables/defaultValues'
+import { useRouter } from 'vue-router'
 
 const toast = useToast()
+const router = useRouter()
 
 const { currentUser } = useCurrentUser()
 

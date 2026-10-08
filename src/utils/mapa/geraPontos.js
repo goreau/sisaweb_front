@@ -88,7 +88,7 @@ export function aplicarEstiloPontosPorTamanho(camadaPontos, estiloConfig) {
   })
 
   // 3. Gera a estrutura da legenda e a RETORNA
-  return gerarEstruturaLegenda(estiloConfig.variavel, limites, raiosClasses, corPreenchimento)
+  return gerarEstruturaLegenda(estiloConfig.fantasia, limites, raiosClasses, corPreenchimento)
 }
 
 function gerarEstruturaLegenda(titulo, limites, raios, corPreenchimento) {
@@ -106,6 +106,7 @@ function gerarEstruturaLegenda(titulo, limites, raios, corPreenchimento) {
   }
 
   return {
+    id: 'pontos',
     tipo: 'tamanho',
     titulo: titulo,
     itens: itensLegenda,

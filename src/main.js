@@ -83,6 +83,8 @@ import {
   faDrawPolygon,
   faPalette,
   faTag,
+  faTableCellsLarge,
+  faGrip,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { EnterToNext } from './directives/EnterToNext'
@@ -153,6 +155,8 @@ library.add(
   faDrawPolygon,
   faPalette,
   faTag,
+  faTableCellsLarge,
+  faGrip,
 )
 
 const options = {

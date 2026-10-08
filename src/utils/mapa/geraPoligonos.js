@@ -10,7 +10,9 @@ const estiloPadrao = new Style({
   }),
 })
 
-const PALETA_PADRAO = ['#bafada', '#86dd86', '#42da49', '#10a829', '#07420a']
+//const PALETA_PADRAO = ['#93f0c2', '#5fe45f', '#1ee228', '#0b851f', '#022403']
+//const PALETA_PADRAO = ['#bac0fa', '#6182dd', '#2c66bd', '#174c88', '#071742']
+const PALETA_PADRAO = ['#ebaff5', '#ba68c8', '#ab47bc', '#6a1b9a', '#290341']
 
 const aplicarAlphaHex = (cor) => {
   const hexLimpo = cor.slice(0, 7)
@@ -23,6 +25,32 @@ function calcularIntervalosIguais(min, max, numClasses) {
   for (let i = 0; i <= numClasses; i++) {
     limites.push(min + amplitude * i)
   }
+  return limites
+}
+
+function calcularPercentis(valores, numClasses = 4) {
+  if (!valores || valores.length === 0) return []
+
+  // 1. Filtra valores inválidos e ordena em ordem crescente (sem mutar o original)
+  const ordenados = valores.filter((v) => typeof v === 'number' && !isNaN(v)).sort((a, b) => a - b)
+
+  const total = ordenados.length
+  const limites = []
+
+  // O primeiro limite é sempre o valor mínimo da distribuição
+  limites.push(ordenados[0])
+
+  // 2. Encontra o valor na posição proporcional de cada classe
+  for (let i = 1; i <= numClasses; i++) {
+    // Calcula o índice proporcional na lista ordenada
+    const posicao = (i / numClasses) * (total - 1)
+
+    // Arredonda o índice para pegar o elemento correspondente
+    const indice = Math.round(posicao)
+
+    limites.push(ordenados[indice])
+  }
+
   return limites
 }
 
@@ -74,7 +102,7 @@ export function aplicarEstiloCoropletico(camadaVetorial, estiloConfig) {
     return {
       legenda: {
         tipo: 'coroplético',
-        titulo: estiloConfig.variavel,
+        titulo: estiloConfig.fantasia,
         itens: [],
       },
       novoEstiloConfig: null, // Nenhuma alteração nos limites
@@ -88,6 +116,7 @@ export function aplicarEstiloCoropletico(camadaVetorial, estiloConfig) {
       : PALETA_PADRAO
 
   const paletaCores = coresOriginais.map(aplicarAlphaHex)
+  console.log(paletaCores)
 
   let intervalos = []
   let novoEstiloConfig = null
@@ -99,10 +128,14 @@ export function aplicarEstiloCoropletico(camadaVetorial, estiloConfig) {
     const min = Math.min(...valores)
     intervalos = [min, ...estiloConfig.limites]
   } else {
-    // Re-calcula limites dinamicamente
-    const min = Math.min(...valores)
-    const max = Math.max(...valores)
-    intervalos = calcularIntervalosIguais(min, max, numClasses)
+    if (estiloConfig.modelo === 'valor') {
+      // Re-calcula limites dinamicamente
+      const min = Math.min(...valores)
+      const max = Math.max(...valores)
+      intervalos = calcularIntervalosIguais(min, max, numClasses)
+    } else {
+      intervalos = calcularPercentis(valores, numClasses)
+    }
 
     // Prepara o objeto atualizado caso o modal de estilos precise do novo cache
     novoEstiloConfig = {
@@ -114,6 +147,8 @@ export function aplicarEstiloCoropletico(camadaVetorial, estiloConfig) {
   // Aplica os estilos na camada
   camadaVetorial.setStyle((feature) => {
     const val = feature.get('valorVariavel')
+    const conf = feature.get('ID')
+    console.log(conf)
 
     if (val === null || val === undefined || isNaN(val)) {
       return estiloPadrao
@@ -135,7 +170,7 @@ export function aplicarEstiloCoropletico(camadaVetorial, estiloConfig) {
 
     return new Style({
       fill: new Fill({ color: corHex }),
-      stroke: new Stroke({ color: '#ffffff', width: 1 }),
+      stroke: new Stroke({ color: '#380303', width: 1.5 }),
     })
   })
 
@@ -157,8 +192,9 @@ export function aplicarEstiloCoropletico(camadaVetorial, estiloConfig) {
   // CASO 2: Retorno unificado com Legenda + Configurações Atualizadas
   return {
     legenda: {
+      id: 'poligono',
       tipo: 'coroplético',
-      titulo: estiloConfig.variavel,
+      titulo: estiloConfig.fantasia,
       itens: itensLegenda,
     },
     novoEstiloConfig, // Envia o novo estiloConfig se ele tiver sido recalculado, ou null se não mudou

@@ -237,6 +237,9 @@ watch(hasRows, async (val) => {
 // Carregamento inicial de opções
 async function loadInicial() {
   try {
+    if (currentUser.value.tipo >= 4) {
+      filter.id_municipio = Number(currentUser.value.unidade)
+    }
     const res = await auxiliarService.getAtividadeCombo(2)
     atividades.value = res.error ? [] : res
   } catch (err) {

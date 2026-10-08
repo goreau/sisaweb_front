@@ -5,11 +5,11 @@
         <div class="card">
           <header class="card-header">
             <p class="card-header-title is-centered">Mapas</p>
-            <button class="button is-info is-outlined" @click="goBack">
+            <button class="button is-info is-outlined" @click="reload">
               <span class="icon">
                 <font-awesome-icon icon="fa-solid fa-rotate-back" />
               </span>
-              <span>Voltar</span>
+              <span>Reiniciar</span>
             </button>
           </header>
           <div class="card-content">
@@ -28,8 +28,11 @@
                 @legenda="onLegenda"
                 @label="onLabel"
                 @grade="onGrade"
+                @tile="onTile"
+                @pontos="onRandomPt"
               />
               <MapaViewer
+                :key="mapKey"
                 ref="mapaViewerRef"
                 :selecao-atual="selecaoUsuario"
                 v-model:loading="isLoading"
@@ -38,38 +41,7 @@
                 @legendaAtualizada="aoAtualizarLegenda"
                 @estiloAtualizado="aoAtualizarEstiloDoMapa"
               />
-              <div v-if="temDadosLegenda" class="legenda-flutuante box">
-                <h6 class="title is-6 mb-2">{{ dadosLegenda.titulo || 'Legenda' }}</h6>
-                <span v-if="opcoesConstrucao.tipo == 'poligono'">
-                  <div
-                    v-for="(item, index) in dadosLegenda.itens"
-                    :key="index"
-                    class="item-legenda"
-                  >
-                    <span class="square-cor" :style="{ backgroundColor: item.cor }"></span>
-                    <span class="label-faixa">{{ item.rotulo }}</span>
-                  </div>
-                </span>
-                <!-- Dentro da legenda do seu template -->
-                <span v-if="opcoesConstrucao.tipo == 'ponto'">
-                  <div
-                    v-for="(item, index) in dadosLegenda.itens"
-                    :key="index"
-                    class="item-legenda-ponto"
-                  >
-                    <!-- Desenha um círculo com o dobro do raio (diâmetro) -->
-                    <span
-                      class="circulo-legenda"
-                      :style="{
-                        width: item.raio * 2 + 'px',
-                        height: item.raio * 2 + 'px',
-                        backgroundColor: item.cor,
-                      }"
-                    ></span>
-                    <span class="label-faixa">{{ item.rotulo }}</span>
-                  </div>
-                </span>
-              </div>
+              <LegendaMapa :legendas="legendasAtivas" v-if="temDadosLegenda" />
             </main>
             <Modal v-if="showForm" @confirm="handleForm" @cancel="cancelForm">
               <!-- Conteúdo específico do modal -->
@@ -88,6 +60,24 @@
                 @aplicar="onAplicarCores"
               />
             </Modal>
+            <Modal
+              v-if="showGradeOptions"
+              @confirm="handleGradeOptions"
+              @cancel="cancelGradeOptions"
+            >
+              <!-- Conteúdo específico do modal -->
+              <div class="opcoes-rapidas">
+                <input
+                  class="input"
+                  type="range"
+                  v-model="gradeSize"
+                  :min="300"
+                  :max="2000"
+                  :step="100"
+                />
+                {{ gradeSize }}m
+              </div>
+            </Modal>
           </div>
         </div>
       </div>
@@ -96,6 +86,7 @@
 </template>
 
 <script setup>
+import LegendaMapa from '@/components/mapa/LegendaMapa.vue'
 import ItemArvore from '@/components/mapa/ItemArvore.vue'
 import MapaViewer from '@/components/mapa/MapaViewer.vue'
 import FormularioConstrucao from '@/components/mapa/FormularioConstrucao.vue'
@@ -112,15 +103,21 @@ const instanceMapa = ref(null)
 const mapaViewerRef = ref(null)
 const formRef = ref(null)
 const paletaRef = ref(null)
-const dadosLegenda = ref(null)
 
 const options = ref([])
 const selecaoUsuario = ref(null)
+
+const mapKey = ref(0)
 
 var hasSel = ref(false)
 var showLegenda = ref(true)
 
 var showGrade = ref(true)
+var showPontos = ref(true)
+var showGradeOptions = ref(false)
+var gradeSize = ref(400)
+
+var showTile = ref(true)
 
 const isLoading = ref(false)
 const isLabeling = ref(false)
@@ -143,9 +140,38 @@ const opcoesConstrucao = reactive({
   tipo: 'poligono',
 })
 
-function aoAtualizarLegenda(legenda) {
-  dadosLegenda.value = legenda
+const legendasAtivas = ref([])
+
+function reload() {
+  legendasAtivas.value = []
+  hasSel.value = false
+  selecaoUsuario.value = null
+
+  mapKey.value += 1
 }
+
+function aoAtualizarLegenda(novaLegenda) {
+  if (!novaLegenda || !novaLegenda.itens || novaLegenda.itens.length === 0) return
+
+  // Procura se já existe uma legenda para esta camada (usando um id ou o próprio título)
+  const idChave = novaLegenda.id || novaLegenda.titulo
+  const index = legendasAtivas.value.findIndex((item) => (item.id || item.titulo) === idChave)
+
+  if (index !== -1) {
+    // Atualiza a legenda existente mantendo a reatividade
+    legendasAtivas.value[index] = novaLegenda
+  } else {
+    // Adiciona uma nova legenda ao array
+    legendasAtivas.value.push(novaLegenda)
+  }
+}
+
+// Função utilitária opcional caso o mapa emita quando uma camada for removida
+/*function aoRemoverLegenda(idOuTituloCamada) {
+  legendasAtivas.value = legendasAtivas.value.filter(
+    (item) => (item.id || item.titulo) !== idOuTituloCamada,
+  )
+}*/
 
 function aoAtualizarEstiloDoMapa(novaConfig) {
   configEstiloModal.value = { ...novaConfig }
@@ -166,6 +192,15 @@ async function handlePaleta() {
     paletaRef.value.submeter()
   }
   showPaleta.value = false
+}
+
+async function handleGradeOptions() {
+  mapaViewerRef.value.alternarGrade(true, gradeSize.value)
+  showGradeOptions.value = false
+}
+
+async function cancelGradeOptions() {
+  showGradeOptions.value = false
 }
 
 async function onAplicarCores(novaPaleta) {
@@ -314,6 +349,7 @@ const onReiniciarMapa = async () => {
   // Chama o método interno do MapaViewer para limpar o GeoJSON renderizado
   if (mapaViewerRef.value && mapaViewerRef.value.limparCamadas) {
     mapaViewerRef.value.limparCamadas()
+    temDadosLegenda.value = false
   }
 
   await nextTick()
@@ -332,7 +368,10 @@ const onCentralizarMapa = () => {
 }
 
 const temDadosLegenda = computed(() => {
-  return showLegenda.value && dadosLegenda.value?.itens?.length > 0
+  return (
+    showLegenda.value &&
+    legendasAtivas.value.some((legenda) => legenda.itens && legenda.itens.length > 0)
+  )
 })
 
 const onConstruir = () => {
@@ -348,8 +387,20 @@ const onLabel = () => {
   isLabeling.value = !isLabeling.value
 }
 const onGrade = () => {
-  mapaViewerRef.value.alternarGrade(showGrade.value)
+  if (showGrade.value) {
+    showGradeOptions.value = showGrade.value
+  } else {
+    mapaViewerRef.value.alternarGrade(false)
+  }
   showGrade.value = !showGrade.value
+}
+const onRandomPt = () => {
+  mapaViewerRef.value.alternarRandomPt(showPontos.value)
+  showPontos.value = !showPontos.value
+}
+const onTile = () => {
+  showTile.value = !showTile.value
+  mapaViewerRef.value.alternarTileLayer(showTile.value)
 }
 </script>
 
