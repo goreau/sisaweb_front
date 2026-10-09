@@ -69,6 +69,13 @@
         </span>
       </button>
 
+      <div class="toolbar-divider"></div>
+
+      <button class="button is-info is-outlined" title="Imprimir" @click="$emit('print')">
+        <span class="icon is-small">
+          <i class="fas fa-print"></i>
+        </span>
+      </button>
       <!-- Espaço reservado para futuras ferramentas (Ex: filtros, cores, camadas) -->
       <!-- <slot></slot> -->
     </div>
@@ -85,6 +92,7 @@ defineEmits([
   'label',
   'grade',
   'pontos',
+  'print',
 ])
 </script>
 

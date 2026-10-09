@@ -1,3 +1,4 @@
+<!-- eslint-disable vue/no-unused-vars -->
 <template>
   <div class="control" data-focus-type="custom-select">
     <VSelect

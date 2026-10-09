@@ -14,18 +14,6 @@ export const referenciaMenu = [
     },
   },
   {
-    href: '/sisaMap',
-    title: 'Mapas (beta)',
-    icon: {
-      element: 'font-awesome-icon',
-      attributes: {
-        icon: 'fa-solid fa-location-dot',
-        size: 'lg',
-        transform: 'shrink-8',
-      },
-    },
-  },
-  {
     href: 'https://vigent.saude.sp.gov.br/sisaweb_aux',
     title: 'Consultas Auxiliares',
     target: '_blank',

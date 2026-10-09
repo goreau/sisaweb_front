@@ -85,6 +85,7 @@ import {
   faTag,
   faTableCellsLarge,
   faGrip,
+  faPrint,
 } from '@fortawesome/free-solid-svg-icons'
 
 import { EnterToNext } from './directives/EnterToNext'
@@ -157,6 +158,7 @@ library.add(
   faTag,
   faTableCellsLarge,
   faGrip,
+  faPrint,
 )
 
 const options = {

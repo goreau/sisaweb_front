@@ -30,6 +30,7 @@
                 @grade="onGrade"
                 @tile="onTile"
                 @pontos="onRandomPt"
+                @print="onPrint"
               />
               <MapaViewer
                 :key="mapKey"
@@ -401,6 +402,13 @@ const onRandomPt = () => {
 const onTile = () => {
   showTile.value = !showTile.value
   mapaViewerRef.value.alternarTileLayer(showTile.value)
+}
+
+const onPrint = () => {
+  mapaViewerRef.value.printMap({
+    titulo: `${selecaoUsuario.value.municipioNome}: ${opcoesConstrucao.fantasia}`,
+    nomeArquivo: 'Sisaweb 3 - mapa.pdf',
+  })
 }
 </script>
 

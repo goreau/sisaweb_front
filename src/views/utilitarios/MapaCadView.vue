@@ -51,7 +51,19 @@
                   <Check v-model="selCens" :options="censitarios" :columns-count="8" />
                 </div>
               </div>
-
+              <div class="columns">
+                <div class="column has-text-right">
+                  <span class="has-text-right export">
+                    <button
+                      class="button is-info is-outlined is-small"
+                      title="Imprimir"
+                      @click="printMap"
+                    >
+                      <font-awesome-icon icon="fa-solid fa-print" />
+                    </button>
+                  </span>
+                </div>
+              </div>
               <!-- CONTÊINER DO MAPA -->
               <div class="mapa-container" style="height: 700px; width: 100%; position: relative">
                 <!-- Div onde o OpenLayers vai injetar o canvas do mapa -->
@@ -84,6 +96,7 @@ import censitarioService from '@/services/cadastro/censitario.service'
 import quarteiraoService from '@/services/cadastro/quarteirao.service'
 import mapaService from '@/services/mapa.service'
 import { useRouter } from 'vue-router'
+import { exportarMapaParaPDF } from '@/utils/mapa/mapPrinter.js'
 
 // Import fundamental do CSS do OpenLayers
 import 'ol/ol.css'
@@ -145,6 +158,18 @@ const quadraStyle = new Style({
   stroke: new Stroke({ color: '#0066ff', width: 1.5 }),
   fill: new Fill({ color: 'rgba(0, 102, 255, 0.2)' }),
 })
+
+async function printMap() {
+  try {
+    const opt = {
+      titulo: `Mapa de Cadastro`,
+      nomeArquivo: 'Sisaweb 3 - cadastro.pdf',
+    }
+    await exportarMapaParaPDF(map, opt)
+  } catch (error) {
+    console.error('Erro ao gerar impressão:', error)
+  }
+}
 
 function adicionarSetorEQuadras(cdGeocodi, listaQuadrasFormatadas) {
   if (!setoresLayer || !quadrasLayer) return

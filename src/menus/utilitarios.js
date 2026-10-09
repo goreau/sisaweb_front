@@ -24,6 +24,18 @@ export const utilitariosMenu = [
     },
   },
   {
+    href: '/sisaMap',
+    title: 'Mapas temáticos',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-location-dot',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+  },
+  {
     href: '/mapaCad',
     title: 'Mapa de cadastro',
     icon: {

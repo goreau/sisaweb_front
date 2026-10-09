@@ -17,6 +17,7 @@ import {
   aplicarEstiloCoropletico,
 } from '@/utils/mapa/geraPoligonos.js'
 import { criarPontosLayer, criarGradeLayer } from '@/utils/mapa/geraMimos.js'
+import { exportarMapaParaPDF } from '@/utils/mapa/mapPrinter.js'
 
 // Importações do OpenLayers
 import Map from 'ol/Map'
@@ -52,6 +53,7 @@ defineExpose({
   alternarGrade,
   alternarTileLayer,
   alternarRandomPt,
+  printMap,
 })
 
 const mapaElemento = ref(null)
@@ -288,6 +290,14 @@ async function alternarRandomPt(ativo) {
 
 function alternarTileLayer(ativo) {
   camadaOsm.setVisible(ativo)
+}
+
+async function printMap(opt) {
+  try {
+    await exportarMapaParaPDF(instanceMapa.value, opt)
+  } catch (error) {
+    console.error('Erro ao gerar impressão:', error)
+  }
 }
 
 // Inicializa a instância base do OpenLayers

@@ -91,7 +91,19 @@
                   <Check v-model="selQuarts" :options="quadras" :columns-count="8" />
                 </div>
               </div>
-
+              <div class="columns">
+                <div class="column has-text-right">
+                  <span class="has-text-right export">
+                    <button
+                      class="button is-info is-outlined is-small"
+                      title="Imprimir"
+                      @click="printMap"
+                    >
+                      <font-awesome-icon icon="fa-solid fa-print" />
+                    </button>
+                  </span>
+                </div>
+              </div>
               <!-- CONTÊINER DO MAPA -->
               <div class="mapa-container" style="height: 500px; width: 100%; position: relative">
                 <!-- Div onde o OpenLayers vai injetar o canvas do mapa -->
@@ -120,6 +132,7 @@ import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import DatePicker from '@/components/forms/MyDatePicker.vue'
 import Check from '@/components/forms/GenericCheckBox.vue'
+import { exportarMapaParaPDF } from '@/utils/mapa/mapPrinter.js'
 
 import utilitariosService from '@/services/utilitarios.service'
 import auxiliarService from '@/services/general/auxiliar.service'
@@ -224,6 +237,18 @@ function initMap() {
       zoom: 7,
     }),
   })
+}
+
+async function printMap() {
+  try {
+    const opt = {
+      titulo: `Percurso do Agente: ${filter.agente}`,
+      nomeArquivo: 'Sisaweb 3 - percurso.pdf',
+    }
+    await exportarMapaParaPDF(map, opt)
+  } catch (error) {
+    console.error('Erro ao gerar impressão:', error)
+  }
 }
 
 // Quando a tela do resultado é exibida (hasRows === true), inicializamos o mapa
