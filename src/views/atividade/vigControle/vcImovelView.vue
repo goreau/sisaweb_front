@@ -595,6 +595,8 @@ onMounted(async () => {
 
   columns.value = [
     { headerName: 'Ordem', field: 'ordem' },
+    { headerName: 'Casa', field: 'casa' },
+    { headerName: 'Amostras', field: 'amostras' },
     { headerName: 'Situação', field: 'fant_sit' },
   ]
 

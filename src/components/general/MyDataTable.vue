@@ -321,6 +321,8 @@ function createActionsColumn() {
       return container
     },
     minWidth: definedWidth,
+    width: definedWidth,
+    lockPinned: true,
     suppressSizeToFit: true,
     pinned: 'right',
   }
