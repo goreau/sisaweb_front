@@ -450,7 +450,7 @@ async function imoveis() {
   if (!v$.value.$invalid) {
     vc_linha.id = generateId()
     store.setFolha({ ...vc_linha })
-    router.push({ name: 'vigImoveis', query: { from: 'vc_linha' } })
+    router.push({ name: 'vigImoveis' })
   }
 }
 
@@ -470,28 +470,32 @@ async function limpar() {
 }
 
 async function save() {
-  v$.value.$touch()
-  if (!v$.value.$invalid) {
-    var resultado = null
-    if (isEditMode.value) {
-      resultado = await vc_linhaService.update(vc_linha)
-    } else {
-      resultado = await vc_linhaService.create(vc_linha)
-    }
-
-    if (resultado.status) {
-      vc_linha.id_vc_folha = resultado.master
-      toast.success(resultado.msg)
-      if (canClear.value) {
-        await limpar()
+  if (v$.value.$anyDirty) {
+    v$.value.$touch()
+    if (!v$.value.$invalid) {
+      var resultado = null
+      if (isEditMode.value) {
+        resultado = await vc_linhaService.update(vc_linha)
       } else {
-        canClear.value = true
+        resultado = await vc_linhaService.create(vc_linha)
+      }
+
+      if (resultado.status) {
+        vc_linha.id_vc_folha = resultado.master
+        toast.success(resultado.msg)
+        if (canClear.value) {
+          await limpar()
+        } else {
+          canClear.value = true
+        }
+      } else {
+        toast.error(resultado.error.msg)
       }
     } else {
-      toast.error(resultado.error.msg)
+      toast.warning('Corrija os erros para enviar as informações')
     }
   } else {
-    toast.warning('Corrija os erros para enviar as informações')
+    toast.success('Não há mudanças sem salvamento')
   }
 }
 
@@ -524,9 +528,29 @@ watch(
 )
 
 watch(
+  () => vc_linha.id_atividade,
+  async (val) => {
+    if (vc_linha.id_censitario == 0) {
+      return
+    }
+    const result = await quarteiraoService.getCombo(
+      JSON.stringify({ id_censitario: vc_linha.id_censitario, id_atividade: val }),
+    )
+    if (result.error) {
+      console.log(result.error)
+      quarteiraos.value = []
+    } else {
+      quarteiraos.value = result
+    }
+  },
+)
+
+watch(
   () => vc_linha.id_censitario,
   async (val) => {
-    const result = await quarteiraoService.getCombo(JSON.stringify({ id_censitario: val }))
+    const result = await quarteiraoService.getCombo(
+      JSON.stringify({ id_censitario: val, id_atividade: vc_linha.id_atividade }),
+    )
     if (result.error) {
       console.log(result.error)
       quarteiraos.value = []
@@ -557,13 +581,6 @@ async function loadCombos() {
   } else {
     atividades.value = result
   }
-
-  /*const result0 = await auxiliarService.getAtividadeCombo(3)
-  if (result0.error) {
-    console.log(result0.error)
-  } else {
-    atividades.value = [...atividades.value, ...result0]
-  }*/
 
   const result1 = await auxiliarService.getProdutoCombo(1)
   if (result1.error) {
@@ -627,14 +644,16 @@ watch(
 )
 
 onMounted(async () => {
-  if (route.query.returnFrom === 'imovel') {
+  if (route.query.from === 'edit') {
     store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
-    Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
-    canClear.value = false
-    save()
-  } else if (route.query.from === 'edit') {
-    store.objetoFolha.id_municipio = Number(store.objetoFolha.id_municipio)
-    Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
+    const dados = JSON.parse(JSON.stringify(store.objetoFolha))
+
+    Object.assign(vc_linha, {
+      ...dados,
+      id_area: dados.id_area ? Number(dados.id_area) : null,
+      id_quarteirao: dados.id_quarteirao ? Number(dados.id_quarteirao) : null,
+    })
+    //  Object.assign(vc_linha, JSON.parse(JSON.stringify(store.objetoFolha)))
   } else {
     store.setFolha({})
   }
@@ -644,6 +663,7 @@ onMounted(async () => {
   }
 
   loadCombos()
+  v$.value.$reset()
 })
 </script>
 

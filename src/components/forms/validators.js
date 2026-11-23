@@ -103,6 +103,41 @@ export const longitudeSP$ = helpers.withMessage(
   },
 )
 
+export const diferencaMaximaDias$ = (dataInicioParam, maxDias = 31, mensagemPersonalizada = '') => {
+  return helpers.withMessage(
+    // Aqui você define a mensagem padrão ou usa a injetada
+    mensagemPersonalizada || `O intervalo está acima do permitido, que é de ${maxDias} dias.`,
+
+    helpers.withParams({ maxDias, dataInicioParam }, (value, parentVM) => {
+      const dataInicio = parentVM[dataInicioParam]
+      const dataFim = value
+
+      // Se algum estiver vazio, deixa o 'required' lidar com isso
+      if (!dataInicio || !dataFim) {
+        return true
+      }
+
+      // Normaliza as datas para ignorar horas/minutos/fusos horários
+      const normalizar = (str) => {
+        const d = new Date(str)
+        return new Date(d.getFullYear(), d.getMonth(), d.getDate())
+      }
+
+      const inicio = normalizar(dataInicio)
+      const fim = normalizar(dataFim)
+
+      if (fim < inicio) {
+        return false
+      }
+
+      const diffTime = Math.abs(fim - inicio)
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24))
+
+      return diffDays <= maxDias
+    }),
+  )
+}
+
 export const horaValida$ = helpers.withMessage('Hora inválida. Use o formato HH:mm', (value) => {
   if (!value) return true // permite vazio, remova se quiser obrigar
   return /^([01]\d|2[0-3]):([0-5]\d)$/.test(value)

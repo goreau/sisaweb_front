@@ -106,6 +106,14 @@ export default [
       ),
   },
   {
+    path: '/trocaUserOt',
+    name: 'trocaUserOt',
+    component: () =>
+      import(
+        /* webpackChunkName: "user" */ '@/views/gerenciamento/proprietario/trocaUserOutrosView.vue'
+      ),
+  },
+  {
     path: '/trocaUserCad',
     name: 'trocaUserCad',
     component: () =>

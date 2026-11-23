@@ -55,8 +55,11 @@ import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { ref, onMounted, reactive, watch } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const toast = useToast()
+const router = useRouter()
+
 const { currentUser } = useCurrentUser()
 
 var areas = ref([])
@@ -102,7 +105,12 @@ watch(
 
 onMounted(async () => {
   let cUser = currentUser
+
   if (cUser.value) {
+    if (cUser.value.tipo > 1) {
+      await router.replace('/acesso-negado') // ou { name: 'Home' } / rota de destino
+      return
+    }
     id_prop.value = cUser.value.id
   }
 })

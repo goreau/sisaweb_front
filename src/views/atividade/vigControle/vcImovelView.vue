@@ -311,9 +311,9 @@
             <footerCard
               v-enter-to-next="'submit-action'"
               @submit="save"
+              @cancel="cancel"
               :ready="readyToGo"
               :customBack="true"
-              @cancel="voltar"
               @aux="recipientes"
               :cFooter="cFooter"
             />
@@ -321,13 +321,16 @@
         </div>
       </div>
     </div>
+    <ConfirmDialog ref="confirmDialog"></ConfirmDialog>
   </div>
+  <br />
 </template>
 
 <script setup>
 import Loader from '@/components/general/MyLoader.vue'
 import footerCard from '@/components/general/FooterCard.vue'
 import auxiliarService from '@/services/general/auxiliar.service'
+import vc_linhaService from '@/services/atividade/vc_linha.service'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import useValidate from '@vuelidate/core'
@@ -344,12 +347,12 @@ import { ref, onMounted, reactive, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useVcVisitaStore } from '@/stores/vcVisitaStore'
 import { useRouter } from 'vue-router'
-//import { useToast } from 'vue-toastification'
+import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 import { generateId } from '@/utils/myUtils'
+import { useToast } from 'vue-toastification'
 
-//const toast = useToast()
-//const route = useRoute()
 const router = useRouter()
+const toast = useToast()
 
 const { currentUser } = useCurrentUser()
 const store = useVcVisitaStore()
@@ -359,6 +362,9 @@ var controles = ref([])
 var prod_focais = ref([])
 var prod_peris = ref([])
 var prod_nebs = ref([])
+
+const idEmEdicao = ref(null)
+var confirmDialog = ref(null)
 
 var colImoveis = ref([])
 const columns = ref([])
@@ -422,17 +428,17 @@ async function recipientes() {
 function insert() {
   v$.value.$touch()
   if (!v$.value.$invalid) {
-    if (imovel.id != 0) {
-      const index = colImoveis.value.findIndex((item) => item.id === imovel.id)
+    if (idEmEdicao.value != null) {
+      const index = colImoveis.value.findIndex((item) => item.id === idEmEdicao.value)
       if (index !== -1) {
         colImoveis.value[index] = { ...imovel }
       }
     } else {
       imovel.id = generateId()
       colImoveis.value.push({ ...imovel })
-      store.addImovel({ ...imovel })
     }
     limpar()
+    store.updateImoveis(colImoveis.value)
   }
 }
 
@@ -511,28 +517,87 @@ const readyToGo = computed(() => {
 function onEditRow(item) {
   const rowData = item.row || item.node?.data || item.data || item
 
+  idEmEdicao.value = rowData.id
+
   Object.assign(imovel, rowData)
 }
 
 function onDeleteRow(item) {
-  //colImoveis.value.splice(item.index, 1)
   const rowData = item.row || item.node?.data || item.data || item
 
   const realIndex = colImoveis.value.findIndex((r) => r.id_im_folha === rowData.id_im_folha)
   colImoveis.value.splice(realIndex, 1)
+  store.updateImoveis(colImoveis.value)
 }
 
-function onRecipiente(item) {
+async function onRecipiente(item) {
+  if (idEmEdicao.value !== null) {
+    const ok = await confirmDialog.value.show({
+      title: 'Sair',
+      message: 'Você tem alterações não salvas. Deseja salvá-las antes de voltar?',
+      okButton: 'Confirmar',
+    })
+    if (ok) {
+      insert()
+    } else {
+      limpar()
+    }
+  }
   router.push({ name: 'recipientesVc', params: { idImovel: item.row.id } })
 }
 
 async function save() {
-  store.updateImoveis(colImoveis.value)
-  router.push({ name: 'vigLinha', query: { returnFrom: 'imovel' } })
+  if (idEmEdicao.value !== null) {
+    const ok = await confirmDialog.value.show({
+      title: 'Sair',
+      message: 'Você tem alterações não salvas. Deseja salvá-las antes de voltar?',
+      okButton: 'Confirmar',
+    })
+    if (ok) {
+      insert()
+    } else {
+      limpar()
+    }
+  }
+
+  var resultado = null
+
+  const vc_linha = store.objetoFolha
+
+  const isEditMode = Number(vc_linha.id_vc_folha) > 0
+
+  if (isEditMode) {
+    resultado = await vc_linhaService.update(vc_linha)
+  } else {
+    resultado = await vc_linhaService.create(vc_linha)
+  }
+
+  if (resultado.status) {
+    vc_linha.id_vc_folha = resultado.master
+    toast.success(resultado.msg)
+    store.setFolha(vc_linha)
+    store.resetarDirty()
+  } else {
+    toast.error(resultado.error.msg)
+  }
+
+  router.push({ name: 'vigLinha', query: { from: 'edit' } })
 }
 
-function voltar() {
-  router.push({ name: 'vigLinha', query: { from: 'edit' } }) // params: { id: 0 }
+async function cancel() {
+  if (store.isDirty) {
+    const ok = await confirmDialog.value.show({
+      title: 'Sair',
+      message: 'Você tem alterações não salvas. Deseja salvá-las antes de voltar?',
+      okButton: 'Confirmar',
+    })
+    if (ok) {
+      insert()
+    } else {
+      limpar()
+    }
+  }
+  router.push({ name: 'vigLinha', query: { from: 'edit' } })
 }
 
 async function loadCombos() {

@@ -241,6 +241,42 @@ export const reportMenu = [
           },
         },
       },
+      {
+        href: '/mainReport/controle/ctPendenciaVC',
+        title: 'Pendência em Visita a Imóveis',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/controle/ctPendenciaNav',
+        title: 'Pendência em Controle de Criadouros',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/mainReport/controle/ctPendenciaQuali',
+        title: 'Qualificação da Pendência',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-plus',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
     ],
   },
   {

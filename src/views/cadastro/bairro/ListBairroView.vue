@@ -111,7 +111,7 @@ function newFilter() {
 }
 
 function newReg() {
-  router.push('bairro/0')
+  router.push('bairro')
 }
 
 async function loadData() {

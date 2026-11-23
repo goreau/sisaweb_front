@@ -1,5 +1,29 @@
 export const utilitariosMenu = [
   {
+    href: '/pendencia',
+    title: 'Listagem de Pendência',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-list',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+  },
+  {
+    href: '/visita',
+    title: 'Listagem de Visita',
+    icon: {
+      element: 'font-awesome-icon',
+      attributes: {
+        icon: 'fa-solid fa-list',
+        size: 'lg',
+        transform: 'shrink-8',
+      },
+    },
+  },
+  {
     href: '/sorteio',
     title: 'Sorteio ADL',
     icon: {

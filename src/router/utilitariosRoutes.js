@@ -1,5 +1,19 @@
 export default [
   {
+    path: '/pendencia',
+    name: 'pendencia',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/utilitarios/ListaPendenciaView.vue'),
+    meta: { onlyUser: true },
+  },
+  {
+    path: '/visita',
+    name: 'visita',
+    component: () =>
+      import(/* webpackChunkName: "user" */ '@/views/utilitarios/ListaVisitaView.vue'),
+    meta: { onlyUser: true },
+  },
+  {
     path: '/sorteio',
     name: 'sorteio',
     component: () => import(/* webpackChunkName: "user" */ '@/views/utilitarios/SorteioView.vue'),

@@ -42,9 +42,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.existente"
+                      v-model.number="recipiente.existente"
                     />
                   </div>
                 </div>
@@ -56,9 +56,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.agua"
+                      v-model.number="recipiente.agua"
                     />
                   </div>
                 </div>
@@ -70,9 +70,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.larva"
+                      v-model.number="recipiente.larva"
                     />
                   </div>
                 </div>
@@ -100,9 +100,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.examinadas"
+                      v-model.number="recipiente.examinadas"
                     />
                   </div>
                 </div>
@@ -114,9 +114,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.aegypti"
+                      v-model.number="recipiente.aegypti"
                     />
                   </div>
                 </div>
@@ -128,9 +128,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.albopictus"
+                      v-model.number="recipiente.albopictus"
                     />
                   </div>
                 </div>
@@ -144,7 +144,7 @@
                 v-enter-to-next="'submit-action'"
               >
                 <button class="button is-link aux-btn is-fullwidth submit-btn" @click="insert">
-                  Inserir
+                  {{ fantBt }}
                 </button>
               </div>
             </div>
@@ -168,7 +168,7 @@
             <footerCard
               v-enter-to-next="'submit-action'"
               @submit="voltar"
-              @cancel="null"
+              @cancel="abandonar"
               @aux="null"
               :cFooter="cFooter"
             />
@@ -176,6 +176,7 @@
         </div>
       </div>
     </div>
+    <ConfirmDialog ref="confirmDialog"></ConfirmDialog>
   </div>
 </template>
 
@@ -189,16 +190,19 @@ import { ref, onMounted, watch, reactive } from 'vue'
 import { useVcVisitaStore } from '@/stores/vcVisitaStore'
 import { useRouter, useRoute } from 'vue-router'
 import { generateId } from '@/utils/myUtils'
+import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
 
 const store = useVcVisitaStore()
 const router = useRouter()
 const route = useRoute()
 
-//var tpUser = ref(0);
-//var nvUser = ref(0);
+const fantBt = ref('Inserir')
+
+var confirmDialog = ref(null)
 var grupos = ref([])
 var tipos = ref([])
 
+const idEmEdicao = ref(null)
 var colRecipientes = ref([])
 const columns = ref([])
 
@@ -229,14 +233,58 @@ var cFooter = ref({
 })
 
 function insert() {
-  recipiente.id = generateId()
-  colRecipientes.value.push({ ...recipiente })
+  if (idEmEdicao.value !== null) {
+    // --- MODO EDIÇÃO ---
+    // Acha o índice apenas na hora de salvar, usando o ID seguro
+    const index = colRecipientes.value.findIndex((r) => r.id === idEmEdicao.value)
+
+    if (index !== -1) {
+      colRecipientes.value[index] = { ...recipiente }
+    }
+
+    // Reseta o controle de edição
+    idEmEdicao.value = null
+  } else {
+    // --- MODO INSERÇÃO ---
+    recipiente.id = generateId() // Garante um ID único
+    colRecipientes.value.push({ ...recipiente })
+  }
+
   limpar()
+
+  store.updateRecipientes(idImovel.value, colRecipientes.value)
 }
 
-function voltar() {
-  store.updateRecipientes(idImovel.value, colRecipientes.value)
-  router.push({ name: 'vigImoveis', query: { returnFrom: 'recipiente' } })
+async function abandonar() {
+  if (store.isDirtyRec) {
+    const ok = await confirmDialog.value.show({
+      title: 'Sair',
+      message: 'Você tem alterações não salvas. Deseja salvá-las antes de voltar?',
+      okButton: 'Confirmar',
+    })
+    if (ok) {
+      insert()
+    } else {
+      limpar()
+    }
+  }
+  router.push({ name: 'vigImoveis' })
+}
+
+async function voltar() {
+  if (idEmEdicao.value !== null) {
+    const ok = await confirmDialog.value.show({
+      title: 'Sair',
+      message: 'Você tem alterações não salvas. Deseja salvá-las antes de voltar?',
+      okButton: 'Confirmar',
+    })
+    if (ok) {
+      insert()
+    } else {
+      limpar()
+    }
+  }
+  router.push({ name: 'vigImoveis' })
 }
 
 function limpar() {
@@ -252,6 +300,7 @@ function limpar() {
     albopictus: 0,
   }
   Object.assign(recipiente, vazio)
+  fantBt.value = 'Inserir'
 }
 
 watch(
@@ -279,12 +328,29 @@ watch(
 )
 
 function onEditRow(item) {
-  let row = colRecipientes.value.splice(item.index, 1)
-  Object.assign(recipiente, row[0])
+  const idBuscado = item.row.id || item.row.id_recipiente
+
+  const itemEncontrado = colRecipientes.value.find((r) => r.id === idBuscado)
+
+  if (itemEncontrado) {
+    fantBt.value = 'Salvar'
+
+    idEmEdicao.value = idBuscado
+
+    Object.assign(recipiente, JSON.parse(JSON.stringify(itemEncontrado)))
+  }
 }
 
 function onDeleteRow(item) {
-  colRecipientes.value.splice(item.index, 1)
+  const idBuscado = item.row.id || item.row.id_recipiente
+
+  const index = colRecipientes.value.findIndex((r) => r.id === idBuscado)
+
+  if (index !== -1) {
+    colRecipientes.value.splice(index, 1)
+  }
+
+  store.updateRecipientes(idImovel.value, colRecipientes.value)
 }
 
 onMounted(async () => {
@@ -296,7 +362,9 @@ onMounted(async () => {
   ]
 
   idImovel.value = route.params.idImovel
-  let oldData = store.objetoFolha.imoveis.find((i) => i.id === idImovel.value)?.recipientes
+  let oldData = store.objetoFolha.imoveis.find(
+    (i) => i.id.toString() === idImovel.value,
+  )?.recipientes
 
   colRecipientes.value = oldData ? [...oldData] : []
 

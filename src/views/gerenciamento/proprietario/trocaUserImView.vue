@@ -134,7 +134,7 @@ import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import MyDatePicker from '@/components/forms/MyDatePicker.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
 import ConfirmDialog from '@/components/general/ConfirmDialog.vue'
-import { ref, onMounted, reactive, watch } from 'vue'
+import { ref, onMounted, reactive } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
 
@@ -159,12 +159,6 @@ const filter = reactive({
 
 const regExclui = ref([])
 const regRecebe = ref([])
-
-const columns = ref([])
-
-function newFilter() {
-  hasRows.value = false
-}
 
 async function loadData() {
   localStorage.setItem('censSW', JSON.stringify(filter))
@@ -191,7 +185,11 @@ async function processa() {
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await vc_imovelService.troca({ sai: regExclui.value, fica: regRecebe.value })
+    const resultado = await vc_imovelService.troca({
+      sai: regExclui.value,
+      fica: regRecebe.value,
+      filter: filter,
+    })
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {

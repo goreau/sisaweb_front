@@ -787,7 +787,14 @@ onMounted(async () => {
   if (route.query.returnFrom === 'recipiente' || route.query.from === 'edit') {
     console.log(store.visita)
     store.visita.id_municipio = Number(store.visita.id_municipio)
-    Object.assign(vc_linha, JSON.parse(JSON.stringify(store.visita)))
+    const dados = JSON.parse(JSON.stringify(store.visita))
+
+    Object.assign(vc_linha, {
+      ...dados,
+      id_area: dados.id_area ? Number(dados.id_area) : null,
+      id_quarteirao: dados.id_quarteirao ? Number(dados.id_quarteirao) : null,
+    })
+    //  Object.assign(vc_linha, JSON.parse(JSON.stringify(store.visita)))
   } else {
     store.setVisita({})
   }

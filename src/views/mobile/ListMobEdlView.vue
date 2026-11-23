@@ -3,6 +3,17 @@
     <div class="columns is-centered">
       <div class="column is-11">
         <MyLoader :active="isLoading" />
+        <div v-show="progressoSync.ativo" class="mb-4">
+          <!-- Texto descritivo e porcentagem em cima -->
+          <p class="has-text-centered mb-1 is-size-7 has-text-weight-semibold">
+            {{ progressoSync.mensagem }}
+          </p>
+
+          <!-- Barra de progresso do Bulma -->
+          <progress class="progress is-info is-large" :value="progressoSync.porcentagem" max="100">
+            {{ progressoSync.porcentagem }}%
+          </progress>
+        </div>
         <div class="card" style="min-height: 60vh">
           <header class="card-header">
             <p class="card-header-title is-centered">Mobile: Manutenção de EDL</p>
@@ -114,13 +125,11 @@ import { ref, onMounted, reactive } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCurrentUser } from '@/composables/currentUser'
 import { useToast } from 'vue-toastification'
-import { useMobileStore } from '@/stores/mobileStore'
 
 const { currentUser } = useCurrentUser()
 
 const router = useRouter()
 const toast = useToast()
-const store = useMobileStore()
 
 var tpUser = ref(0)
 var idUser = ref(0)
@@ -139,6 +148,14 @@ const filter = reactive({
   id_municipio: 0,
   dt_inicial: '',
   dt_final: '',
+})
+
+const progressoSync = ref({
+  ativo: false,
+  atual: 0,
+  total: 0,
+  porcentagem: 0,
+  mensagem: '',
 })
 
 const columns = ref([])
@@ -195,6 +212,79 @@ async function onDeleteRow(item) {
 
 async function sincroniza() {
   try {
+    //isLoading.value = true
+    if (!tabelaRef.value) return
+
+    const linhas = tabelaRef.value.getFilteredRows()
+
+    const ids = linhas.map((l) => l.id) // Substitua 'l.id' pelo campo correto do ID na sua tabela
+
+    if (!ids || ids.length === 0) {
+      toast.warning('Nenhum registro para sincronizar.')
+      return
+    }
+
+    const tamanhoLote = 1000 // Lotes de 500 IDs por requisição
+    let totalSucesso = 0
+    let totalErros = 0
+    let todosErrosDetalhes = []
+
+    const totalLinhas = ids.length
+    const totalLotes = Math.ceil(totalLinhas / tamanhoLote)
+
+    progressoSync.value = {
+      ativo: true,
+      atual: 0,
+      total: totalLotes,
+      porcentagem: 0,
+      mensagem: `Iniciando sincronização de ${ids.length} registros...`,
+    }
+
+    for (let i = 0; i < totalLinhas; i += tamanhoLote) {
+      const loteIds = ids.slice(i, i + tamanhoLote)
+
+      const loteAtual = Math.floor(i / tamanhoLote) + 1
+
+      progressoSync.value.atual = loteAtual
+      progressoSync.value.porcentagem = Math.round((loteAtual / totalLotes) * 100)
+      progressoSync.value.mensagem = `Processando lote ${loteAtual} de ${totalLotes} (${progressoSync.value.porcentagem}%)...`
+
+      // toast.info(`Sincronizando lote ${loteAtual} de ${totalLotes}...`, { id: 'sync-progress' })
+
+      // Envia apenas o array de IDs para o backend
+
+      const ret = await mobEdlService.sync({ ids: loteIds })
+
+      if (ret && !ret.error) {
+        totalSucesso += ret.master || 0
+        totalErros += ret.errosCount || 0
+        if (ret.detalhesErros) {
+          todosErrosDetalhes.push(...ret.detalhesErros)
+        }
+      }
+    }
+
+    tabelaRef.value.clearFilters()
+
+    if (totalErros > 0) {
+      toast.warning(
+        `Sincronização concluída com avisos. Sucessos: ${totalSucesso}, Erros: ${totalErros}`,
+      )
+    } else {
+      toast.success(`Sincronização concluída com sucesso! ${totalSucesso} registros processados.`)
+    }
+
+    loadData()
+  } finally {
+    //isLoading.value = false
+    setTimeout(() => {
+      progressoSync.value.ativo = false
+    }, 1500)
+  }
+}
+
+/*async function sincroniza() {
+  try {
     isLoading.value = true
     if (tabelaRef.value) {
       const linhas = tabelaRef.value.getFilteredRows()
@@ -212,7 +302,7 @@ async function sincroniza() {
   } finally {
     isLoading.value = false
   }
-}
+}*/
 
 onMounted(() => {
   const saved = localStorage.getItem(STORAGE_KEY)

@@ -79,7 +79,6 @@
     </div>
     <FiltroWrapper :ativos="ativos" :endpoint="'cross'" @submit="processar" />
   </fieldset>
-  {{ ativos }}
 </template>
 
 <script setup>

@@ -160,12 +160,6 @@ const filter = reactive({
 const regExclui = ref([])
 const regRecebe = ref([])
 
-const columns = ref([])
-
-function newFilter() {
-  hasRows.value = false
-}
-
 async function loadData() {
   localStorage.setItem('censSW', JSON.stringify(filter))
 
@@ -191,7 +185,11 @@ async function processa() {
     okButton: 'Confirmar',
   })
   if (ok) {
-    const resultado = await vc_linhaService.troca({ sai: regExclui.value, fica: regRecebe.value })
+    const resultado = await vc_linhaService.troca({
+      sai: regExclui.value,
+      fica: regRecebe.value,
+      filter: filter,
+    })
     if (resultado.error) {
       toast.error(resultado.msg)
     } else {

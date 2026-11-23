@@ -1,64 +1,70 @@
 import axios from '@/services/api.js'
 
-class ContaOvosService {
-  async getListaLog(filter) {
-    try {
-      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/contalogs/`
-      console.log(link)
-      console.log(`Bearer ${import.meta.env.VITE_SISAPI_KEY}`)
+const apiSistema = axios.create({
+  baseURL: `${import.meta.env.VITE_SISAPI_URL}api/sistema/`,
+  headers: {
+    Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+  },
+})
 
-      let config = {
-        method: 'post',
+function tratarErro(error) {
+  const mensagemErro = error.response?.data || 'Erro desconhecido'
+  return { error: true, msg: mensagemErro }
+}
+
+function queryStringParaObjeto(queryString) {
+  const params = new URLSearchParams(String(queryString).trim().replace(/^\?/, ''))
+  const obj = {}
+
+  for (const [chave, valor] of params.entries()) {
+    obj[chave] = valor
+  }
+
+  return obj
+}
+
+class ContaOvosService {
+  async getTesteGen() {
+    try {
+      const response = await apiSistema.get('testecron', {
         maxBodyLength: Infinity,
-        url: link, ///'https://sisapi.saude.sp.gov.br/api/recebe/logs', //'http://10.8.150.23:4033/api/recebe/logs', //
         headers: {
           'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+        },
+      })
+      return response.data
+    } catch (error) {
+      return tratarErro(error)
+    }
+  }
+  async getListaLog(filter) {
+    try {
+      const response = await apiSistema.get('contalogs', {
+        maxBodyLength: Infinity,
+        headers: {
+          'Content-Type': 'application/json',
         },
         data: filter,
-      }
+      })
 
-      return axios
-        .request(config)
-        .then((response) => {
-          //logs.value(JSON.stringify(response.data))
-          return response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      return response.data
     } catch (error) {
-      console.log(error)
-      return []
+      return tratarErro(error)
     }
   }
 
   async getLogFile(file) {
     try {
-      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/contalogfile/${file}`
-
-      let config = {
-        method: 'get',
+      const response = await apiSistema.get(`contalogfile/${file}`, {
         maxBodyLength: Infinity,
-        url: link, ///'https://sisapi.saude.sp.gov.br/api/recebe/logs', //'http://10.8.150.23:4033/api/recebe/logs', //
         headers: {
           'Content-Type': 'blob',
-          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
         },
-      }
+      })
 
-      return axios
-        .request(config)
-        .then((response) => {
-          //logs.value(JSON.stringify(response.data))
-          return response.data
-        })
-        .catch((error) => {
-          console.log(error)
-        })
+      return response.data
     } catch (error) {
-      console.log(error)
-      return []
+      return tratarErro(error)
     }
   }
 
@@ -127,92 +133,50 @@ class ContaOvosService {
     }
   }
 
-  async getTesteCron() {
+  async _enviarParaEndpoint(endpoint, data) {
     try {
-      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/testecron`
-      //console.log(link)
-      console.log(`Bearer ${import.meta.env.VITE_SISAPI_KEY}`)
+      const payload = queryStringParaObjeto(data)
 
-      let config = {
-        method: 'get',
-        maxBodyLength: Infinity,
-        url: link,
+      const response = await apiSistema.post(endpoint, payload, {
         headers: {
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
+          'Content-Type': 'application/x-www-form-urlencoded',
         },
-      }
-
-      const response = await axios.request(config)
-
+      })
       return response.data
     } catch (error) {
-      const mensagemErro = error.response?.data || 'Erro desconhecido'
-
-      // Retornamos um objeto que seu componente saiba ler como erro
-      return { error: true, msg: mensagemErro }
+      return tratarErro(error)
     }
   }
 
-  async postManual(data) {
+  postEndpoint(endpoint, data) {
+    return this._enviarParaEndpoint(endpoint, data)
+  }
+
+  async getTesteCron() {
     try {
-      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/postManual`
-
-      // Se o backend exige form-urlencoded, precisamos transformar o objeto
-      const params = new URLSearchParams()
-      params.append('data', data)
-
-      const config = {
-        method: 'post',
-        url: link,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
-        },
-        data: params, // Agora os dados estão no formato correto
-      }
-
-      const response = await axios.request(config)
-      return response.data // Sucesso puro
+      const response = await apiSistema.get('testecron')
+      return response.data
     } catch (error) {
-      const mensagemErro = error.response?.data || 'Erro desconhecido'
-
-      // Retornamos um objeto que seu componente saiba ler como erro
-      return { error: true, msg: mensagemErro }
+      return tratarErro(error)
     }
   }
 
-  async delete(data) {
-    try {
-      const link = `${import.meta.env.VITE_SISAPI_URL}api/sistema/deleteEnviado`
-
-      // Se o backend exige form-urlencoded, precisamos transformar o objeto
-      const params = new URLSearchParams()
-      params.append('data', data)
-
-      const config = {
-        method: 'post',
-        url: link,
-        headers: {
-          'Content-Type': 'application/x-www-form-urlencoded',
-          Authorization: `Bearer ${import.meta.env.VITE_SISAPI_KEY}`,
-        },
-        data: params, // Agora os dados estão no formato correto
-      }
-
-      const response = await axios.request(config)
-      return response.data // Sucesso puro
-    } catch (error) {
-      const mensagemErro = error.response?.data || 'Erro desconhecido'
-
-      // Retornamos um objeto que seu componente saiba ler como erro
-      return { error: true, msg: mensagemErro }
-    }
-  }
-
-  async getOrfaos(id) {
+  async getOrfaos() {
     try {
       const res = await axios.get(`/api/cadastro/getorfaos`)
+      return res
+    } catch (error) {
+      if (error.response && error.response.data) {
+        return error.response.data
+      } else {
+        return { error: true, msg: 'Erro de comunicação com o servidor.' }
+      }
+    }
+  }
+
+  async getErros(id) {
+    try {
+      const res = await axios.get(`/api/cadastro/getErros/${id}`)
       return res
     } catch (error) {
       if (error.response && error.response.data) {

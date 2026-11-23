@@ -42,9 +42,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.existente"
+                      v-model.number="recipiente.existente"
                     />
                   </div>
                 </div>
@@ -56,9 +56,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.agua"
+                      v-model.number="recipiente.agua"
                     />
                   </div>
                 </div>
@@ -70,9 +70,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.larva"
+                      v-model.number="recipiente.larva"
                     />
                   </div>
                 </div>
@@ -100,9 +100,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.examinadas"
+                      v-model.number="recipiente.examinadas"
                     />
                   </div>
                 </div>
@@ -114,9 +114,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.aegypti"
+                      v-model.number="recipiente.aegypti"
                     />
                   </div>
                 </div>
@@ -128,9 +128,9 @@
                     <input
                       v-enter-to-next="'form-rec'"
                       class="input"
-                      type="text"
+                      type="number"
                       placeholder="Opcional"
-                      v-model="recipiente.albopictus"
+                      v-model.number="recipiente.albopictus"
                     />
                   </div>
                 </div>
@@ -187,6 +187,7 @@ import CmbGeneric from '@/components/forms/CmbGeneric.vue'
 import { ref, onMounted, watch, reactive } from 'vue'
 import { useVcImovelStore } from '@/stores/vcImovelStore'
 import { useRouter } from 'vue-router'
+import { generateId } from '@/utils/myUtils'
 
 const store = useVcImovelStore()
 const router = useRouter()
@@ -200,6 +201,7 @@ var colRecipientes = ref([])
 const columns = ref([])
 
 var recipiente = reactive({
+  id: 0,
   id_grupo_rec: 0,
   fantGrupo: '',
   id_tipo_rec: 0,
@@ -223,11 +225,8 @@ var cFooter = ref({
 })
 
 function insert() {
-  colRecipientes.value.push({
-    ...recipiente,
-    existente: Number(recipiente.existente),
-    larva: Number(recipiente.larva),
-  })
+  recipiente.id = generateId()
+  colRecipientes.value.push({ ...recipiente })
   limpar()
 }
 
@@ -280,26 +279,30 @@ watch(
 )
 
 function onEditRow(item) {
-  // let row = colRecipientes.value.splice(item.index, 1)
-  // Object.assign(recipiente, row[0])
+  const idBuscado = item.row.id || item.row.id_recipiente
 
-  const rowData = item.data || item
+  const index = colRecipientes.value.findIndex((r) => r.id === idBuscado)
 
-  // 2. Encontra o índice real no array original pelo ID
-  const realIndex = colRecipientes.value.findIndex((r) => r.id === rowData.id_recipiente)
+  //console.log('Índice encontrado:', index)
 
-  if (realIndex !== -1) {
-    // 3. Remove do array e popula o formulário
-    const [removedItem] = colRecipientes.value.splice(realIndex, 1)
-    Object.assign(recipiente, removedItem)
+  if (index !== -1) {
+    // Remove o item correto da lista
+    const row = colRecipientes.value.splice(index, 1)
+    // Atribui os dados ao objeto reativo
+    Object.assign(recipiente, row[0])
   }
 }
 
 function onDeleteRow(item) {
-  const rowData = item.data || item
+  const idBuscado = item.row.id || item.row.id_recipiente
 
-  const realIndex = colRecipientes.value.findIndex((r) => r.id === rowData.id_recipiente)
-  colRecipientes.value.splice(realIndex, 1)
+  const index = colRecipientes.value.findIndex((r) => r.id === idBuscado)
+
+  //console.log('Índice encontrado:', index)
+
+  if (index !== -1) {
+    colRecipientes.value.splice(index, 1)
+  }
 }
 
 onMounted(async () => {

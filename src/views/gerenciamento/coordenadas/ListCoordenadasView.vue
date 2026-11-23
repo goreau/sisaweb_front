@@ -310,6 +310,7 @@ onMounted(async () => {
   tipos.value = [
     { id: 1, nome: 'Imóveis Cadastrados' },
     { id: 2, nome: 'Ovitrampas' },
+    { id: 3, nome: 'EDL' },
   ]
 
   let cUser = currentUser

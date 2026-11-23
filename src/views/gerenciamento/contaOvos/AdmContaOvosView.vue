@@ -10,7 +10,7 @@
           <div class="card-content">
             <div class="content">
               <fieldset class="fieldset">
-                <legend>Opção:</legend>
+                <legend>Opções Gerais:</legend>
                 <div class="columns">
                   <div class="column">
                     <div class="field">
@@ -19,6 +19,42 @@
                           v-enter-to-next="'form-alado'"
                           v-model="selOption"
                           :options="options"
+                          name="option"
+                          :inline="true"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="fieldset">
+                <legend>Ovitrampa:</legend>
+                <div class="columns">
+                  <div class="column">
+                    <div class="field">
+                      <div class="field">
+                        <RadioGeneric
+                          v-enter-to-next="'form-alado'"
+                          v-model="selOption"
+                          :options="optOvi"
+                          name="optionOvi"
+                          :inline="true"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </fieldset>
+              <fieldset class="fieldset">
+                <legend>Opções EDL:</legend>
+                <div class="columns">
+                  <div class="column">
+                    <div class="field">
+                      <div class="field">
+                        <RadioGeneric
+                          v-enter-to-next="'form-alado'"
+                          v-model="selOption"
+                          :options="optEdl"
                           name="option"
                           :inline="true"
                         />
@@ -40,61 +76,11 @@
                   </div>
                 </fieldset>
               </section>
-              <section v-if="selOption == 2">
-                <fieldset class="fieldset optSection">
-                  <div class="columns">
-                    <div class="column is-10 is-offset-1">
-                      <div class="field">
-                        <label class="label">Dados do log de envio com erro</label>
-                        <div class="control">
-                          <textarea
-                            class="textarea"
-                            name="data"
-                            id="data"
-                            rows="8"
-                            v-model="logData"
-                            placeholder="key=...&ovitrap_...."
-                          ></textarea>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="columns is-centered dvButton">
-                    <button class="button is-success" @click.prevent="enviar">Enviar</button>
-                  </div>
-                </fieldset>
-              </section>
-              <section v-if="selOption == 3">
-                <fieldset class="fieldset optSection">
-                  <div class="columns">
-                    <div class="column is-10 is-offset-1">
-                      <div class="field">
-                        <label class="label">Dados do log de envio com erro</label>
-                        <div class="control">
-                          <textarea
-                            class="textarea"
-                            name="data"
-                            id="data"
-                            rows="8"
-                            v-model="logData"
-                            placeholder="key=...&ovitrap_...."
-                          ></textarea>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <div class="columns is-centered dvButton">
-                    <button class="button is-success" @click.prevent="excluir">Excluir</button>
-                  </div>
-                </fieldset>
-              </section>
               <section v-if="selOption == 4">
                 <fieldset class="fieldset optSection">
                   <div class="columns">
                     <div class="column is-10 is-offset-1">
-                      <label class="label"
-                        >Municípios com registro de ovitrampa sem chave para envio</label
-                      >
+                      <label class="label">Municípios com registro sem chave para envio</label>
                       <MyDataTable
                         :loggedUser="{ id: idUser, tipo: tpUser }"
                         :buttons="['edit']"
@@ -104,6 +90,47 @@
                         @edit="onEditRow"
                       />
                     </div>
+                  </div>
+                </fieldset>
+              </section>
+              <section v-if="selOption > 10">
+                <fieldset class="fieldset optSection">
+                  <div class="columns">
+                    <div class="column is-10 is-offset-1">
+                      <label class="label">Municípios com registros com erro no envio</label>
+                      <MyDataTable
+                        :loggedUser="{ id: idUser, tipo: tpUser }"
+                        :buttons="[]"
+                        :data="dataTable"
+                        :columns="columns"
+                        :pagination="true"
+                        :hasExports="true"
+                      />
+                    </div>
+                  </div>
+                </fieldset>
+              </section>
+              <section v-if="dadoSelecionado">
+                <fieldset class="fieldset optSection">
+                  <div class="columns">
+                    <div class="column is-10 is-offset-1">
+                      <div class="field">
+                        <label class="label">Dados do log de envio</label>
+                        <div class="control">
+                          <textarea
+                            class="textarea"
+                            name="data"
+                            id="data"
+                            rows="8"
+                            v-model="logData"
+                            :placeholder="placeholderAtual"
+                          ></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="columns is-centered dvButton">
+                    <button class="button is-success" @click.prevent="processar">Enviar</button>
                   </div>
                 </fieldset>
               </section>
@@ -119,14 +146,20 @@
 import MyDataTable from '@/components/general/MyDataTable.vue'
 import Loader from '@/components/general/MyLoader.vue'
 import RadioGeneric from '@/components/forms/RadioGeneric.vue'
-import { onMounted, ref, watch } from 'vue'
+import { onMounted, ref, watch, computed } from 'vue'
 import { useCurrentUser } from '@/composables/currentUser'
 import contaOvosService from '@/services/gerenciamento/contaOvos.service'
 import { useToast } from 'vue-toastification'
+import { useRouter } from 'vue-router'
 
 const toast = useToast()
+const router = useRouter()
 
 const options = ref([])
+const optOvi = ref([])
+const optEdl = ref([])
+const dadosComplementares = ref([])
+
 const { currentUser } = useCurrentUser()
 var idUser = ref(0)
 var tpUser = ref(0)
@@ -139,12 +172,39 @@ var logData = ref('')
 var dataTable = ref([])
 const columns = ref([])
 
+const dadoSelecionado = computed(() => {
+  return dadosComplementares.value.find((item) => item.id === Number(selOption.value))
+})
+
+// Extrai apenas o placeholder (ou string vazia se não encontrado)
+const placeholderAtual = computed(() => {
+  return dadoSelecionado.value?.placeholder ?? ''
+})
+
 async function loadCombos() {
   options.value = [
     { id: 1, nome: 'Reiniciar Processamento' },
-    { id: 2, nome: 'Envio Manual' },
-    { id: 3, nome: 'Excluir Visita Anterior' },
     { id: 4, nome: 'Localizar Órfãos' },
+  ]
+  optOvi.value = [
+    { id: 2, nome: 'Envio' },
+    { id: 3, nome: 'Excluir Visita Anterior' },
+    { id: 11, nome: 'Erro no envio' },
+  ]
+  optEdl.value = [
+    { id: 5, nome: 'Envio Cadastro' },
+    { id: 6, nome: 'Excluir Cadastro Anterior' },
+    { id: 7, nome: 'Envio Manutenção' },
+    { id: 8, nome: 'Excluir Visita Anterior' },
+    { id: 12, nome: 'Erro no envio' },
+  ]
+  dadosComplementares.value = [
+    { id: 2, endpoint: 'postManual', placeholder: 'key=...&ovitrap_....' },
+    { id: 3, endpoint: 'deleteEnviado', placeholder: 'key=...&ovitrap_....' },
+    { id: 5, endpoint: 'postManualCadEdl', placeholder: 'id=...&latitude=....' },
+    { id: 6, endpoint: 'deleteCadastroEdl', placeholder: 'id=...&latitude=....' },
+    { id: 7, endpoint: 'postManualEdl', placeholder: 'id=...&latitude=....' },
+    { id: 8, endpoint: 'deleteEdl', placeholder: 'id=...&latitude=....' },
   ]
 }
 
@@ -163,31 +223,20 @@ const testecron = async () => {
   }
 }
 
-async function enviar() {
-  try {
-    isLoading.value = true
+async function processar() {
+  const itemAtual = dadosComplementares.value.find((item) => item.id === Number(selOption.value))
 
-    const dados = logData.value
-
-    const result = await contaOvosService.postManual(dados)
-    if (result.error) {
-      toast.error(result.msg)
-    } else {
-      toast.success(result)
-    }
-  } finally {
-    isLoading.value = false
+  if (!itemAtual?.endpoint) {
+    toast.error('Selecione uma opção válida antes de enviar.')
+    return
   }
-}
 
-async function excluir() {
   try {
     isLoading.value = true
 
-    const dados = logData.value
+    const result = await contaOvosService.postEndpoint(itemAtual.endpoint, logData.value)
 
-    const result = await contaOvosService.delete(dados)
-    if (result.error) {
+    if (result?.error) {
       toast.error(result.msg)
     } else {
       toast.success(result)
@@ -222,12 +271,24 @@ async function getTable() {
   }
 }
 
+async function getErros() {
+  const result = await contaOvosService.getErros(selOption.value)
+  if (result.error) {
+    dataTable.value = []
+  } else {
+    dataTable.value = result.data.rows
+    columns.value = result.data.cols
+  }
+}
+
 watch(
   () => selOption.value,
   async (val) => {
-    if (val != 4) return
-
-    getTable()
+    if (val == 4) {
+      getTable()
+    } else if (val > 10) {
+      getErros()
+    }
   },
 )
 
@@ -235,7 +296,8 @@ onMounted(async () => {
   let cUser = currentUser
   if (cUser.value) {
     if (cUser.value.tipo > 1) {
-      alert('some daqui')
+      await router.replace('/acesso-negado') // ou { name: 'Home' } / rota de destino
+      return
     }
     id_prop.value = cUser.value.id
     idUser.value = cUser.value.id

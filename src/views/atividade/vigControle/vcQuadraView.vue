@@ -1003,9 +1003,29 @@ watch(
 )
 
 watch(
+  () => vc_linha.id_atividade,
+  async (val) => {
+    if (vc_linha.id_censitario == 0) {
+      return
+    }
+    const result = await quarteiraoService.getCombo(
+      JSON.stringify({ id_censitario: vc_linha.id_censitario, id_atividade: val }),
+    )
+    if (result.error) {
+      console.log(result.error)
+      quarteiraos.value = []
+    } else {
+      quarteiraos.value = result
+    }
+  },
+)
+
+watch(
   () => vc_linha.id_censitario,
   async (val) => {
-    const result = await quarteiraoService.getCombo(JSON.stringify({ id_censitario: val }))
+    const result = await quarteiraoService.getCombo(
+      JSON.stringify({ id_censitario: val, id_atividade: vc_linha.id_atividade }),
+    )
     if (result.error) {
       console.log(result.error)
       quarteiraos.value = []

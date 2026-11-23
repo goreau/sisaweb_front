@@ -8,7 +8,7 @@ if (cUser.value) {
   notAdm = cUser.value.tipo > 1
 }*/
 
-var notAdm = false
+//var notAdm = false
 
 export const gerenciamentoMenu = [
   {
@@ -224,6 +224,18 @@ export const gerenciamentoMenu = [
       {
         href: '/trocaUserVC',
         title: 'Visitas a imóveis',
+        icon: {
+          element: 'font-awesome-icon',
+          attributes: {
+            icon: 'fa-solid fa-arrow-right',
+            size: 'lg',
+            transform: 'shrink-8',
+          },
+        },
+      },
+      {
+        href: '/trocaUserOt',
+        title: 'Outras Atividades',
         icon: {
           element: 'font-awesome-icon',
           attributes: {
